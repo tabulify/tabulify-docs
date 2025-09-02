@@ -23,6 +23,27 @@
   * the execution of [[docs:connection:tpcds_query|TPC-DS queries]]
 
 
+TPC-DS  is a widely recognized benchmark for evaluating the performance of data warehouses and analytical databases. It involves a dataset spread across 24 tables.
+
+The benchmark includes 99 complex queries designed to test various aspects of database performance, such as joins, aggregations, and subqueries.
+
+The TPC-DS schema is based on a snowflake schema, representing real-world scenarios like 
+  * web, 
+  * catalog, 
+  * and store sales. 
+  
+
+
+===== Size 1TB =====
+
+TPC-DS 1TB involves a dataset of approximately 1TB in size, 
+containing around 6.35 billion records 
+spread across 24 tables.
+
+The 1TB scale is considered a moderate size for data warehouses 
+but is still challenging due to the complexity of the queries 
+and the large number of records
+
 ===== Operations =====
 ==== Schema Management====
 This section shows you how to manage the sub-schema of ''TPC-DS''
