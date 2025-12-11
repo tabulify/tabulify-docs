@@ -1,0 +1,23 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:vault:start" }
+    ],
+    "page_id": "4fzv10kjxlkff8w0bdckr"
+}
+---
+====== Tabul - Vault Module ======
+
+
+===== Vault =====
+''vault'' is a [[docs:tabul:module|module]] that implements the [[docs:common:vault|vault functionalities]] in order to protect sensitive information.
+
+
+This module is composed of two sub-command:
+  * [[encrypt]]
+  * [[decrypt]]
+
+<note>
+  * To use this command, the [[docs:common:passphrase|passphrase option]] is mandatory
+  * By default, ''Tabulify'' ensures that every [[docs:connection:password|password]] is encrypted and asks then for a [[docs:common:passphrase|passphrase]] when a connection needs a password.
+</note>

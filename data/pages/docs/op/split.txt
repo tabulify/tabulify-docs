@@ -1,0 +1,27 @@
+---json
+{
+    "page_id": "o1zdp87yix5azjzy1anb7"
+}
+---
+====== Data Operation - Split ======
+
+
+===== About =====
+''split'' is a [[:docs:flow:intermediate|intermediate operation]] that will split its [[:docs:flow:input|input]] creating target resource as [[:docs:flow:output|output]]
+
+
+===== Argument =====
+
+^ Name ^ Default ^ Description ^
+| [[#target template|Target template]] | Random | A [[docs:flow:template_string|target template]] that define the [[:docs:resource:name|name]] of the created target from the input |
+| [[:docs:flow:granularity|granularity]] | record (default) or resource  | Define how to split the resource |
+
+
+==== Target Template ====
+
+The target-template is a [[docs:flow:template_string|target template]] that accepts the following prefix:
+  * ''record'' (in a split by record granularity)
+  * ''input'' 
+
+Example:
+For a record with a column named ''id'', you could give the Target Template ''${record_id}.csv'' if you want to create a [[:docs:resource:csv|csv file]] by record ''id''.

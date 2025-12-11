@@ -1,12 +1,112 @@
+---json
+{
+    "page_id": "gkjrxmyyaybexsxxwbv4s"
+}
+---
 ====== Data Operation - Print ======
 
 
 ===== About =====
-''printing'' is the process to show the content of [[docs:resource:resource|data resources]] on a media.
-
-The ''print'' operation is supported by:
-  * the [[docs:tabli:data:print|data print command]]
-  * the [[docs:tabli:data:head|data head command]]
-  * the [[docs:tabli:data:tail|data tail command]]
+''print'' is an [[:docs:flow:intermediate|intermediate operation]] that prints the content of [[docs:resource:resource|data resources]] in the terminal console (ie to standard out, ie ''stdio.out'').
 
 
+
+
+===== Arguments =====
+
+^ Name ^ Default ^ Description ^
+| ''format'' | default | [[#pipe]], [[#stream]], [[#default]] |
+| ''print-table-header'' | true | Print the table header ([[:docs:resource:name|resource name]] and comment) |
+| ''print-columns-headers'' | true | Print the columns headers |
+| ''print-non-visible-characters'' | true | Print the non-visible characters such as end of line |
+| ''footer-separation-line-count'' | 1 | The number of empty line printed in the footer |
+| ''colors-column-name'' |  | The name of a column that stores a [[#color definition]] |
+| ''boolean-true-token'' | ''✓'' | The string representation of the [[:docs:data_type:boolean|Boolean]] value ''true'' |
+| ''boolean-false-token'' | '''' | The string representation of the [[:docs:data_type:boolean|Boolean]] value ''false'' |
+| ''null-token'' | ''%%<null>%%'' | The string representation of the ''Null'' value |
+| ''string-empty-token'' | ''%%<empty>%%'' | The string representation of an empty string |
+| ''string-blank-token'' | ''%%<blank>%%'' | The string representation of an blank string (ie only whitespace) |
+
+Note: the default values ''%%<null>%%'', ''%%<empty>%%'' and ''%%<blank>%%'' are the empty string if this is not a [[:docs:op:diff|diff report]] (ie if the colors column is not found)
+===== Format =====
+
+==== Pipe ====
+
+''pipe'' is a format suitable when [[:docs:tabul:tabul|tabul]] is used in a pipeline shell (ie suitable for the ''pipe'' operator of a shell).
+
+It will not print:
+  * any headers (table or column) or footer
+  * any non-visible characters
+
+
+Note that the [[:docs:tabul:data:concat|concat command]] with only one source as argument is an alias to the pipe mode.
+
+Example:
+<unit>
+<code bash>
+tabul data cat --strict-selection characters.csv@howto
+</code>
+<console>
+last_name,first_name,birth_date,wikipedia_page
+Schwarzenegger,Arnold,1947-07-30,https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+Norman,Don,1935-12-25,https://en.wikipedia.org/wiki/Don_Norman
+Harbison Carnagey,Dale,1888-11-24,https://en.wikipedia.org/wiki/Dale_Carnegie
+Kahneman,Daniel,1934-03-05,https://en.wikipedia.org/wiki/Daniel_Kahneman
+Pittman,Bob,1953-12-28,https://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)
+</console>
+</unit>
+
+
+==== Stream ====
+
+''stream'' is a format suitable to print immediately records received from an upstream operation that send them in a [[:docs:flow:processing-type|stream mode]].
+
+It will:
+  * print the header once
+  * not print any footer
+
+This is the default format if ''print'' runs in a [[:docs:flow:stream_pipeline|stream pipeline]].
+
+==== Default ====
+
+''default'' prints the table in the default tabulify format
+
+
+===== Color Definition =====
+
+To color cells in a terminal, you can:
+  * add a column with the ''colors-column-name'' argument
+  * that will store a column definition.
+
+A color definition is a series of cell color definition separated by a comma.
+
+Example:
+<code bash>
+# cell 1 in green, cell 4 in green, cell 5 in blue
+1g,4g,5b
+# cell 1 in red, cell 4 in red, cell 5 in blue
+1r,4r,5b
+# all cells in red
+r
+# all cells in blue
+b
+</code>
+
+The cell color definition syntax is:
+<code>
+[n]c
+</code>
+where:
+  * ''n'' is an optional column position (ie the column to color). If omitted, the whole record gets the color
+  * ''c'' is the color
+    * ''r'' for red
+    * ''g'' for green
+    * ''b'' for blue
+
+
+===== Cli =====
+
+The ''print'' operation is used in the following [[:docs:tabul:command|tabul command]]:
+  * the [[docs:tabul:data:print|data print command]]
+  * the [[docs:tabul:data:head|data head command]]
+  * the [[docs:tabul:data:tail|data tail command]]

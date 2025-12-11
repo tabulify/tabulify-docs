@@ -1,51 +1,43 @@
+---json
+{
+    "page_id": "4qv2owujdabxhcjcy1toy"
+}
+---
 ====== Data Resource - HTML ======
 
 
 
 ===== About =====
-The ''html'' file are supported. Tabulify will extract by default the first ''html'' table (ie [[tabular_file|tabular file]] [[resource|data resource]]).
+The ''html'' files are supported. Tabulify will extract by default the first ''html'' table (ie [[tabular_file|tabular file]] [[resource|data resource]]).
 
 <note>
-If you want the whole content, you can set the [[docs:resource:type|resource type]] to ''text''.
+If you want the whole content, you can set the [[docs:resource:media-type|resource type]] to ''text''.
 </note>
 
+If there is no table element in the html page, the created resource has one cell with the whole content.
+===== Example =====
 
-===== Properties =====
+[[howto:html:read|]]
+===== Attributes =====
 
+The [[docs:resource:attribute|data attributes]]  for an HTML file are:
 
 ^ Name ^ Default Value ^ Description ^
-| ''tableSelector'' | ''%%table%%'' | The Css selector to obtain the table element |
-| ''headerSelector'' | ''%%th%%'' | The Css selector to obtain the headers elements |
-| ''rowSelector'' | ''tr'' | The Css selector to obtain the rows |
-| ''dataSelector'' | ''th, td'' | The Css selector to obtain the data cell |
+| ''TABLE_SELECTOR'' | ''%%table%%'' | The Css selector to obtain the table element |
+| ''HEADER_SELECTOR'' | ''%%th%%'' | The Css selector to obtain the headers elements in the table |
+| ''ROW_SELECTOR'' | ''tr'' | The Css selector to obtain the rows in the table |
+| ''DATA_SELECTOR'' | ''th, td'' | The Css selector to obtain the data cell in the row |
 
 <note tip>
 Because a ''html'' file is also a [[text|text file]], you can also set [[text#properties|text properties]] such as the character set.
 </note>
 
-If there is no table element in the html page, the created resource has one cell with the whole content.
+===== FAQ =====
+==== What happens if there is no table selected ? ====
+
+If there is no table selected or present, the ''html'' file is considered a [[text|text file]].
 
 
-===== Example =====
 
-The first [[https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes|10 languages code]] with the data [[docs:tabli:data:head|data head command]]
-<unit>
-<code bash>
-tabli data head  https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-</code>
-<console>
-The first 10 rows of the data resource (List_of_ISO_639-1_codes@en.wikipedia.org>wiki):
-ISO language name   639-1   639-2/T   639-2/B   639-3      Notes
------------------   -----   -------   -------   --------   ----------------------------------------------------------------------------------------------------------
-Abkhazian           ab      abk       abk       abk        also known as Abkhaz
-Afar                aa      aar       aar       aar
-Afrikaans           af      afr       afr       afr
-Akan                ak      aka       aka       aka + 2    macrolanguage, Twi is tw/twi, Fanti is fat
-Albanian            sq      sqi       alb       sqi + 4    macrolanguage, called "Albanian Phylozone" in 639-6
-Amharic             am      amh       amh       amh
-Arabic              ar      ara       ara       ara + 29   macrolanguage, Standard Arabic is arb
-Aragonese           an      arg       arg       arg
-Armenian            hy      hye       arm       hye        ISO 639-3 code hye is for Eastern Armenian, hyw is for Western Armenian, and xcl is for Classical Armenian
-Assamese            as      asm       asm       asm
-</console>
-</unit>
+
+

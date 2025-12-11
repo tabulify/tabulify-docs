@@ -1,13 +1,30 @@
+---json
+{
+    "page_id": "bgctaaxmx3obw4gi9jorm"
+}
+---
 ====== Data Operation - Move ======
 
 
 ===== About =====
 ''move'' is an [[transfer|transfer operation]] that will:
   * [[rename|rename]] the [[docs:resource:resource|data resource]] if it happens on the same [[docs:connection:connection|connection]]
-  * or [[copy|copy]] and [[drop|drop]] the source [[docs:resource:resource|data resource]] if it happens between two [[docs:connection:connection|connections]].
+  * or [[copy|copy]] (same data structure) and [[drop|drop]] the source [[docs:resource:resource|data resource]] if it happens between two [[docs:connection:connection|connections]].
 
 
-===== Example =====
 
-See the [[:docs:tabli:data:move|move tabli command for example]]
+===== Transfer Shortcut =====
+
+A  ''move'' operation is shortcut for a [[transfer|transfer operation]] with:
+  * the operation method set to ''copy''
+  * and the [[docs:op:transfer#resource_operation|source-operation]] set to ''drop''
+
+===== Prerequisites =====
+A move operation is logically a [[copy|copy operation]] followed by a [[drop|drop]] of the [[docs:flow:source|source]].
+
+Therefore this operations should follow the [[copy#prerequisites|prerequisites of the copy operation]]
+
+===== Cli =====
+
+See the [[:docs:tabul:data:move|move tabul command]]
 

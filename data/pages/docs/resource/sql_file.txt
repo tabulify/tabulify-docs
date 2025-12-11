@@ -1,0 +1,144 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:sql" }
+    ],
+    "page_id": "9kugefk9lz6zj30bd9lz4"
+}
+---
+====== Data Resource - SQL File ======
+
+
+===== About =====
+''sql files'' are [[text|text file data resource]] that:
+  * contains [[docs:system:database:sql_statement|sql statement]] as [[docs:resource:record|record]].
+  * have the ''text/sql'' [[docs:resource:media-type|media type]].
+
+They can be:
+  * [[#transfer|moved or loaded (transfer)]]
+  * [[#execution|executed]]
+===== Attributes =====
+
+A sql file accepts the following [[docs:resource:attribute|attributes parameter]]
+
+^ Argument ^ Values ^ Default  ^ Description ^
+| [[#parsing|PARSING]] | ''sql'' or ''text'' | ''sql'' | The parsing mode |
+| [[#EndOfRecords|END_OF_RECORDS]] | See [[#endOfRecords]] | See [[#endOfRecords]] | The end of records for a sql statement |
+| [[text#arguments|COLUMN_NAME]] | - | ''sql'' | The name of the column that stores the SQL statement |
+
+
+Because a SQL file is a [[docs:resource:text|text file]], you can also set  [[text#attributes|text attributes]]
+
+==== EndOfRecords ====
+
+When the [[#parsing|parsing mode]] is set to text, the following default [[text#arguments|end of records]] values are used:
+
+
+
+^ Description ^ Values ^
+| '';'' followed by an ''end of line character'' | '';\n'', '';\r\n'', '';\r'' |
+| ''/'' followed by an ''end of line character'' | ''/\n'', ''/\r\n'', ''/\r'' |
+| the word ''GO'' or ''go'' on one line | ''\ngo\n'', ''\r\ngo\r\n'', ''\rgo\r'' \\ ''\nGO\n'', ''\r\nGO\r\n'', ''\rGO\r'' |
+
+
+
+
+==== Parsing ====
+The ''parsing'' attribute has two values:
+  * [[#sql]]
+  * [[#text]]
+
+
+
+=== SQL ===
+The ''sql'' value will extract the SQL statement with a SQL parser that is aware of the SQL language such as:
+  * block of code (ie procedural code)
+  * comment
+
+In this mode, the returned data path has the following columns:
+  * ''name'': the statement name. Example of values:
+    * ''select''
+    * ''with''
+    * ''update''
+    * ''create''
+    * ...
+  * ''subset'': the [[:docs:system:database:sql_statement#subset|subset]].
+  * ''category'': the category. Example of values:
+    * ''sql'' - pure SQL,
+    * ''psql'' - procedural SQL,
+    * ''comment'' - a script comment,
+    * ...
+  * and a column for the SQL statement with the name specified by the [[#arguments|columnName argument]] and a [[docs:data_type:data_type|clob data type]].
+
+
+In this mode, the end of statement characters are:
+  * for a pure SQL statement: '';''
+  * for a [[:docs:system:database:sql_procedure|SQL Procedure]]:
+    * ''%%//%%'' - MySQL Delimiter
+    * ''$$;'' - Postgres Delimiter
+    * ''end;'' - MySQL Delimiter
+  * for a SQL comment: ''--'' or ''#''
+
+=== Text ===
+
+The ''text'' mode will extract the SQL statement with the [[#EndOfRecords|end Of Records]] values on text level.
+
+In this mode, the returned data path has only one column that stores the SQL statement with the name specified by the [[#attributes|column-name attribute]] and a [[docs:data_type:data_type|clob data type]].
+
+
+===== Operation =====
+
+==== Transfer ====
+
+
+
+**Structure Source / Target**
+
+In a [[:docs:op:transfer|transfer]]:
+  * as a [[:docs:flow:source|source]], in:
+    * [[#text|text mode]]: one column
+    * [[#sql|sql mode]]: 2 columns (type and sql)
+  * as a [[docs:flow:target|target]], it's considered a free form structure that accepts any number of columns.
+
+==== Execution ====
+
+A ''SQL File'' is [[docs:resource:runtime|executed]] only if you use it in a [[sql_request|SQL Request format]]
+
+
+
+
+===== Parsing Language Support =====
+
+We support all SQL scripts that follows the [[wp>SQL#Standardization_history|ANSI SQL standard]].
+
+Unfortunately, every database derives from it for historical or feature purpose and there is almost one SQL language flavor by database.
+
+==== Statement support ====
+
+We recognize:
+  * [[wp>SQL#Standardization_history|ANSI SQL statement (Select, Insert, Update, ...)]]
+  * all [[:docs:system:database:sql_procedure|SQL Procedure statement]] flavor
+  * third SQL statements such as:
+    * the [[https://www.postgresql.org/docs/current/sql-do.html|Postgres DO statement]]
+    * the [[https://dev.mysql.com/doc/refman/8.4/en/use.html|MySQL USE statement]]
+    * the [[https://www.sqlite.org/pragma.html|MySQL PRAGMA statement]]
+    * ...
+  * third cli command (we don't implement them, we parse them only) such as
+    * the [[https://dev.mysql.com/doc/refman/8.4/en/stored-programs-defining.html|delimiter command]]
+  * and if a unknown statement is found, we consider it to be a statement terminating by a '';''
+
+
+==== Comments ====
+We support comment at the beginning of a line and  in-line comment
+<code sql>
+# A supported comment
+-- A supported  comment
+SELECT 1 /* an in-line supported comment */ + 1;
+</code>
+
+We DON'T support comment at the end of the line (because our parser is line based, not word based)
+<code sql>
+SELECT 1+1;     # This comment is not supported
+SELECT 1+1;     -- This comment is not supported
+</code>
+

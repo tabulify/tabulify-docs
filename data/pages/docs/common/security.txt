@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "idxrzpre2e7cn8zkbs64a"
+}
+---
 ====== Security Consideration ======
 
 According to the [[wp>Kerckhoffs%27_principle|Kerckhoffs' principle]] ''only secrecy of the key provides security'', you should take great care of your ''secrets''
@@ -11,7 +16,7 @@ In Tabulify, they come in 2 forms:
 
 ==== Development ====
 
-In an development environment, a ''secret'' can be shared broadly because the data should have no secrecy character. 
+In an development environment, a ''secret'' can be shared broadly because the data should have no secrecy character.
 
 ==== Production ====
 
@@ -40,6 +45,6 @@ If you choose to use a ''wrapper script'' to provide the secret (not recommended
 
 
 Example:
-<code bash tabliWrapper.sh>
-tabli --passphrase secret "$@"
+<code bash tabulWrapper.sh>
+tabul --passphrase secret "$@"
 </code>

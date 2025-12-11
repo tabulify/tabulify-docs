@@ -1,90 +1,164 @@
+---json
+{
+    "page_id": "tinebxd98hfmbtsflf7eu"
+}
+---
 ====== Data Definition (DataDef.yml) ======
 
 
 ===== About =====
-A ''data definition'' is a serie of properties in [[docs:common:yaml|yaml]] format that defines the [[structure|data structure]] and [[attribute|attributes]] of a a [[resource|data resource]].
+A ''data definition'' is a [[#manifest|manifest file property]] or [[#argument|argument]] that defines the [[docs:resource:metadata|metadata]] of a [[resource|data resource]] (ie [[attribute|attributes]] and [[structure|data structure]])
 
 
+
+
+===== Example =====
+
+
+==== Manifest====
+Example in a [[docs:resource:manifest#kind|kind resource manifest file]]
+
+
+<unit>
+<file yaml books--csv.yml>
+kind: csv
+spec:
+  data-def:
+    logical-name: favorite_books
+    header-row-id: 1
+    delimiter-character: ','
+    columns:
+      - name: asin
+        type: varchar
+        precision: 20
+      - name: description
+        type: varchar
+      - name: price
+        type: double
+      - name: group
+        type: varchar
+
+</file>
+</unit>
+
+
+
+
+==== Operation Argument ====
+
+Example as argument of the [[:docs:op:define|define step]] in a [[:docs:flow:pipeline|pipeline manifest]]
+
+
+<code yaml datedef--pipeline.yml>
+kind: pipeline
+spec:
+  steps:
+    - operation: "define"
+      arguments:
+        # The data def argument
+        data-def:
+          logical-name: "colors"
+          columns: ["id","color"]
+</code>
+
+==== Cli Options ====
+
+You can also set them with [[#tabul cli option]].
+
+For example, setting a semicolon separator to a [[:docs:resource:csv|CSV]]
+<unit>
+<code bash>
+tabul data head \
+  --attribute delimiter-character=';' \
+  books-semicolon.csv@howto
+</code>
+</unit>
 
 ===== Usage =====
-==== Data definition file ====
-If you have a [[file|file]] with the [[logicalname|logical name]] ''foo'', you may defined its data definition by creating the yaml file ''foo--datadef.yml'' in the same directory.
-==== Inline Data Definition ====
-The [[docs:op:define|define operation]] uses this format to define inline data resources.
-==== Generator ====
+==== Resource Manifest ====
 
-The [[docs:resource:generator|resource generator]] uses this format to define the data generated and their parameters.
+''Data definition'' may be defined in any [[docs:resource:manifest|resource manifest]] (ie yaml file that defines a resource)
 
-===== Structure =====
 
-==== Common ====
+
+==== Operation Argument ====
+This format is used in pipeline step in the ''data-def'' argument.
+
+Example:
+  * the [[docs:op:define|define operation]]
+  * the [[docs:op:select|select operation]]
+  * the [[:docs:op:enrich|enrich operation]]
+
+
+==== Tabul Cli Option ====
+
+You can set the data definition with the following [[docs:tabul:option|tabul options]]
+  * ''source-attribute'' or ''target-attribute'' in a [[docs:tabul:data:transfer|transfer command]]
+  * ''attribute'' for others [[docs:tabul:data:start|data command]]
+
+
+===== Format =====
+
 
 The following ''data definition'' file shows the common structure of all data definition file that defines the name of the tabular structure and its columns.
 
+==== Scalar ====
+
+At the root, you can set any scalar attributes such as the [[docs:resource:attribute|common attributes]]
+
+Example:
+<code yaml DataDef.yml>
+logical-name: LogicalName
+</code>
+where
+  * ''logical-name'' is the [[logical_name|logical name]] of the [[resource|resource]] (Default to the name of the file without structure information).
+
+==== Relational Structure ====
+
+
+=== Columns ===
 
 <code yaml DataDef.yml>
-LogicalName: LogicalName
-PrimaryColumns: [ "column_name1", "column_name2" ]
-Columns:
+columns:
   - name: column_name1
-    Type:
+    Type: date
+    ansi-type: date 
     Precision:
     Scale:
     Comment:
     Position: 1
   - name: column_name2
-    Type:
-    Precision:
-    Scale:
-    Comment:
-  .....
-Request:
-    header: X-HTTP-header
-    Accept: ...
+    type: varchar
+    precision:
+    scale: 0
+    comment: A comment
 </code>
 where:
-  * ''logicalName'' is the [[logicalname|logical name]] of the [[resource|resource]] (Default to the name of the file without structure information).
-  * ''columns'' defines a list of column
+  * ''columns'' defines the [[docs:resource:column|columns]]
       * ''name'' is the name of the column
-      * ''type'' is the [[docs:common:data_type|data type]] of a column (Default: ''varchar'')
+      * ''type'' is the [[docs:data_type:data_type|data type name]] of the connection  (Default: ''varchar'')
+      * ''ansi-type'' is the [[:docs:data_type:data_type#ansi|ansi type of data]] (By default, derived from the ''type'')
       * ''precision'' is the precision of the data type (Default value of the data type)
       * ''scale'' is the scale of the data type (Default value of the data type)
       * ''comment'' is a comment on the column
-      * ''position'' is the physical column position 
-  * ''primaryColumns'' defines a list of column names that compose the primary key.
-  * ''request'' are request attributes used when the resource is dynamic (mostly used to defined [[docs:system:http|http resource]])
+      * ''position'' is the physical column position
+
+=== Primary Columns ===
 
 
-
-Example:
-<code yaml Date.yml>
-LogicalName: Date
-Columns:
-  - name: DATE_ID
-    Type: Date
-  - name: MONTH_ID
-    Type: Varchar
-    Precision: 6
-  - name: MONTH_NUMBER
-    Type: Integer
-  - name: MONTH_NAME
-    Type: Varchar
-    Precision: 20
-  - name: MONTH_DESC
-    Type: Varchar
-    Precision: 20
-  - name: MONTH_DESC_SHORT
-    Type: Varchar
-    Precision: 10
-  - name: YEAR_NUMBER
-    Type: Varchar
-    Precision: 4
+<code yaml DataDef.yml>
+primary-columns: [ "column_name1", "column_name2" ]
 </code>
 
-==== Extra Variables ====
+where  ''primary-columns'' defines a list of column names that compose the primary key.
 
 
-Each action may need additional information about a table or a column. This information can be added at each level (table or column) as a attribute (ie property).
+
+
+===== Extra Attributes =====
+
+
+Each data resource type may need additional information about a table or a column. This information can be added at each level (table or column) as a attribute (ie property).
 
 <code yaml DataDefExtra.yml>
 DataResourceAttribute1: value1
@@ -104,5 +178,5 @@ A Property value may be:
 
 
 <note>
-The [[docs:generator:column|column data generators]] use them to define data generations arguments.
+The [[docs:generator:data-supplier|column data generators]] use them to add the ''data-supplier'' argument.
 </note>

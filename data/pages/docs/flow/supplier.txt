@@ -1,15 +1,31 @@
+---json
+{
+    "page_id": "sybyvw53o1ht13aicosj3"
+}
+---
 ====== Tabulify - Supplier Step ======
 
 ===== About =====
-A ''supplier'' is an [[step|step]] that selects or defines [[docs:resource:resource|data resource]].
+A ''supplier'' is  the first [[step|step]] of a [[pipeline|pipeline pipeline]] that supplies the pipeline in [[docs:resource:resource|data resources]].
 
-It's used the first [[step|step]] of a [[pipeline|pipeline pipeline]].
+
 
 ===== List =====
 
 Tabulify supports the following supplier step.
 
 ^ Supplier Step ^ Description ^
-| [[docs:op:select|select]] | Select one or more data resources |
-| [[docs:op:define|define]] | Define or or more data resources |
+| [[docs:op:select|select]] | Select one or more data resources with [[docs:flow:data_selector|data selectors]] |
+| [[docs:op:define|define]] | Define one or more data resources with [[:docs:resource:data_uri|data uris]] or inline data records |
+| [[docs:op:generate|generate]] | Supplies data resources thanks to [[:docs:resource:generator|generators]] |
+
+
+===== Type =====
+
+Every supplier supports one or more [[processing-type|Processing type]] ([[:docs:flow:stream_pipeline|stream]], batch).
+
+===== Argument =====
+
+When they support the [[docs:flow:processing-type|stream processing type]], they create a [[docs:flow:stream_pipeline|stream pipeline]] and supports extra [[docs:flow:stream_pipeline#argument|arguments]].
+
 

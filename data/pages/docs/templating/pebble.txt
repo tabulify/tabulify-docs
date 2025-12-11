@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "y1u1b6q7qa2aaw5ockg31"
+}
+---
 ====== Pebble Template Engine ======
 
 
@@ -14,11 +19,11 @@
 
 To support ''template block'', ''Tabulify'' adds the ''base-uri'' argument to the [[docs:op:template#arguments|template operation]] where you can define a [[docs:resource:directory|directory uri]].
 
-Example from the [[docs:connection:sd|script directory]] defining a ''pebble'' subdirectory.
+Example from the [[docs:connection:md|script directory]] defining a ''pebble'' subdirectory.
 <code yaml>
 - name: "template"
-  op: template
-  args:
+  operation: template
+  arguments:
       engine: "pebble"
       base-uri:  "pebble@sd"
       ...

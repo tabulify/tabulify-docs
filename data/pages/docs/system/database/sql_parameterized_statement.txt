@@ -1,0 +1,143 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:docs:resource:sql_prepared_statement" }
+    ],
+    "page_id": "uxm0rh8xd2jg7www2id3w"
+}
+---
+====== Sql Parameterized Statement ======
+
+
+
+===== About =====
+A ''Parameterized Statement'' is a [[docs:system:database:sql_statement|SQL statement]] templated with arguments called [[#parameters]]
+
+They are [[docs:resource:runtime|runtime]] where
+  * the [[#parameters]] are the arguments
+  * the [[#placeholder]] (''?'' or ''%%$N%%'') is where the parameter value is applied
+
+===== Howto =====
+
+  * [[:howto:postgres:procedure_call|]]
+  * [[howto:postgres:procedure_with_out_parameter|]]
+  * [[:howto:postgres:function_setof|]]
+===== Example =====
+
+==== Select ====
+
+An analytics [[docs:resource:sql_select|SQL Select]] statement with 1 [[#placeholder|placeholder]] (ie 1 parameter)
+<code sql>
+select d_week_seq1
+       ,round(sun_sales1/sun_sales2,2)
+       ,round(mon_sales1/mon_sales2,2)
+where
+  d_year = ?
+group by
+  d_week_seq1
+</code>
+
+==== Insert ====
+
+An [[docs:resource:sql_dml|DML insert]] statement with 2 [[#placeholder|placeholders]] (ie 2 parameters)
+<code sql>
+INSERT INTO products (name, price) VALUES (?, ?);
+</code>
+
+==== Stored Procedure ====
+
+
+An [[:docs:resource:sql_stored_procedure|stored procedure]] statement with 2 [[#placeholder|placeholders]] (ie 2 parameters)
+
+Example
+  * with the [[https://www.postgresql.org/docs/current/sql-call.html|Postgres call]]
+<code sql>
+? = call upper(?)
+</code>
+  * for all database systems with [[https://docs.oracle.com/javadb/10.10.1.2/ref/rrefjdbc1020262.html|jdbc escaping]]
+<code sql>
+{ ? = call upper(?) }
+</code>
+
+
+
+
+===== Parameters =====
+
+''SQL Parameters'' are a list of parameter that can be used to parametrized [[:docs:resource:sql_dml|DML statements]].
+
+In a command comparison, they are the arguments of a [[:docs:system:database:sql_statement|SQL Statement]]
+
+''Parameters'' are also known as ''bind'' variables
+
+
+==== Attribute ====
+
+You can add to a [[docs:resource:sql_request|SQL request]], the ''parameters'' attributes
+
+
+Example of [[docs:resource:sql_request#manifest|SQL Request manifest]]
+<code yaml>
+kind: sql-request
+spec:
+  data-uri: (script.sql@cd)@database
+  data-def:
+    parameters:
+        # the value (default: null)
+      - value: value1
+        # The direction: IN (default), OUT, INOUT
+        direction: IN
+        # the data type (mandatory when the value is null)
+        type: varchar
+        # the column name if the direction is OUT, INOUT (default: para_N)
+        name: para_1
+      - ...
+</code>
+
+
+where:
+  * ''value'' is the value of a parameter. If omitted, the value is ''null''.
+  * ''type'' is the [[docs:data_type:data_type|data type]] of the ''value''.
+    * Mandatory if the value is not set
+    * Derived from the [[docs:data_type:data_type#yaml|Yaml data type]] of the ''value'' if not set
+  * ''direction'' is the direction of the parameter. Default to ''IN''
+  * ''name'' is the column name used in the result data resource when a direction is ''OUT'' or ''INOUT''
+
+==== Direction ====
+
+The direction of a parameter defines if a value should be:
+  * passed to the statement
+  * returned after execution
+
+^ Direction ^ Statement Kind ^ Value passed  \\ to the statement ^ Value returned \\ after execution ^
+| ''IN'' (default) | [[:docs:resource:sql_dml|All DML]] | True | False |
+| ''OUT'' | [[:docs:system:database:sql_procedure|Procedure only]] | False | True |
+| ''INOUT'' | [[:docs:system:database:sql_procedure|Procedure only]] | True | True |
+
+If one of the parameters has a ''OUT'' or ''INOUT'' direction, they are returned in a data resource.
+==== Placeholder ====
+
+
+
+The placeholder parameter syntax differs depending on your database.
+
+^ Notation ^ Database ^
+| ''?'' | MySQL, SQL Server, Oracle, SQLite, ... |
+| ''%%$N%%'' | PostgreSQL (if not [[https://docs.oracle.com/javadb/10.8.3.0/ref/rrefjdbc1020262.html|escaped]]) |
+
+
+===== Category =====
+
+''Parameterized Statements'' fall into 2 categories:
+  * ''Prepared statement'' for ''select/insert/update/merge'' statements that allows only ''IN'' parameters
+  * ''Callable statement'' for ''call/exec/begin'' statements that allows ''IN'' and ''OUT'' parameters (ie [[docs:system:database:sql_procedure|SQL Procedure execution]])
+
+
+===== Limitations =====
+
+Table names and column names cannot be parameterized, only value (ie you can only parameterize values, not structural elements)
+===== SQL Subset Support =====
+
+Not all kind of statement can be written as ''prepared statement''.
+
+You need to refer to your database documentation but generally, they are supported with [[docs:resource:sql_dml|DML statement (Select, Insert, Update, Merge, Call)]]

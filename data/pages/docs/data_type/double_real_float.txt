@@ -1,0 +1,28 @@
+---json
+{
+    "name": "Double\/Float\/Real",
+    "page_id": "5r7x3ndqboej0d54pagw3"
+}
+---
+====== Double, Real, Float Data Type ======
+
+===== About ======
+''Double'', ''Real'', ''Float'' are [[data_type#ansi|ANSI Data Type]] known collectively as:
+  * the approximate numeric types
+  * or floating-point number.
+
+===== List =====
+
+^ Name ^ SQL standard Name ^ Description ^ 
+| ''real'', ''float4'' | ''real'' | Single precision floating-point number (4 bytes) |
+| ''float'' | ''float(p)'' | Variable floating-point number (4 or 8 bytes) |
+| ''double'', ''float8'' | ''double precision'' | Double precision floating-point number (8 bytes) |
+
+===== Float =====
+''Float'' is the only data type that accepts a parameter (ie [[precision|precision]])
+
+''float(p)'' - The precision value is used to determine the storage size.
+  * A precision from ''0'' to ''23'' bits results in a 4-byte single-precision FLOAT column.
+  * A precision from ''24'' to ''53'' bits results in an 8-byte double-precision DOUBLE column.
+
+

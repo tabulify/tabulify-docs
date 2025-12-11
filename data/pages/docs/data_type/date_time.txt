@@ -1,0 +1,128 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:common:time" },
+        { "path": ":docs:data_type:time" }
+    ],
+    "name": "Date\/Time",
+    "page_id": "3luk5pg2aqn5oczle4k7h"
+}
+---
+====== Tabulify - Date and Time data type ======
+
+
+
+===== About =====
+This page contains the documentation about how ''Tabulify'' is managing ''time'' [[data_type#|ansi data type]] (ie ''date'', ''timestamp'', ''time'').
+
+===== List =====
+
+Note that we follow the sql type specification, therefore, we use the following time data type:
+
+^ Name ^ Default format ^ Definition ^ 
+| ''date'' | ''YYYY/mm/dd'' | Hours, minutes, seconds, and milliseconds are set to zero (day level) |
+| ''timestamp [ (p) ] [ without time zone ]'' | ''YYYY/mm/dd hh:mm:ss'' | A full Date Time  (ie instant) |
+| ''timestamp [ (p) ] with time zone'' |  |
+| ''time [ (p) ] [ without time zone ]'' | ''hh:mm:ss'' | Year, month and day are set to zero |
+| ''time [ (p) ] with time zone'' | |
+
+
+Note:
+  * ''p'' specifies the number of fractional digits seen/retained in the seconds field (default to 0).
+  * The generally allowed range of ''p'' is from 0 to 6 for timestamp/time.
+  * ''timestamp'' alone is the equivalent to ''timestamp without time zone''
+  * ''time'' alone is equivalent to ''time without time zone''
+  * A [[precision|precision]] of ''10'' on a date represents the number of digits. ie ''YYYY-MM-DD''
+
+
+===== Conversion =====
+
+==== From Number ====
+
+A number will be considered as the number of milliseconds since [[kb>epoch|epoch time]]
+
+Why? We are using [[:howto:generator:expression|javascript expression]] and this is the [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now|Javascript convention]].
+
+==== To Number ====
+
+An integer or a long is considered:
+      * for a ''date'' as the number of day since Epoch (''1970-01-01'')
+      * for a ''timestamp'' as the number of Millisecond since Epoch (''1970-01-01 00:00:00'')
+      * for a ''time'' as the number of second (since the beginning of the day)
+==== To String ====
+
+''Tabulify'' will translate automatically a date/time string in a native date/time when loading data.
+
+This list is not exhaustive but below are the most known pattern.
+
+^ String Pattern ^ Type ^
+| ''yyyy-MM-dd'' | Date |
+| ''yyyy-MM-dd HH:mm:ss.SSS'' | Sql Timestamp |
+| ''yyyy-MM-ddTHH:mm:ss.SSS'' | Iso Timestamp |
+| ''HH:mm'', ''HH:mm:ss'' or `HH:mm:ss.SSS` | Time |
+
+
+===== Time Zone =====
+
+
+We support the standard ''time zone'' datatype:
+  * ''time with time zone''
+  * ''timestamp with time zone''
+
+Note that the support is not really universal because not all database 
+  * implements them 
+  * and if they do they don't implement the standard.
+
+For instance, [[:docs:system:sqlserver:sqlserver|SQL Server]] 
+  * does not support ''time with time zone'' 
+  * implements a custom ''timestamp with time zone'' with 
+    * [[https://learn.microsoft.com/en-us/sql/connect/jdbc/reference/datetimeoffset-class|microsoft.sql.DateTimeOffset]] as explained in the [[https://learn.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types|type documentation]]
+    * and not the standard [[https://docs.oracle.com/javase/8/docs/api/java/time/OffsetDateTime.html|OffsetDateTime]]
+
+
+<note width="600" align="center">
+Therefore, when storing time data, we recommend to store them:
+  * without ''time zone'' 
+  * with a value located at ''UTC''.
+
+Why? 
+Because this type is:
+  * the default of:
+    * [[:howto:postgres:postgres|Postgres]]
+    * ''Javascript''
+    * and a lot of other system.
+  * implemented broadly by database system
+  * easier to transfer
+  * does not need any conversion
+  * easier to manipulate
+  * easier for localization (You do the conversion on the client)
+</note>
+===== Configuration =====
+==== Storage ====
+
+The following [[docs:connection:attribute|built-in connection attribute]] changes the storage format of ''time'' data type (ie ''date'', ''timestamp'' and ''time'').
+
+<note warning>
+Changing this value may lead to unpredictable transformation. If you change the value from ''epochSec'' to ''epochMs'', the same number will not have the same time value. Once this settings has been set for your connection, it's not recommended to change it.
+</note>
+
+^ Built-in Connection Attribute ^ Default Value ^ Description ^
+| ''DATE_DATA_TYPE'' | ''Native'' | Define the storage format of a ''Date'' data type (''YYYY-MM-DD'') |
+| ''TIMESTAMP_DATA_TYPE'' | ''Native'' | Define the storage format of a ''Timestamp'' data type (''YYYY-MM-DD HH:MM:SS'') |
+| ''TIME_DATA_TYPE'' | ''Native'' | Define the storage format of a ''Time'' data type (''HH:MM:SS'') |
+
+The value can be chosen with any of the following values:
+
+^ Name ^ Data Type ^ Description ^
+| ''native'' (Default) | Sql Object |  Store the time value in the data type of the target system. |
+| ''sql-literal'' | String | Store the time value in a text literal (ie ''YYYY-MM-DD'', ''YYYY-MM-DD HH:MM:SS.SSS'', or ''HH:MM:SS'') |
+| ''epoch-sec'' | Number | Store the time value from epoch (1970-01-01) format in second unit |
+| ''epoch-ms'' | Number | Store the time value from epoch (1970-01-01) format in milli-second unit |
+| ''epoch-day'' | Number | Store the time value from epoch (1970-01-01) format in number of day - only valid for a ''date'' |
+
+<note>
+The default value may change by [[docs:system:system|system]]. For instance, the ''sqlite'' database storage format is ''SqlLiteral'' because ''Sqlite'' does not support a native time format. More ...[[docs:system:sqlite:time]]
+</note>
+
+
+

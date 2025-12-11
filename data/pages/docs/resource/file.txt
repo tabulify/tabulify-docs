@@ -1,26 +1,33 @@
+---json
+{
+    "page_id": "fskusatthsu7cthpklv2b"
+}
+---
 ====== Data Resource - File ======
 
 
 ===== About =====
-A file is a [[resource|data resource]] from a [[docs:system:file|file system]].
+A ''file'' is a [[resource|data resource]] from a [[docs:system:file|file system]].
 
 
 
 
 
 ===== Supported format =====
-You can move any file.
 
 The following ''file'' shows a [[structure|format]] that can be defined via [[attribute|extra attributes]].
   * [[text|Text]]
   * [[csv|Csv]]
   * [[json|Json]]
+  * [[:docs:resource:sql_file|SQL file]]
+  * [[:docs:resource:script|Script (bash, python, ...)]]
   * [[excel|Excel]]
   * [[xml|Xml]]
+  * [[yaml|Yaml]]
+  * [[:docs:resource:html|HTML]]
+  * [[archive|Archive (zip, tar, ...)]]
 
+If the format is not detected, the file is seen as a [[:docs:resource:binary|binary file]] and can still be moved, copied, deleted but not changed.
 ===== Attributes =====
-For every file, the following [[attribute|attributes]] are available:
-  * ''absolute path''
-  * ''size''
-  * ''path'' (relative)
+For every file, the [[attribute|common attributes]] are available
 

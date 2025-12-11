@@ -1,0 +1,115 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:truncate" }
+    ],
+    "page_id": "5h51oar4g4vbmwe96iikf"
+}
+---
+====== Tabul - Truncate data command ======
+
+
+===== About =====
+The ''data truncate'' [[docs:tabul:command|command]] of the [[start|data module]] permits to [[docs:op:truncate|truncate]] one or more [[docs:resource:resource|data resources]].
+
+
+===== Syntax =====
+
+
+<unit>
+<code bash>
+tabul data truncate --help
+</code>
+<console>
+Tabul data truncate
+===================
+
+Truncate data resources(s) - ie remove all records/content from data resources
+
+
+
+Examples
+--------
+
+ 1 - To truncate the tables D_TIME and F_SALES:
+
+
+    tabul data truncateD_TIME@connection F_SALES@connection
+
+
+ 2 - To truncate only the table D_TIME with force (ie deleting the foreign keys constraint):
+
+
+    tabul data truncate--forceD_TIME@database
+
+
+ 3 - To truncate all dimension tables that begins with (D_):
+
+
+    tabul data truncate D_*@connection
+
+
+ 4 - To truncate all tables from the current schema:
+
+
+    tabul data truncate *@database
+
+
+
+
+Syntax
+------
+
+
+    tabul data truncate [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                      One or more data or script selectors
+
+
+  Options:
+
+    --cascade                                               Drop with cascade (ie drop foreign resource)
+
+    --force                                                 Drop with force (ie drop foreign key)
+
+
+  Selection Options:
+
+    --no-strict-selection                                   If set an empty selection will not return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                 If set, the dependencies will be also selected
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

@@ -1,9 +1,9 @@
 ---json
 {
-  "name":"Data Generation",
-   "canonical":"howto:generator",
-   "title":"How to generate data with the Tabulify Data Generator",
-     "description":"A collection of how-to's to get the in and out of the Tabulify Data Generator"
+    "canonical": ":howto:generator",
+    "description": "A collection of how-to's to get the in and out of the Tabulify Data Generator",
+    "name": "Data Generation",
+    "page_id": "df1obk3i8a2rbog7dne36"
 }
 ---
 
@@ -16,7 +16,7 @@
 {{ :docs:op:undraw_data_processing.svg?600&ratio=16:9 |}}
 
 ===== About =====
-This [[..:howto|how-to]] sections is specific and show you how to generate data with the [[docs:generator:generator|data generator]] and show-case the use of the [[docs:generator:column|column generator]].
+This [[..:howto|how-to]] sections is specific and show you how to generate data with the [[docs:generator:generator|data generator]] and show-case the use of the [[docs:generator:data-supplier|column generator]].
 
 
 <iterator>

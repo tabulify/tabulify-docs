@@ -1,0 +1,40 @@
+---json
+{
+    "page_id": "1cec3a4n46ksgrd4a93ij"
+}
+---
+====== Alias Connection ======
+
+
+
+===== About =====
+An ''alias'' connection permits to create a relative connection from an existing one..
+
+
+===== Example =====
+
+In this scenario, you want to refer to the directory ''pipeline@app'' via ''@pipeline''
+
+ie you have stored your [[:docs:flow:pipeline|pipeline]] in a subdirectory of the [[:docs:connection:app|app directory]] called ''pipeline''  and you don't want to use
+<code>
+pipeline/01-pipeline@app
+</code>
+but you want to use
+<code>
+01-pipeline@pipeline
+</code>
+
+In your [[docs:conf:tabul.yml|configuration vault]], you would add the following ''pipeline'' connection
+<file yml>
+connections:
+  pipeline:
+    uri: 'alias:pipeline@app'
+</file>
+
+
+===== URI Syntax =====
+
+You can create alias connection with the following [[:docs:connection:uri|URI]]:
+<code>
+alias:path@connection-name
+</code>

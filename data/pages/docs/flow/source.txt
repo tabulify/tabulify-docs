@@ -1,13 +1,24 @@
-====== Flow - Source (Input) ======
+---json
+{
+    "page_id": "y05vruiil3s8qm3rofe5g"
+}
+---
+====== Flow - Source ======
 
 
 ===== About =====
-A ''source data resource'' is a [[docs:resource:resource|data resource]] used as a ''source'':
-  * in a [[step|pipeline step]].
-  * or  in a [[docs:tabli:data:start|tabli data operations]]
+A ''source data resource'' is a [[docs:resource:resource|data resource]] produced/created by a [[:docs:flow:supplier|supplier]].
+
+They are passed downstream to the first [[:docs:flow:intermediate|intermediate operation]] as [[input|input]].
 
 
 
-===== Selection =====
-One ore more ''source data resource'' via selected via a [[docs:resource:selector|data selector]]
+
+
+
+===== Cli =====
+
+In [[:docs:tabul:tabul|tabul commands]], they are mostly defined by a [[:docs:flow:data_selector|data selector]] that uses the [[:docs:op:select|select operation]]
+
+
 

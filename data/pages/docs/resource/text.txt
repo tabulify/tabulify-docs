@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "zoevghaij9tk9fs9hmj0c"
+}
+---
 ====== Data Resource - Text File ======
 
 
@@ -5,16 +10,20 @@
 A ''text'' file is a [[file|file]] [[resource|data resource]] that contains ''characters'' data.
 
 
+===== Transfer =====
 
+In a [[:docs:op:transfer|transfer]]:
+  * as a [[:docs:flow:input|input]], it has only one column
+  * as a [[docs:flow:target|target]], it's considered a free form structure that accepts any number of columns.
 
 ===== Attributes =====
 
 A ''text file'' allows to specifies the following [[attribute|attributes]].
 
 ^ Name ^ Default Values ^ Description ^
-| ''endOfRecords'' | ''\r\n'', ''\n'' or ''\r''  on Read \\  ''\r\n'' (Windows) or ''\n'' (Linux) on Write | The ''end of record (EOR)'' are the characters that design the end of a [[record|record]] (by default the end of line) |
-| ''characterSet'' | Detected on Read \\ ''UTF-8'' on Creation | The character set that maps bits data to characters.  |
-| ''columnName'' | ''Lines'' | The name of the column when loaded in a [[docs:system:relational|relational database]]. \\ A text file is then processed as [[tabular|tabular data]] with one column of [[docs:common:data_type|type]] text. |
+| ''end-of-record'' | ''\r\n'', ''\n'' or ''\r''  on Read \\  ''\r\n'' (Windows) or ''\n'' (Linux) on Write | The ''end of record (EOR)'' are the characters that design the end of a [[record|record]] (by default the end of line) |
+| ''character-set'' | Detected on Read \\ ''UTF-8'' on Creation | The character set that maps bits data to characters.  |
+| ''column-name'' | ''Lines'' | The default name of the column when there is no [[:docs:resource:structure|structure]] defined. \\ A text file is then read as [[tabular|tabular data]] with one column of [[docs:data_type:data_type|type]] text. |
 
 <note>
 Note also that the [[count|count common attribute]] gives you the number of record (line by default).

@@ -1,8 +1,16 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:common:cmd" }
+    ],
+    "page_id": "0t8cbwh7yxbe202801mlm"
+}
+---
 ====== Tabulify - CMD/Powershell Shell ======
 
 
 ===== Information =====
-''Tabulify'' supports the ''CMD'' and ''Powershell'' shell but be aware that when using them, you will encounter problem if you are passing an [[docs:resource:uri|URI/URL]] as argument with the [[docs:tabli:data:start|tabli data command]]. See [[bash#why_do_we_recommend_bash|Why we recommend bash]]
+''Tabulify'' supports the ''CMD'' and ''Powershell'' shell but be aware that when using them, you will encounter problem if you are passing an [[docs:resource:uri|URI/URL]] as argument with the [[docs:tabul:data:start|tabul data command]]. See [[bash#why_do_we_recommend_bash|Why we recommend bash]]
 
 ===== Configuration =====
 
@@ -10,7 +18,7 @@
 
 Set the width size of you terminal to a big enough number. We recommend 9000.
 
-When [[docs:tabli:attribute:list|listing some configuration]], you may get a lengthy output (such as a list of a path) and the output will then not render nicely.
+When [[docs:tabul:env:list|listing some configuration]], you may get a lengthy output (such as a list of a path) and the output will then not render nicely.
 
 To avoid this inconvenient, our advice is to increase the width size of your terminal.
 

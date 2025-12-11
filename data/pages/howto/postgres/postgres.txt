@@ -1,0 +1,36 @@
+---json
+{
+    "page_id": "wvr0ri69l3d00v2353gpz",
+    "template": "holy"
+}
+---
+====== Postgres How-To ======
+
+===== About =====
+
+This section regroups howto that are specific to the [[:docs:system:postgres:postgres|Postgres System]].
+
+
+
+
+===== Full List =====
+
+
+<iterator>
+    <data>select where is_home = 0  and (path glob ':howto:postgres*') order by path asc </data>
+<grid>
+    <fragment>
+        <box>
+            <card clickable>
+            <page-image ratio="16:9" color="#336699"/>
+            === $title ===
+
+            $description [[$path| ]]
+            </card>
+        </box>
+    </fragment>
+</grid>
+</iterator>
+
+
+

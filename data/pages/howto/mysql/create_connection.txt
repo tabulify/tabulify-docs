@@ -1,0 +1,114 @@
+---json
+{
+    "page_id": "x61c7prx5um2kgtvuqrgz"
+}
+---
+====== How to create an MySQL connection? ======
+
+
+===== About =====
+This howto shows you how to create a [[:docs:connection:connection|connection]] to an <icon name="logos:mysql"/> [[:docs:system:mysql:mysql|mysql database]].
+
+===== Attributes =====
+
+
+An mysql connection supports :
+  * all [[:docs:connection:attribute|common connection attributes]]
+    * [[:docs:connection:uri|Uri]],
+    * user,
+    * [[:docs:connection:password|password]]
+    * ...
+  * and all [[docs:system:database:connection_attributes|database connection attributes]]
+    * Driver (Jdbc Class)
+    * ...
+
+===== Example =====
+
+Here are the attributes of the [[howto:mysql:howto_connection|howto connection]]
+<unit>
+<code bash display="none">
+tabul data print --type text .tabul/.tabul.yml@home | yq '.spec.connections.mysql'
+</code>
+<console yaml>
+comment: The default mysql data store
+driver: com.mysql.cj.jdbc.Driver
+password: my-secret-pw
+uri: jdbc:mysql://localhost:3306/howto
+user: root
+varchar-default-precision: 2000
+</console>
+</unit>
+
+
+
+
+
+===== How to create =====
+
+You can  create an ''mysql'' connection:
+  * by directly modifying the [[#Configuration vault]]
+  * or by using the [[#tabul command]]
+
+<note>
+=== Secret ===
+In this howto, the password is expected to be stored in the ''MY_MYSQL_PASSWORD'' [[:docs:conf:os|OS environment variable]] but there is more way to provide secrets.
+
+To know how to pass and handle secrets, read more at [[:docs:conf:secret]]
+</note>
+==== Configuration Vault ====
+
+
+In a [[docs:conf:tabul.yml|Configuration Vault]], to define a mysql [[docs:connection:connection|connection]] with the name ''mySqlOne'', you would write:
+\\
+
+<code yaml>
+connections:
+   mySqlOne:
+     uri: jdbc:mysql://<hostname>:<port>/<dbname>
+     # driver is optional
+     driver: com.mysql.cj.jdbc.Driver
+     user: loginUser
+     password: ${MY_MYSQL_PASSWORD}
+     natives:
+       # https://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html
+       key: value
+</code>
+
+
+
+==== Tabul Command ====
+
+With the [[docs:tabul:connection:add|tabul add command of the connection module]], you can add a mysql connection with the name ''mysqlConnectionName'':
+
+<unit display="none">
+<code bash>
+tabul connection delete --not-strict "mysqlConnectionName"
+</code>
+</unit>
+
+<tabs>
+   <panel selected>
+      <label>Bash</label>
+<unit>
+<code bash>
+tabul connection add "mysqlConnectionName" \
+    "jdbc:mysql://hostname:3306/dbname" \
+    --user login \
+    --password '${MY_MYSQL_PASSWORD}'
+</code>
+<console>
+</console>
+</unit>
+   </panel>
+
+  <panel>
+    <label>Windows CMD console</label>
+<code bash>
+tabul connection add "mysqlConnectionName" "jdbc:mysql://<hostname>:<port>/<dbname>" ^
+    --user login ^
+    --password '${MY_MYSQL_PASSWORD}'
+</code>
+   </panel>
+</tabs>
+
+

@@ -1,0 +1,173 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:fill" }
+    ],
+    "page_id": "tgllzet2zl6q9sjv9157a"
+}
+---
+====== Tabul - Data Fill (with generated data) ======
+
+
+===== About =====
+The [[..:tabul|Tabul]] ''data fill'' [[docs:tabul:command|command]] from the [[start|data module]] insert [[docs:generator:generator|generated]] data into a [[docs:resource:content|content resource (file, sql table)]].
+
+
+
+
+===== How do the fill command maps generators to target ? =====
+
+If you specify the `--generator-selector`, you may select more than one [[:docs:resource:generator|generator]].
+
+These generators are mapped to the target:
+  * by their [[docs:resource:logical_name|logical name]] for a multi-fill operation
+  * by position for a mono-fill operation (one generator, one target)
+
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul data fill --help
+</code>
+<console>
+Tabul data fill
+===============
+
+Load generated data into data resources.
+
+You select the data resources to be filled with:
+   * the data selector argument (`target-selector...`)
+   * and optionally the dependency option (`--with-dependencies`)
+
+For more control on the data generated, you can add the data resource generators (`*--generator.yml`)
+by selecting them with the generator selector option (--generator-selector)
+
+This is an alias to the `transfer` command where:
+  * the targets are the selected data resources
+  * the sources are generated from the generator data resources and/of target metadatas
+
+The default transfer operation is `upsert`.
+
+
+
+Examples
+--------
+
+ 1 - To load the table `D_TIME` from the connection `sqlite` with auto-generated data:
+
+
+    tabul data fill D_TIME@sqlite
+
+
+ 2 - To load the table `D_TIME` with the data generation file `D_TIME--generator.yml` present in the current directory:
+
+
+    tabul data fill --generator-selector D_TIME* D_TIME@connection
+
+
+ 3 - To load all data in the whole schema with the data generation file in the dir directory:
+
+
+    tabul data fill --generator-selector dir/* *@connection
+
+
+ 4 - Load auto generated data into the table F_SALES and its dependencies
+
+
+    tabul data fill --with-dependencies F_SALES@sqlite
+
+
+
+
+Syntax
+------
+
+
+    tabul data fill [options|flags] <target-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <target-selector...>                                          One or more data selectors that will select the target data resources to be filled.
+
+
+  Cross Data Transfer Options:
+
+    -bs,--buffer-size <buffer-size>                               defines the size of the memory buffer between the source and target threads
+
+    -mdu,--metrics-data-uri <metrics-data-uri>                    defines a target data uri where the data metrics should be exported
+
+    -out,--output-type <output-type>                              The resource that is passed as output
+
+    -pt,--processing-type <processing-type>                       how to process the inputs (one by one or in batch)
+
+    -sfs,--source-fetch-size <source-fetch-size>                  defines the size of the network message from the source to fetch the data
+
+    -tbs,--target-batch-size <target-batch-size>                  defines the batch size against the target data resource
+
+    -tcf,--target-commit-frequency <target-commit-frequency>      defines the commit frequency in number of batches against the target data resource
+
+    -to,--target-operation <target-operation>                     defines the data operations (drop or truncate) on the existing target before transfer. A `replace` operation will drop the target.
+
+    -twc,--target-worker-count <target-worker-count>              defines the target number of thread against the target connection
+
+    -tmc,--transfer-mapping-columns <transfer-mapping-columns>    defines the columns mapping between the source and the target
+
+    -tmm,--transfer-mapping-method <transfer-mapping-method>      defines the method used to map the source columns to the target columns
+
+    -tms,--transfer-mapping-strict <transfer-mapping-strict>      defines if a map by name or position is strict
+
+    -op,--transfer-operation <transfer-operation>                 defines the transfer operation (insert, update, delete, upsert, merge, copy).
+
+    -tut,--transfer-upsert-type <transfer-upsert-type>            defines the type of upsert operation (merge, insert, insert-update, update-insert).
+
+    -wp,--with-parameters                                         defines if parameters are used in the SQL statement
+
+
+  Fill Options:
+
+    -gs,--generator-selector <generatorSelector...>               One or more data selector that selects one or more data resource generator ( --generator.yml )
+
+    -mrc,--max-record-count <maxRecordCount>                      This option defines the maximum total number of record that the data resource(s) must have when no data resource generator was found.
+
+
+  Data Definition Options:
+
+    -ta,--target-attribute <attributeName=value>                  Set a target attribute
+
+
+  Selection Options:
+
+    -wd,--with-dependencies                                       If this flag is present, the dependencies of the selected target tables (ie parent/foreign tables) will be also be filled with data
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                         The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                             The path to a configuration file
+
+    -ee,--exec-env <name>                                         The execution environment (prod or dev)
+
+    -h,--help                                                     Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>                  Set the log level
+
+    -ns,--not-strict                                              A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                        defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                        defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>          defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                                 A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                                   Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                                  Print version information
+</console>
+</unit>

@@ -1,9 +1,0 @@
-====== What is the flow Command ? ======
-
-
-
-===== About =====
-The ''flow'' command is a [[docs:tabli:module|module]] that permits to manage the [[docs:flow:flow|flow language]].
-
-
-It has for now only one command the [[docs:tabli:flow:execute|execute command]] that permits to execute pipeline.

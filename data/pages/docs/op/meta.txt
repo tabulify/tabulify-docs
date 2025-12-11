@@ -1,0 +1,49 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:op:list" }
+    ],
+    "page_id": "njx7niumdq9zyv2ktyir6"
+}
+---
+====== Data Operation - List ======
+
+
+===== About =====
+''Meta'' are [[op|data operation]] that shows [[:docs:resource:metadata|metadata]].
+
+
+
+
+
+===== Tabular Format Type =====
+
+Data resources displaying metadata may have the following [[docs:resource:tabular|tabular format]] type:
+  * ''Record'': a table where
+      * each column represents the value of an attribute
+  * ''Form'': a table with the following set of fixed columns:
+      * attribute name
+      * attribute description
+      * value
+      * and default value
+
+===== Avaibility =====
+
+==== Intermediate Operations ====
+
+The following [[:docs:flow:intermediate|intermediate operations]] add [[docs:resource:attribute|data resources attributes]] from their  [[:docs:flow:input|inputs]] in a `Record` fashion
+  * [[list]]
+  * [[enrich|Enrich]] with the [[:docs:generator:meta|meta data supplier]]
+
+==== Cli Command ====
+
+The following [[:docs:tabul:command|tabul commands]] shows [[:docs:resource:metadata|metadata]]:
+
+^ Attributes ^ Record Type ^ Form Type ^
+| [[docs:resource:attribute|data resources]] | [[docs:tabul:data:list|tabul data list]] | [[docs:tabul:data:info|tabul data info]] |
+| [[docs:connection:attribute|connection]] | [[docs:tabul:connection:list|tabul connection list]] | [[docs:tabul:service:info|tabul service info]] |
+| [[docs:conf:attribute|configuration]] | [[docs:tabul:env:list|tabul conf list]] | |
+| [[docs:resource:structure|data structure]] (ie column) |  | [[docs:tabul:data:describe|tabul data describe]] |
+| [[:docs:service:service|service]] | [[:docs:tabul:service:list|tabul service list]] | [[docs:tabul:service:info|tabul service info]]
+
+

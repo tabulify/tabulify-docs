@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "4deobh74zrfrbjfhew37k"
+}
+---
 ====== Data Resource - Data Locator ======
 
 
@@ -13,11 +18,11 @@ where:
   * ''connection'' is the [[docs:connection:name|connection name]]
   * ''path'' is a hierarchical path consisting of a sequence of path segments separated generally by:
       * a slash (''/'') for a [[docs:system:file|file system]]
-      * a point (''.'') for a [[docs:system:database|database]]
+      * a point (''.'') for a [[docs:system:database:database|database]]
 
 ===== Example =====
 
-  * A [[docs:resource:table#uri|table uri]]
+  * A [[docs:resource:sql_table#uri|table uri]]
 <code bash>
 # Absolute path
 [catalog.][schema.]table@databaseName

@@ -1,8 +1,18 @@
+---json
+{
+    "page_id": "gazq8aqpfjddmg71ahbop"
+}
+---
 ====== Data Resource - Tabular File ======
 
 ===== About =====
 A ''tabular file'' is a [[docs:resource:file|file]] that may show a [[docs:resource:tabular|tabular structure]].
 ===== List =====
+
+By default, Tabulify considers all files as tabular.
+  * For instance, a [[docs:resource:text|text file]] is by default seen as one column table filled with lines
+
+Below are a list of files that have a natural tabular format:
   * [[docs:resource:csv]]
   * [[docs:resource:excel]]
   * [[json]] when the chosen structure option is ''tabular''

@@ -2,8 +2,7 @@
 {
     "description": "Templating is the process of transforming a template into a data resource (ie document).",
     "low_quality_page": "false",
-    "page_id": "e9h7wfpbvfmqjak9o2cw7",
-    "title": "What is templating ?"
+    "page_id": "e9h7wfpbvfmqjak9o2cw7"
 }
 ---
 ====== Templating ======

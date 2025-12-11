@@ -1,0 +1,85 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:sql_view:create_from_create" }
+    ],
+    "low_quality_page": "false",
+    "name": "Create a view From a CREATE statement",
+    "page_id": "r22vxhv4s3r5pehfthe7t"
+}
+---
+
+====== How to create a SQL view with a CREATE statement file ======
+
+
+
+===== About =====
+This [[..:howto|Howto]] will show you how to create a [[docs:resource:sql_view|SQL View]] with a <icon name="carbon:SQL"/> SQL file that contains a ''CREATE'' SQL statement with the [[docs:tabul:data:create|Tabul table create command]].
+
+===== Steps =====
+==== Prerequisites ====
+You should have ''Tabulify'' installed on your computer: [[howto:getting_started:1_install]]
+
+
+==== The CREATE View statement ====
+
+<unit display="none">
+Delete the target destination
+<code bash>
+tabul data drop --no-strict-selection *@sqlite
+</code>
+</unit>
+
+
+We will execute the below [[:docs:resource:sql_ddl|SQL Script]] that is located in the [[docs:connection:howto|howto connection]].
+<unit>
+<file sql create_view_foo.sql>
+create view foo as
+select "bar"
+
+</file>
+</unit>
+
+==== The data create command ====
+
+With the [[docs:tabul:data:create|tabul data create]] command, if you use a [[docs:flow:runtime_selector|runtime selector]] as first argument, the selected [[docs:resource:runtime|script]] are executed.
+
+To execute the previous SQL script, the below the command should be executed:
+<unit>
+<code bash>
+tabul data create '(create_view_foo.sql@howto)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+where:
+  * ''data create'' is the [[docs:tabul:data:create|data create]] command
+  * ''(create_view_foo.sql)@sqlite'' is a [[docs:flow:runtime_selector|runtime selector]] that:
+    * select the ''create_view_foo.sql'' in the [[docs:connection:howto|howto]] connection
+    * and executes it in the [[howto:sqlite:howto_connection|Sqlite howtos connection]]
+<console>
+List of runtime executed
+runtime_data_uri                     exit_code   count   latency   data_uri                                                             error_message
+----------------------------------   ---------   -----   -------   ------------------------------------------------------------------   -------------
+(create_view_foo.sql@howto)@sqlite           0       1   0.27s     execute/20251110-204922-162-pipe-anonymous/create_view_foo.log@tmp
+</console>
+</unit>
+
+
+
+==== Check the metadata ====
+
+Check the metadata with the [[docs:tabul:data:describe|tabul data describe]] command
+<unit>
+<code bash>
+tabul data describe foo@sqlite
+</code>
+<console>
+Structure of the resource foo@sqlite
+position   name    type   precision   scale   primary_key   nullable   autoincrement   comment
+--------   -----   ----   ---------   -----   -----------   --------   -------------   -------
+1          "bar"   text   0           0                     x
+</console>
+</unit>
+
+
+
+

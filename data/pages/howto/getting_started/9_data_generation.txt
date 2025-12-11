@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "ognjto9n01l621jzyrzrq"
+}
+---
 ====== Learning Tabulify - Step 9 - How to fill a data resource with generated data ? ======
 
 
@@ -22,88 +27,90 @@ The [[docs:op:fill|data fill operation]] is an operation that will [[docs:op:sel
   * [[#auto fill|auto]] - the data generated is automatically chosen
   * [[#generator|generator]] - the data generated is defined in a file called the ''generator''
 
-The [[docs:op:fill|fill operation]] is supported by the [[docs:tabli:data:fill|data fill command]].
+The [[docs:op:fill|fill operation]] is supported by the [[docs:tabul:data:fill|data fill command]].
 
 ===== Auto Fill =====
 
-Let's first delete all data with the [[docs:tabli:data:truncate|data truncate command]] to get a clean schema.
+Let's first delete all data with the [[docs:tabul:data:truncate|data truncate command]] to get a clean schema.
 <unit >
-<code dos>
-tabli data truncate *@sqlite
+<code bash>
+tabul data truncate *@sqlite
 </code>
 </unit>
 
-The below [[docs:tabli:data:fill|fill command]] will fill all [[docs:resource:table|tables]] with auto-generated data
+The below [[docs:tabul:data:fill|fill command]] will fill all [[docs:resource:sql_table|tables]] with auto-generated data
 
 <unit >
-<code dos>
-tabli data fill *@sqlite
+<code bash>
+tabul data fill *@sqlite
 </code>
 
 <console>
-Source                          Target                          Latency (ms)   Row Count   Error   Message
------------------------------   -----------------------------   ------------   ---------   -----   -------
-call_center@memgen              call_center@sqlite              137            1000
-catalog_page@memgen             catalog_page@sqlite             48             1000
-catalog_sales@memgen            catalog_sales@sqlite            130            1000
-customer@memgen                 customer@sqlite                 98             1000
-customer_address@memgen         customer_address@sqlite         94             1000
-customer_demographics@memgen    customer_demographics@sqlite    62             1000
-date_dim@memgen                 date_dim@sqlite                 104            1000
-household_demographics@memgen   household_demographics@sqlite   32             1000
-income_band@memgen              income_band@sqlite              37             1000
-item@memgen                     item@sqlite                     195            1000
-promotion@memgen                promotion@sqlite                76             1000
-ship_mode@memgen                ship_mode@sqlite                45             1000
-store@memgen                    store@sqlite                    105            1000
-store_sales@memgen              store_sales@sqlite              100            1000
-time_dim@memgen                 time_dim@sqlite                 56             1000
-warehouse@memgen                warehouse@sqlite                81             1000
-web_page@memgen                 web_page@sqlite                 70             1000
-web_sales@memgen                web_sales@sqlite                135            1000
-web_site@memgen                 web_site@sqlite                 96             1000
+Transfer results
+input                           target                          latency   record_count   error_code   error_message
+-----------------------------   -----------------------------   -------   ------------   ----------   -------------
+call_center@memgen              call_center@sqlite              0.37s              100                
+catalog_page@memgen             catalog_page@sqlite             0.12s              100                
+catalog_sales@memgen            catalog_sales@sqlite            0.36s              100                
+customer@memgen                 customer@sqlite                 0.16s              100                
+customer_address@memgen         customer_address@sqlite         0.21s              100                
+customer_demographics@memgen    customer_demographics@sqlite    0.15s              100                
+date_dim@memgen                 date_dim@sqlite                 0.82s              100                
+household_demographics@memgen   household_demographics@sqlite   0.10s              100                
+income_band@memgen              income_band@sqlite              0.10s              100                
+item@memgen                     item@sqlite                     0.32s              100                
+promotion@memgen                promotion@sqlite                0.19s              100                
+ship_mode@memgen                ship_mode@sqlite                0.12s              100                
+store@memgen                    store@sqlite                    0.30s              100                
+store_sales@memgen              store_sales@sqlite              0.23s              100                
+time_dim@memgen                 time_dim@sqlite                 0.13s              100                
+warehouse@memgen                warehouse@sqlite                0.17s              100                
+web_page@memgen                 web_page@sqlite                 0.16s              100                
+web_sales@memgen                web_sales@sqlite                0.34s              100                
+web_site@memgen                 web_site@sqlite                 0.26s              100
 </console>
 </unit>
 
 <note>
-The [[docs:tabli:data:fill|data fill command]] loads ''1000'' records for each [[docs:resource:table|table]] because this is the default value of the  [[docs:generator:max-record-count|max-record-count]] [[docs:tabli:option|option]] ( This option defines the number of records generated ).
+The [[docs:tabul:data:fill|data fill command]] loads ''100'' records for each [[docs:resource:sql_table|table]] because this is the default value of the  [[docs:generator:max-record-count|max-record-count]] [[docs:tabul:option|option]] (This option defines the number of records generated).
 </note>
 
 
 ===== Query 11 =====
 
-By running the [[howto:getting_started:7_query|query 11 (of the query lesson)]], we don't get any data back.
+By running the [[howto:getting_started:7_sql_query|query 11 (of the query lesson)]], we don't get any data back.
 <unit >
-<code dos>
-tabli data print (sqlite/query_11.sql@tpcds_query)@sqlite
+<code bash>
+tabul data print '(sqlite/query_11.sql@tpcds_query)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
 </code>
 <console>
+(sqlite/query_11.sql@tpcds_query)@sqlite
 customer_id   customer_first_name   customer_last_name   customer_email_address
 -----------   -------------------   ------------------   ----------------------
-
 </console>
 </unit>
 
-Why ? Because the [[howto:getting_started:7_query|query 11]] is based on time data of the year ''2001'' and unfortunately the auto-generated data does not contain ''2001'' in the ''d_year'' column.
+Why ? Because the [[howto:getting_started:7_sql_query|query 11]] is based on time data of the year ''2001'' and unfortunately the auto-generated data does not contain ''2001'' in the ''d_year'' column.
 
 <unit >
-<code dos>
-tabli data head --limit 10 date_dim@sqlite
+<code bash>
+tabul data head --limit 10 date_dim@sqlite
 </code>
 <console>
 The first 10 rows of the data resource (date_dim@sqlite):
 d_date_sk   d_date_id   d_date       d_month_seq   d_week_seq   d_quarter_seq   d_year   d_dow   d_moy   d_dom   d_qoy   d_fy_year   d_fy_quarter_seq   d_fy_week_seq   d_day_name   d_quarter_name   d_holiday   d_weekend   d_following_holiday   d_first_dom   d_last_dom   d_same_day_ly   d_same_day_lq   d_current_day   d_current_week   d_current_month   d_current_quarter   d_current_year
 ---------   ---------   ----------   -----------   ----------   -------------   ------   -----   -----   -----   -----   ---------   ----------------   -------------   ----------   --------------   ---------   ---------   -------------------   -----------   ----------   -------------   -------------   -------------   --------------   ---------------   -----------------   --------------
-        1   a           2020-12-06             8            7               8        3       5       8       2       2           1                  3               2   j            e                r           w           q                               8            4               9               0   x               g                b                 k                   i
-        2   b           2020-12-04             0            6               7        0       1       5       6       5           4                  4               4   t            n                h           t           l                               3            8               4               5   b               j                x                 l                   a
-        3   c           2020-12-12             5            3               1        7       9       0       0       7           9                  5               9   m            c                c           b           g                               1            0               7               1   o               h                h                 f                   a
-        4   d           2020-12-12             9            4               9        9       0       4       9       2           8                 10               9   b            l                b           d           o                               8            2              10               1   d               h                k                 n                   n
-        5   e           2020-12-02             4            8               3        6       2       2       3       8           8                  8               8   i            e                e           g           k                               3            1               8               0   b               l                w                 a                   p
-        6   f           2020-12-09             8            2               0       10       3       6       2       0           5                  2               6   i            u                c           i           o                               4            1               3               5   e               q                p                 t                   v
-        7   g           2020-12-10             5           10              10        8       6       2       1       3          10                  7               2   e            o                h           h           a                               9            5               8               8   q               p                k                 n                   f
-        8   h           2020-12-06             1            6              10        7       7       5       5       2           1                 10               1   t            w                f           o           k                              10           10               4               4   y               j                m                 j                   h
-        9   i           2020-12-06             6            2               8        1       5       1       5       3           6                  9              10   s            q                l           v           d                               6            5               0               6   o               f                v                 n                   x
-       10   j           2020-12-03             6            8               6        8       6       0       3       7           9                  6               2   v            s                w           o           a                               1           10               1               6   w               n                v                 x                   q
+        1   a           2025-10-31             7            2               4        7       5       1       8       0           0                  6               4   k            t                q           x           x                              10            6               8               4   u               p                u                 d                   t
+        2   b           2025-11-05             7            3               0        1       6       8       9       5           3                  0              10   p            m                u           f           j                               8            2              10               9   m               m                z                 x                   h
+        3   c           2025-11-02             6            6               4        2       1       6       3       1           3                  7               7   w            k                p           i           c                               3            2               4               5   l               l                q                 m                   m
+        4   d           2025-11-04             3            1               1        5       1       1       5       0          10                  4               5   r            g                k           f           b                               0            1               2               8   b               w                h                 p                   x
+        5   e           2025-11-04             5            8               8        2      10       7       1       4           1                  2               6   n            x                l           w           p                               7            7               0               3   x               o                f                 h                   l
+        6   f           2025-11-06             7            3               0        3       5      10       8       5          10                  6              10   a            c                n           l           w                               7            1               7              10   e               k                h                 t                   m
+        7   g           2025-11-10             3            0               4        7       0       0       4       4           1                  0               0   o            y                r           f           q                               0            8              10               7   l               d                c                 l                   u
+        8   h           2025-11-02             8           10               8        7       2      10       7       8           5                  7               0   i            o                n           a           i                               9            2               5              10   k               z                c                 x                   k
+        9   i           2025-11-10             6            2               2        8       6       3       3       9          10                  0               1   w            z                a           m           h                               4            3               8               8   n               w                n                 l                   y
+       10   j           2025-11-09             2           10               5        8       3       4      10       9           8                  4               7   p            h                u           m           i                              10            8               2               0   o               u                o                 r                   w
 </console>
 </unit>
 
@@ -113,30 +120,35 @@ To update the column ''dyear'' with data from the year ''2001'', we will use a [
 
 A [[docs:resource:generator|generator]] is a [[docs:resource:file|file]] that contains the data generation definition.
 
-For each column, a [[docs:generator:column|column data generator]] is defined that control the data generated.
+For each column, a [[docs:generator:data-supplier|column data generator]] is defined that control the data generated.
 
 The below [[docs:resource:generator|generator]] generates one year of data with two columns:
   * ''d_date'' that has a [[docs:generator:sequence|date sequence generator]] to generate ''date'' data from ''2001-01-01'' and upwards
   * ''dyear'' that has a [[docs:generator:expression|expression generator]] that extracts the ''year'' of the ''d_date'' column.
 
 <unit>
-<file yaml date_dim_2001--datagen.yml>
-LogicalName: date_dim
-Columns:
-  - name: d_date
-    type: date
-    comment: A column with a sequence generator that generates a date sequence from 2001-01-01 and after
-    DataGenerator:
-      type: sequence
-      start: 2001-01-01
-      step: 1
-  - name: d_year
-    precision: 4
-    comment: A column with a expression generator that extract the year from the date column
-    DataGenerator:
-      type: expression
-      ColumnParents: d_date
-      expression: "x.getFullYear()"
+<file yaml date_dim_2001--generator.yml>
+kind: generator
+spec:
+  LogicalName: date_dim
+  Columns:
+    - name: d_date
+      type: date
+      comment: A column with a sequence generator that generates a date sequence from 2001-01-01 and after
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 2001-01-01
+          step: 1
+    - name: d_year
+      type: integer
+      precision: 4
+      comment: A column with a expression generator that extracts the year from the date column
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.getFullYear()"
 
 </file>
 </unit>
@@ -145,78 +157,74 @@ This [[docs:resource:generator|generator]] is also a [[docs:resource:content|con
 
 <unit>
 <code bash>
-tabli data head date_dim_2001--datagen.yml@howto
+tabul data head date_dim_2001--generator.yml@howto
 </code>
 <console>
-The first 10 rows of the data resource (date_dim_2001--datagen.yml@howto):
+The first 10 rows of the data resource (date_dim_2001@memgen):
 d_date       d_year
 ----------   ------
-2001-01-01   2001
-2001-01-02   2001
-2001-01-03   2001
-2001-01-04   2001
-2001-01-05   2001
-2001-01-06   2001
-2001-01-07   2001
-2001-01-08   2001
-2001-01-09   2001
-2001-01-10   2001
+2001-01-01     2001
+2001-01-02     2001
+2001-01-03     2001
+2001-01-04     2001
+2001-01-05     2001
+2001-01-06     2001
+2001-01-07     2001
+2001-01-08     2001
+2001-01-09     2001
+2001-01-10     2001
 </console>
 </unit>
 
 ===== Fill with generators =====
 
-After having created a generator for the ''date_dim'' [[docs:resource:table|table]], we can pass it to the [[docs:tabli:data:fill|data fill command]] with the ''--generator-selector'' option to make the data generation more controled.
+After having created a generator for the ''date_dim'' [[docs:resource:sql_table|table]], we can pass it to the [[docs:tabul:data:fill|data fill command]] with the ''--generator-selector'' option to make the data generation more controled.
 <unit >
-<code dos>
-tabli data fill --generator-selector date_dim_2001--datagen.yml@howto   *@sqlite
+<code bash>
+tabul data fill --generator-selector date_dim_2001--generator.yml@howto   *@sqlite
 </code>
 <note>
-As the option ''generator-selector'' is a [[docs:resource:selector|resource selector]], you can create a [[docs:resource:generator|generator]] for each table where you want to customize the generated data and select them with the [[docs:common:globbing|glob pattern]].
+As the option ''generator-selector'' is a [[docs:flow:selector|resource selector]], you can create a [[docs:resource:generator|generator]] for each table where you want to customize the generated data and select them with a [[docs:common:globbing|glob pattern]].
 </note>
 Output:
 <console>
-Source                          Target                          Latency (ms)   Row Count   Error   Message
------------------------------   -----------------------------   ------------   ---------   -----   -------
-call_center@memgen              call_center@sqlite              131            1000
-catalog_page@memgen             catalog_page@sqlite             49             1000
-catalog_sales@memgen            catalog_sales@sqlite            130            1000
-customer@memgen                 customer@sqlite                 71             1000
-customer_address@memgen         customer_address@sqlite         64             1000
-customer_demographics@memgen    customer_demographics@sqlite    84             1000
-date_dim@memgen                 date_dim@sqlite                 1794           1000
-household_demographics@memgen   household_demographics@sqlite   32             1000
-income_band@memgen              income_band@sqlite              30             1000
-item@memgen                     item@sqlite                     145            1000
-promotion@memgen                promotion@sqlite                77             1000
-ship_mode@memgen                ship_mode@sqlite                42             1000
-store@memgen                    store@sqlite                    108            1000
-store_sales@memgen              store_sales@sqlite              94             1000
-time_dim@memgen                 time_dim@sqlite                 53             1000
-warehouse@memgen                warehouse@sqlite                79             1000
-web_page@memgen                 web_page@sqlite                 66             1000
-web_sales@memgen                web_sales@sqlite                131            1000
-web_site@memgen                 web_site@sqlite                 122            1000
+Transfer results
+input                           target                          latency   record_count   error_code   error_message
+-----------------------------   -----------------------------   -------   ------------   ----------   -------------
+call_center@memgen              call_center@sqlite              0.37s              100                
+catalog_page@memgen             catalog_page@sqlite             0.13s              100                
+catalog_sales@memgen            catalog_sales@sqlite            0.37s              100                
+customer@memgen                 customer@sqlite                 0.19s              100                
+customer_address@memgen         customer_address@sqlite         0.16s              100                
+customer_demographics@memgen    customer_demographics@sqlite    0.13s              100                
+date_dim@memgen                 date_dim@sqlite                 0.351s             100                
+household_demographics@memgen   household_demographics@sqlite   0.11s              100                
+income_band@memgen              income_band@sqlite              0.9s               100                
+item@memgen                     item@sqlite                     0.35s              100                
+promotion@memgen                promotion@sqlite                0.18s              100                
+ship_mode@memgen                ship_mode@sqlite                0.11s              100                
+store@memgen                    store@sqlite                    0.29s              100                
+store_sales@memgen              store_sales@sqlite              0.23s              100                
+time_dim@memgen                 time_dim@sqlite                 0.15s              100                
+warehouse@memgen                warehouse@sqlite                0.16s              100                
+web_page@memgen                 web_page@sqlite                 0.12s              100                
+web_sales@memgen                web_sales@sqlite                0.28s              100                
+web_site@memgen                 web_site@sqlite                 0.28s              100
 </console>
 </unit>
 
 And the ''query 11'' is now giving back a result. The generated data is minimal and should be further defined.
 
 <unit >
-<code dos>
-tabli data print (sqlite/query_11.sql@tpcds_query)@sqlite
+<code bash>
+tabul data print '(sqlite/query_11.sql@tpcds_query)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
 </code>
 
 <console>
+(sqlite/query_11.sql@tpcds_query)@sqlite
 customer_id   customer_first_name   customer_last_name   customer_email_address
 -----------   -------------------   ------------------   ----------------------
-bbi           g                     k                    e
-bbx           j                     a                    w
-bhj           h                     r                    i
-cw            z                     w                    p
-ga            q                     e                    d
-kd            w                     f                    h
-sl            a                     x                    q
 </console>
 </unit>
 
@@ -224,5 +232,5 @@ sl            a                     x                    q
 Learn how to compare data resource.
 
 <btn>
-[[10_resource_comparison|Data Resource Comparison]]
+[[10_resource_comparison|Data Resource Diff]]
 </btn>

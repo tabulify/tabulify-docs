@@ -1,0 +1,281 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:sql_view:create" },
+        { "path": ":howto:sql_view:create_select" },
+        { "path": ":howto:sqlite:create_view" },
+        { "path": ":howto:view:create" }
+    ],
+    "name": "Create a view from a SELECT Query",
+    "page_id": "o3xebattvtoblu88ies4q"
+}
+---
+====== How to create a SQL View with a SELECT query ======
+
+
+===== About =====
+
+This ''howto'' shows you how to create  [[docs:resource:sql_view|sql views]] with [[docs:resource:sql_select|select query]] stored in [[docs:resource:sql_file|SQL file]]
+
+===== How to create one view from one query =====
+
+==== The Select Query ====
+
+We are going to use the [[:docs:connection:tpcds_query|tpcds]] ''query_11.sql'' to create this view.
+
+<unit>
+<code bash>
+tabul data print --type text sqlite/query_11.sql@tpcds_query
+</code>
+<console sql height="300px" scroll="toggle">
+with year_total as (
+ select c_customer_id customer_id
+       ,c_first_name customer_first_name
+       ,c_last_name customer_last_name
+       ,c_preferred_cust_flag customer_preferred_cust_flag
+       ,c_birth_country customer_birth_country
+       ,c_login customer_login
+       ,c_email_address customer_email_address
+       ,d_year dyear
+       ,sum(ss_ext_list_price-ss_ext_discount_amt) year_total
+       ,'s' sale_type
+ from customer
+     ,store_sales
+     ,date_dim
+ where c_customer_sk = ss_customer_sk
+   and ss_sold_date_sk = d_date_sk
+ group by c_customer_id
+         ,c_first_name
+         ,c_last_name
+         ,c_preferred_cust_flag 
+         ,c_birth_country
+         ,c_login
+         ,c_email_address
+         ,d_year 
+ union all
+ select c_customer_id customer_id
+       ,c_first_name customer_first_name
+       ,c_last_name customer_last_name
+       ,c_preferred_cust_flag customer_preferred_cust_flag
+       ,c_birth_country customer_birth_country
+       ,c_login customer_login
+       ,c_email_address customer_email_address
+       ,d_year dyear
+       ,sum(ws_ext_list_price-ws_ext_discount_amt) year_total
+       ,'w' sale_type
+ from customer
+     ,web_sales
+     ,date_dim
+ where c_customer_sk = ws_bill_customer_sk
+   and ws_sold_date_sk = d_date_sk
+ group by c_customer_id
+         ,c_first_name
+         ,c_last_name
+         ,c_preferred_cust_flag 
+         ,c_birth_country
+         ,c_login
+         ,c_email_address
+         ,d_year
+         )
+  select  
+                  t_s_secyear.customer_id
+                 ,t_s_secyear.customer_first_name
+                 ,t_s_secyear.customer_last_name
+                 ,t_s_secyear.customer_email_address
+ from year_total t_s_firstyear
+     ,year_total t_s_secyear
+     ,year_total t_w_firstyear
+     ,year_total t_w_secyear
+ where t_s_secyear.customer_id = t_s_firstyear.customer_id
+         and t_s_firstyear.customer_id = t_w_secyear.customer_id
+         and t_s_firstyear.customer_id = t_w_firstyear.customer_id
+         and t_s_firstyear.sale_type = 's'
+         and t_w_firstyear.sale_type = 'w'
+         and t_s_secyear.sale_type = 's'
+         and t_w_secyear.sale_type = 'w'
+         and t_s_firstyear.dyear = 2001
+         and t_s_secyear.dyear = 2001+1
+         and t_w_firstyear.dyear = 2001
+         and t_w_secyear.dyear = 2001+1
+         and t_s_firstyear.year_total > 0
+         and t_w_firstyear.year_total > 0
+         and case when t_w_firstyear.year_total > 0 then t_w_secyear.year_total / t_w_firstyear.year_total else 0.0 end
+             > case when t_s_firstyear.year_total > 0 then t_s_secyear.year_total / t_s_firstyear.year_total else 0.0 end
+ order by t_s_secyear.customer_id
+         ,t_s_secyear.customer_first_name
+         ,t_s_secyear.customer_last_name
+         ,t_s_secyear.customer_email_address
+limit 100;
+</console>
+</unit>
+
+==== The creation ====
+
+<unit display="none">
+Drop the view and all existing if they exists
+<code bash>
+tabul data drop --no-strict-selection *@sqlite
+</code>
+</unit>
+
+With the [[:docs:tabul:data:create|tabul create]] command, to create view called ''query_11'' from the ''query_11.sql'' file, you would execute the following command:
+<unit>
+<code bash>
+tabul data create \
+   --target-attribute media-type=view \
+   sqlite/query_11.sql@tpcds_query  \
+   @sqlite
+</code>
+where:
+  * ''--target-attribute media-type=view'' specifies the [[docs:resource:media-type|media type]] as [[docs:resource:sql_view|view]].
+    * It means that we want to create a sql view and not a [[docs:resource:sql_table|sql table]] (the default, for the [[:docs:op:create|create operation]] in a relational system)
+  * ''sqlite/query_11.sql@tpcds_query'' is a [[docs:flow:data_selector|data selector]] that selects the ''query_11.sql'' [[:docs:connection:tpcds_query|tpcds]] [[docs:resource:sql_file|sql file]]  as [[:docs:flow:source|source]]
+  * ''@sqlite'' select the [[howto:sqlite:howto_connection|sql howto connection]] as [[:docs:flow:target|target]]
+
+Output:
+<console>
+Results of the create operation
+input                             target
+-------------------------------   ---------------
+sqlite/query_11.sql@tpcds_query   query_11@sqlite
+</console>
+</unit>
+
+===== How to create multiple views from multiple SQL files? =====
+
+==== The Create command ====
+
+Because Tabulify is capable to process multiple files at once, we can also create for all [[:docs:connection:tpcds_query|TpcsDs query]], a view.
+
+<unit>
+<code bash>
+tabul data create \
+   --target-attribute media-type=view \
+   sqlite/*.sql@tpcds_query  \
+   'tpcds_$1@sqlite'
+# single quotes around the tpcds_$1@sqlite are mandatory so that bash will not see $1 as a environment variable
+</code>
+where:
+  * ''sqlite/*.sql@tpcds_query'' is a [[docs:flow:data_selector|data selector]] that:
+    * selects all [[docs:resource:sql_file|sql files]] thanks to the [[:howto:tabul:glob|star (glob expression)]]
+    * in the ''sqlite'' directory of the [[:docs:connection:tpcds_query|tpcds query directory]]
+    * as [[:docs:flow:source|source]]
+  * ''%%tpcds_$1@sqlite%%'' is a [[docs:flow:template_data_uri|target uri]] that will:
+      * create for each source,
+      * a target with a name that:
+         * starts with ''tpcds_''
+         * followed by the first matching part (''%%$1%%'') of the [[:howto:tabul:glob|star (glob expression)]]
+      * as [[:docs:flow:target|target]]
+</unit>
+
+==== Listing the views ====
+
+With the [[:docs:tabul:data:list|data list command]], we can see all of them as been created:
+
+<unit>
+<code bash>
+tabul data list *@sqlite
+</code>
+<console height="300px" scroll="toggle">
+path               media_type
+----------------   ----------
+query_11           view
+tpcds_query_1      view
+tpcds_query_2      view
+tpcds_query_3      view
+tpcds_query_4      view
+tpcds_query_5      view
+tpcds_query_6      view
+tpcds_query_7      view
+tpcds_query_8      view
+tpcds_query_9      view
+tpcds_query_10     view
+tpcds_query_11     view
+tpcds_query_12     view
+tpcds_query_13     view
+tpcds_query_14     view
+tpcds_query_15     view
+tpcds_query_18     view
+tpcds_query_19     view
+tpcds_query_20     view
+tpcds_query_21     view
+tpcds_query_22     view
+tpcds_query_23     view
+tpcds_query_24     view
+tpcds_query_24_1   view
+tpcds_query_25     view
+tpcds_query_26     view
+tpcds_query_27     view
+tpcds_query_28     view
+tpcds_query_29     view
+tpcds_query_30     view
+tpcds_query_31     view
+tpcds_query_32     view
+tpcds_query_33     view
+tpcds_query_34     view
+tpcds_query_35     view
+tpcds_query_36     view
+tpcds_query_37     view
+tpcds_query_38     view
+tpcds_query_40     view
+tpcds_query_41     view
+tpcds_query_42     view
+tpcds_query_43     view
+tpcds_query_44     view
+tpcds_query_45     view
+tpcds_query_46     view
+tpcds_query_47     view
+tpcds_query_48     view
+tpcds_query_49     view
+tpcds_query_50     view
+tpcds_query_52     view
+tpcds_query_53     view
+tpcds_query_54     view
+tpcds_query_55     view
+tpcds_query_56     view
+tpcds_query_57     view
+tpcds_query_58     view
+tpcds_query_59     view
+tpcds_query_60     view
+tpcds_query_61     view
+tpcds_query_62     view
+tpcds_query_63     view
+tpcds_query_64     view
+tpcds_query_65     view
+tpcds_query_66     view
+tpcds_query_67     view
+tpcds_query_68     view
+tpcds_query_69     view
+tpcds_query_70     view
+tpcds_query_71     view
+tpcds_query_72     view
+tpcds_query_73     view
+tpcds_query_74     view
+tpcds_query_75     view
+tpcds_query_76     view
+tpcds_query_77     view
+tpcds_query_78     view
+tpcds_query_79     view
+tpcds_query_80     view
+tpcds_query_81     view
+tpcds_query_82     view
+tpcds_query_83     view
+tpcds_query_84     view
+tpcds_query_85     view
+tpcds_query_86     view
+tpcds_query_88     view
+tpcds_query_89     view
+tpcds_query_90     view
+tpcds_query_91     view
+tpcds_query_92     view
+tpcds_query_93     view
+tpcds_query_94     view
+tpcds_query_95     view
+tpcds_query_96     view
+tpcds_query_98     view
+tpcds_query_99     view
+</console>
+</unit>
+
+
+

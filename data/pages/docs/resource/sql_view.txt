@@ -1,0 +1,42 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:view" }
+    ],
+    "page_id": "48uttmll38s2drmw4bj5h"
+}
+---
+====== Data Resource - Sql View ======
+
+===== About =====
+''view'' is a [[resource|data resource]] that represents a ''SQL view'' of a [[docs:system:database:database|database]].
+
+
+
+===== Example =====
+
+  * [[howto:sql_view:create_from_select|]]
+
+===== Operations =====
+
+A ''sql view'' supports the following [[docs:op:op|data operations]]:
+  * [[howto:sql_view:create_from_select|create]]
+  * [[docs:op:drop|drop]]
+  * [[docs:op:transfer|transfer]] (copy, ...)
+
+and has a [[:docs:resource:structure|structure]] only if the select query is valid (a view can be created with an invalid query).
+
+
+===== Data Uri =====
+
+It has the same [[:docs:resource:data_uri|URI]] as any relation object such as a [[docs:resource:sql_table|table]]
+
+<code sql>
+catalog.schema.viewName@connection
+</code>
+
+===== Media Type =====
+
+The [[docs:resource:media-type|media type]] for a view is ''sql/view'' or ''view'' for short against a [[docs:system:database:database|database system]]
+
+

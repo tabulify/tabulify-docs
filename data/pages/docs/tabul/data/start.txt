@@ -1,0 +1,115 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:start" }
+    ],
+    "page_id": "sujixh0cafeqvbij7lyev"
+}
+---
+====== Tabul - Data Module ======
+
+
+===== About =====
+The ''tabul'' ''data'' [[docs:tabul:module|module]] helps you to perform [[docs:tabul:command|actions]] against one or more [[docs:resource:resource|data resources (table, file, ...)]].
+
+===== Command =====
+  * [[summarize|summarize]] - summarize a list of data resources (count, size, ...)
+  * [[create|create]] - create a resource definition (table, ...)
+  * [[dep|dependency]] - show the data dependencies
+  * [[diff|diff]] - perform a diff operation between two data resources
+  * [[drop|drop]] - drop data resources (table, file, ...)
+  * [[fill|fill]] - fill a resource (table, csv,...) with generated data
+  * [[head|head]] - show the first pieces of content of a data resource
+  * [[info|info]] - show the attributes of a data resource (ie file status, count, size, ...)
+  * [[list|list]] - show the data resources in a list fashion
+  * [[print|print]] - show the content of a data resource
+  * [[describe|describe]] - show the structure of a data resource
+  * [[tail|tail]] - show the last pieces of content of a data resource
+  * [[template|template]] - create data resource from template
+  * [[transfer|transfer]] - transfer data resources (copy, download, load, move, rename)
+  * [[truncate|truncate]] - truncate data resources (table, file, ...)
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul data --help
+</code>
+<console>
+Tabul data
+==========
+
+Data operations against data resources (table, file, ...).
+
+
+
+Syntax
+------
+
+
+    tabul data <command> [-h,--help]
+
+
+where:
+
+
+  Commands:
+
+    concat        Concatenate data resources
+
+    copy          Copy a data resource
+
+    create        Create a data resource
+
+    delete        Delete data from a data resource
+
+    dependency    Show the data dependencies
+
+    describe      Show the data structure of data resources
+
+    diff          Perform a diff operation against two data resources
+
+    drop          Drop data resources
+
+    execute       Execute one or more executable in a single, batch or performance fashion
+
+    fill          Fill a data resource with generated data
+
+    head          Print the first content of data resources
+
+    info          Show the attributes of a data resource in a form fashion
+
+    insert        Insert data into a data resource
+
+    list          List data resources
+
+    move          Move a data resource
+
+    print         Print the content of data resources
+
+    replace       Replace a data resource
+
+    summarize     Count the number of data resources
+
+    tail          Print the last content of data resources
+
+    template      Create data resources from a template and a data source
+
+    transfer      Transfer a data resource (insert, update, delete, upsert, merge, copy)
+
+    truncate      Truncate data resources
+
+    unzip         Unzip archive data resources
+
+    update        Update data from a data resource
+
+    upsert        Merge data into a data resource
+
+
+  Option:
+
+    -h,--help     Print this help
+</console>
+</unit>
+
+

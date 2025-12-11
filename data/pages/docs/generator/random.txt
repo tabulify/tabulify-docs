@@ -1,8 +1,13 @@
+---json
+{
+    "page_id": "fa7q4wz0yw7m0u7omywxw"
+}
+---
 ====== Random Data Generator ======
 
 
 ===== About =====
-A ''random generator'' is a [[column|column data generator]] that [[generator|generates]] data randomly inside a range of values.
+A ''random generator'' is a [[data-supplier|column data supplier]] that [[generator|generates]] data randomly inside a range of values.
 
 
 <note tip>
@@ -11,29 +16,34 @@ If you want to extract values from a list at random, you should use the [[histog
 
 
 This generator will generate the values in an uniform distribution.
-===== Howto =====
-<related pattern="howto:*" />
+
+===== Example =====
+
+[[howto/generator/random]]
 
 
-===== Properties =====
+===== Arguments =====
 
-^ Key ^ Default Value ^ Description ^ Related HowTo ^
+Arguments of the [[:docs:generator:data-supplier|data supplier node]]
+
+^ Name ^ Default Value ^ Description ^ Related HowTo ^
 | ''min'' | See [[#data type|data type]] | The minimum value of the range of values | [[howto:generator:random|random]] |
 | ''max'' | See [[#data type|data type]] | The minimum value of the range of values | [[howto:generator:random|random]] |
+| ''step'' | See [[#data type|data type]] | The step value in the range | [[howto:generator:random|random]] |
 
 ===== Data Type =====
 
 The below data type are supported:
 
-^ Data Type ^ Default Min ^ Default Max ^ Precision ^
-| Integer | 1 | 10 | Na |
-| Float / Double / Real | 1.0 | 10.0 | Na |
-| Numeric / Decimal (Rounding Half Down) | 1.0 | 10.0 | Column Scale Property |
-| Date | -10 days | 0 | day |
-| Timestamp | -10 days | 0 | Second |
-| Time | ''00:00:00'' | ''23:59:59'' | Second |
-| Varchar | a | z | Na |
+^ Data Type ^ Default Min ^ Default Max ^ Step ^ Step Precision ^
+| Integer | 1 | 10 | 1 | Na | 
+| Float / Double / Real | 1.0 | 10.0 | 1.0 | Na |
+| Numeric / Decimal (Rounding Half Down) | 1.0 | 10.0 | 1.0 | Column Scale Property |
+| Date | -10 days | 0 | 1 | day |
+| Timestamp | -10 days | 0 | 1000 | Millisecond |
+| Time | ''00:00:00'' | ''23:59:59'' | 1000 | Millisecond |
+| Varchar | a | Z | 1 | Na |
 
 <note important>
-A Timestamp without time zone is not considered an timestamp from the UTC timezone as required by the YAML specification. Read more here: [[docs:common:yaml#timestamp|Timetamp]]
+A Timestamp without time zone is not considered a timestamp from the UTC time zone as required by the YAML specification. Read more here: [[docs:common:yaml#timestamp|Timestamp]]
 </note>

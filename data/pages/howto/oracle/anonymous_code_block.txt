@@ -1,0 +1,138 @@
+---json
+{
+    "page_id": "s4emg46wnt83zieemlvar"
+}
+---
+====== Oracle - How to execute an Anonymous Code Block ======
+
+
+===== About =====
+In [[:docs:system:oracle:oracle|Oracle]], an [[docs:resource:sql_anonymous_block|anonymous code block]] can be created with the [[https://docs.oracle.com/cd/B19306_01/appdev.102/b14261/block_declaration.htm|DECLARE/BEGIN/END block]].
+
+
+===== Steps =====
+
+==== Start Oracle ====
+
+
+The next steps will be using the [[:howto:oracle:howto_connection|howto connection]].
+
+  * You need to [[:howto:oracle:howto_connection#docker|start the sql server docker image]].
+<unit>
+<code bash>
+tabul service start oracle
+</code>
+<console>
+1 service was started
+Name     Type
+------   ------
+oracle   docker
+</console>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] your connection to check that the database is up.
+<unit>
+<code bash>
+tabul connection ping oracle
+</code>
+<console>
+The connection (oracle) has been pinged successfully
+</console>
+</unit>
+
+==== The Anonymous Block ====
+
+
+
+This anonymous block is idempotent, it will create the role ''webuser'' if it does not exist
+
+
+The anonymous code block is located at ''oracle/anonymous_block.sql'' in the [[:docs:connection:howto|howto connection]]
+
+With the [[:docs:tabul:data:print|data print command]], we can see the content.
+<unit>
+<code bash>
+tabul data cat oracle/anonymous_block.sql@howto
+</code>
+<console sql>
+DECLARE
+  role_count NUMBER;
+BEGIN
+  -- Check if role already exists
+  SELECT COUNT(*)
+  INTO role_count
+  FROM dba_roles
+  WHERE role = 'WEBUSER';
+
+  IF role_count = 0 THEN
+    EXECUTE IMMEDIATE 'CREATE ROLE webuser';
+    DBMS_OUTPUT.PUT_LINE('Role webuser created successfully.');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Role webuser already exists.');
+  END IF;
+
+END;
+/
+</console>
+</unit>
+
+
+
+==== Execution ====
+
+The execution is performed via a [[docs:resource:sql_request|SQL Request]]
+<unit>
+<code bash>
+tabul data execute '(oracle/anonymous_block.sql@howto)@oracle'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+List of runtime executed
+runtime_data_uri                            exit_code   count   latency   data_uri                                                                   error_message
+-----------------------------------------   ---------   -----   -------   ------------------------------------------------------------------------   -------------
+(oracle/anonymous_block.sql@howto)@oracle           0       1   0.48s     execute/20251110-204127-357-pipe-tabul-data-exec/anonymous_block.log@tmp
+</console>
+</unit>
+
+
+==== Validation ====
+
+
+Anonymous block result returns only an execution status. To verify the execution result, you need:
+  * to check visually with a [[:docs:resource:sql_select|SQL Select]]
+
+<unit>
+<file sql oracle/anonymous_block_actual_roles.sql>
+select role
+from dba_roles
+where role = 'WEBUSER'
+
+</file>
+<code bash>
+tabul data print '(oracle/anonymous_block_actual_roles.sql@howto)@oracle'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+(oracle/anonymous_block_actual_roles.sql@howto)@oracle
+ROLE
+-------
+WEBUSER
+</console>
+</unit>
+  * or to perform a [[:docs:op:diff|diff]].
+
+
+<unit>
+<code bash>
+tabul data diff \
+  oracle/anonymous_block_expected_roles.csv@howto \
+  '(oracle/anonymous_block_actual_roles.sql@howto)@oracle'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+Diff Summary Report
+The data resources are equals.
+from                                              to                                                       equals   record_count   change_count
+-----------------------------------------------   ------------------------------------------------------   ------   ------------   ------------
+oracle/anonymous_block_expected_roles.csv@howto   (oracle/anonymous_block_actual_roles.sql@howto)@oracle   ✓                   1              0
+</console>
+</unit>

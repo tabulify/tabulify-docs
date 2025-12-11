@@ -1,0 +1,95 @@
+---json
+{
+    "page_id": "p12jhcbor96oyaug9179y"
+}
+---
+====== Postgres Connection ======
+
+
+===== About =====
+
+This page talks about [[:docs:system:postgres:connection|Postgres]] [[:docs:connection:connection|connection]].
+
+You can:
+  * use the [[:howto:postgres:howto_connection_service|postgres howto connection]] to get quickly a Postgres database and a connection
+  * or create your own connection
+
+The section below shows you how to create and customize your own connection.
+
+===== Creation =====
+
+
+
+To create a ''Postgres'' connection, you have the following possibilities:
+<tabs skin="tabs">
+<tab panel="confVault" selected="true">Configuration Vault</tab>
+<tab panel="tabul">Tabul</tab>
+</tabs>
+<tabpanels>
+<tabpanel id="confVault" spacing="m-3">
+In a [[docs:conf:tabul.yml|Configuration Vault]], to define a Postgres [[docs:connection:connection|connection]] with the name ''myPostgres'', you would write:
+\\
+
+<code yaml>
+connections:
+   # connection name
+   myPostgres:
+      uri: jdbc:postgresql://host:[port]/[databse]
+      user: postgres
+      password: ${MY_PASSWORD_ENV}
+      driver: org.postgresql.Driver
+      natives:
+        # any postgres jdbc connection parameters
+        # https://jdbc.postgresql.org/documentation/use/#connection-parameters
+        ssl: true
+</code>
+<note>
+The [[docs:connection:password|password value]] will be retrieved from the ''MY_PASSWORD_ENV''  [[:docs:conf:os|environment variable]]
+</note>
+</tabpanel>
+<tabpanel id="tabul" spacing="m-3">
+
+With the [[docs:tabul:connection:add|tabul add command of the connection module]], adding a Postgres connection with the name ''postgresConnectionName'':
+
+
+  * With the Windows CMD console
+
+<code bash>
+tabul connection add "postgresConnectionName" "jdbc:postgresql://[host]:[port]/[database]" ^
+    --user login ^
+    --password password
+</code>
+  * With Linux Bash
+<code bash>
+tabul connection add "postgresConnectionName" "jdbc:postgresql://[host]:[port]/[database]" \
+    --user login \
+    --password password
+</code>
+
+</tabpanel>
+</tabpanels>
+
+For more information and customization on Postgres connection, you can check the [[https://jdbc.postgresql.org/documentation/use/|Official documentation]]
+where the [[https://jdbc.postgresql.org/documentation/use/#connection-parameters|native connection properties]] are also listed.
+===== Connection Attribute Reference =====
+When creating a new [[docs:connection:connection|connection]], you may give the following properties.
+==== URI ====
+
+The [[docs:connection:uri|URI]] can take one of this form
+<code>
+jdbc:postgresql:database
+jdbc:postgresql:/
+jdbc:postgresql://host/database
+jdbc:postgresql://host/
+jdbc:postgresql://host:port/database
+jdbc:postgresql://host:port/
+</code>
+where:
+  * ''host'' is the host name of the server. Defaults to localhost
+  * ''port'' is the port number the server is listening on. Defaults to ''5432''
+  * ''database'' is the database name. Defaults to the same name as the user name.
+
+
+==== Native Attributes ====
+All possible [[docs:connection:natives|natives attributes]] (known as connection parameters in Postgres documentation) can be found in the [[https://jdbc.postgresql.org/documentation/use/#connection-parameters|Postgres connection documentation]].
+

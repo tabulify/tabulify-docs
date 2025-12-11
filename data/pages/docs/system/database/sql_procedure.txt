@@ -1,0 +1,43 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:sql_procedure" }
+    ],
+    "page_id": "uan91fsu5oze2rsgoy1eh"
+}
+---
+====== SQL Procedure ======
+
+
+===== About =====
+A ''SQL Procedure'' is a [[docs:system:database:database|database]] unit of execution written in a ''procedural language (PL)'' designed to embrace ''SQL'' statements within its syntax.
+
+
+
+===== Type =====
+
+Tabulify supports the 2 kind of procedures:
+  * a [[:docs:resource:sql_stored_procedure|stored procedure]] (ie stored in the database)
+  * a [[:docs:resource:sql_anonymous_block|anonymous block procedure]] (ie written in a SQL script)
+
+
+===== Syntax =====
+
+The procedural language syntax is database dependent and is generally designed to embrace SQL statements within its syntax.
+
+The body can be:
+  * a simple statement such as ''SELECT'' or ''INSERT'', 
+  * or a block statement written using ''BEGIN'' and ''END''. block statements can contain 
+    * declarations, 
+    * loops, 
+    * and other control structure statements.
+
+Below is a non-exhaustive list of procedural languages (PLs) by [[docs:system:database:database|database]].
+
+^ System ^ Procedural language (PL) ^
+| [[:docs:system:mysql:mysql|MySQL]] | [[https://dev.mysql.com/doc/refman/8.4/en/stored-routines.html|Stored Routine]] |
+| [[:docs:system:oracle:oracle|Oracle]] | [[https://www.oracle.com/nl/database/technologies/appdev/plsql.html|Oracle PL/SQL]] |
+| [[:docs:system:postgres:postgres|Postgres]] | [[https://www.postgresql.org/docs/current/xplang.html|PL/pgSQL, PL/Tcl, PL/Perl, PL/Python]] |
+| [[:docs:system:sqlite:sqlite|SQLite]] | Not Supported |
+| [[:docs:system:sqlserver:sqlserver|SqlServer]] | [[https://learn.microsoft.com/en-us/sql/t-sql/language-reference|T-SQL (Transact SQL)]] |
+

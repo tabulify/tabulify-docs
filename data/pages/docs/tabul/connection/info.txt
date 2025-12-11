@@ -1,0 +1,158 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:connection:info" }
+    ],
+    "page_id": "t2jzs4bikcmp0bat5l75z"
+}
+---
+====== Tabul - Connection Information ======
+
+
+===== About =====
+''info'' is an action of the [[docs:tabul:connection:start|connection module]] that shows the [[docs:connection:attribute|connection attributes]] in a form fashion.
+
+<note tip>If you want to get the result in a tabular format, see the [[list|list]] action</note>
+
+===== Example =====
+
+
+
+==== Showing information about one database ====
+
+This command will show the information of the [[howto:sqlite:howto_connection|Sqlite HowTo Connection]]
+
+<unit>
+<code bash>
+tabul connection info sqlite
+</code>
+<console>
+Information about the connection (sqlite)
+Attribute                    Value                                                 Description
+--------------------------   ---------------------------------------------------   --------------------------------------------------------------------
+BOOLEAN_DATA_TYPE            Native                                                Boolean data type used to store boolean values
+BUILDER_CACHE_ENABLED        true                                                  Enable or disable the builder cache
+CHAR_DEFAULT_PRECISION       1                                                     Default CHAR precision
+COMMENT                      The sqlite default connection                         A connection description
+DATABASE_MAJOR_VERSION                                                             The major version number of the database
+DATABASE_MINOR_VERSION                                                             The minor version number of the database
+DATABASE_PRODUCT_NAME                                                              The name of the database
+DATABASE_PRODUCT_VERSION                                                           The version of the database
+DATE_DATA_TYPE               NATIVE                                                Date data type used to store date values
+DRIVER                       org.sqlite.JDBC                                       The jdbc driver class
+DRIVER_NAME                                                                        The driver name
+DRIVER_VERSION                                                                     The driver version
+HOST                                                                               Host Server
+JDBC_MAJOR_VERSION                                                                 The major version number of JDBC
+JDBC_MINOR_VERSION                                                                 The minor version number of JDBC
+LOGIN_STATEMENTS                                                                   Statements that runs after a connection has been established
+MAX_CONCURRENT_THREAD                                                              The maximum number of threads that can be created against the system
+MAX_NAME_IN_PATH                                                                   The maximum number of names in a path
+NAME                         sqlite                                                The name of the connection
+NAME_QUOTING_DISABLED_CASE   UPPERCASE                                             The case to apply when quoting is disabled
+NAME_QUOTING_ENABLED         true                                                  Enable quoting of names
+NATIVES                                                                            Native Driver attributes (jdbc properties, ...)
+NCHAR_DEFAULT_PRECISION      1                                                     Default NCHAR precision
+NVARCHAR_DEFAULT_PRECISION   0                                                     Default NVARCHAR precision
+ORIGIN                       CONF                                                  The origin of the connection
+PASSWORD                                                                           The user password
+PORT                                                                               Host Port
+SUPPORT_BATCH_UPDATES                                                              If the system supports batch SQL updates
+SUPPORT_NAMED_PARAMETERS                                                           If the system supports named parameters in the SQL statement
+TIMESTAMP_DATA_TYPE          NATIVE                                                Timestamp data type used to store timestamp values
+TIME_DATA_TYPE               NATIVE                                                Time format data type to store time values
+TYPE_AFFINITY_CONVERSION     false                                                 If true, the type name are converted to affinity name
+URI                          jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3   The uri of the connection
+USER                                                                               The user name
+VARCHAR_DEFAULT_PRECISION    0                                                     Default VARCHAR precision
+WORKING_PATH                                                                       The working path (Schema for database, directory for file system)
+</console>
+</unit>
+==== Selecting database with globbing ====
+
+  * List only the database with ''sql'' in their name by using a [[docs:common:globbing|glob pattern]]
+
+<unit>
+<code bash>
+tabul connection info *sql*
+</code>
+</unit>
+
+==== Listing only  a set of databases ====
+
+  * List only the databases with the database name [[howto:postgres:howto_connection_service|postgres]] and [[howto:sqlite:howto_connection|sqlite]]
+<unit>
+<code bash>
+tabul connection info postgres sqlite
+</code>
+</unit>
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul connection info --help
+</code>
+<console>
+Tabul connection info
+=====================
+
+Print connection attributes in a form fashion.
+
+
+
+Examples
+--------
+
+ 1 - To output information about the connection `name`:
+
+
+    tabul connection info name
+
+
+ 2 - To output information about all the connection with `sql` in their name:tabul connection info *sql*
+
+
+
+
+Syntax
+------
+
+
+    tabul connection info <(NamePattern)...>
+
+
+where:
+
+
+  Arguments:
+
+    <(NamePattern)...>                                      one or more connection name
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        If there is no connection found, no errors will be emitted
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

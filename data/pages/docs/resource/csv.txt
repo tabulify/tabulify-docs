@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "weyr6r02p5peroqwvl9o0"
+}
+---
 ====== Data Resource - Csv ======
 
 
@@ -7,17 +12,63 @@
 
 
 
-===== Properties =====
+===== Attributes =====
 
+A csv file may get the following [[docs:resource:attribute|data attributes]]:
 
 ^ Name ^ Default Value ^ Description ^
-| ''commentCharacter'' | ''%%#%%'' | The character that if found as the first character of a line makes the line a comment |
-| ''delimiterCharacter'' | ''%%,%%'' | The character that delimits every fields (ie columns) |
-| ''escapeCharacter'' | ''null'' | The character that when found before a CSV character, set it as a character and not as a property |
-| ''headerRowId'' | ''1'' | The row id where the header is located (''0'' means no header and ''1'' the first line) | 
-| ''ignoreEmptyLine'' | ''true'' | Empty line are ignored |
-| ''quoteCharacter'' | ''%%"%%'' | The character that enclose a field value. |
+| ''comment-character'' | ''%%#%%'' | The character that if found as the first character of a line makes the line a comment |
+| ''delimiter-character'' | ''%%,%%'' | The character that delimits every fields (ie columns) |
+| ''escape-character'' | ''null'' | The character that when found before a CSV character, set it as a character and not as a property |
+| ''header-row-id'' | ''1'' | The row id where the header is located (''0'' means no header and ''1'' the first line) |
+| ''ignore-empty-line'' | ''true'' | Empty line are ignored |
+| ''quote-character'' | ''%%"%%'' | The character that enclose a field value. |
 
 <note tip>
-Because a ''csv'' file is also a [[text|text file]], you can also set [[text#properties|text properties]]
+Because a ''csv'' file is also a [[text|text file]], you can also set [[text#attributes|text attributes]]
 </note>
+
+==== Manifest ====
+ 
+
+Example of attributes setting in a [[docs:resource:manifest#kind|kind resource manifest]]
+
+<unit>
+<file yaml books--csv.yml>
+kind: csv
+spec:
+  data-def:
+    logical-name: favorite_books
+    header-row-id: 1
+    delimiter-character: ','
+    columns:
+      - name: asin
+        type: varchar
+        precision: 20
+      - name: description
+        type: varchar
+      - name: price
+        type: double
+      - name: group
+        type: varchar
+
+</file>
+</unit>
+
+You can then use the manifest for any [[docs:op:op|data operation]] on the ''csv'' file
+<unit>
+<code bash>
+tabul data print books--csv.yml@howto
+</code>
+<console>
+books.csv@md
+asin            description                                   price   group
+-------------   -------------------------------------------   -----   ----------
+B007US9NA8      The New Encyclopedia of Modern Bodybuilding   27.18   Sports
+1439199191      How To Win Friends And Influence People       27.18   Psychology
+9780465050659   The Design of Everyday Things                  9.99   Design
+9780465050659   The Design of Everyday Things                  9.99   Psychology
+B00555X8OA      Thinking, Fast and Slow                        8.85   Decision
+B00555X8OA      Thinking, Fast and Slow                        8.85   Psychology
+</console>
+</unit>

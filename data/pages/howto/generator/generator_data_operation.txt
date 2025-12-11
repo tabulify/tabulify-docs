@@ -2,8 +2,7 @@
 {
     "description": "This how-to shows you how to use a data generator as data source",
     "low_quality_page": "false",
-    "page_id": "98nvmw9ig8chcrlp7n7yb",
-    "title": "How to use a data generator in a data operation"
+    "page_id": "98nvmw9ig8chcrlp7n7yb"
 }
 ---
 ====== Tabulify - How to use a data generator in a data operation ======
@@ -20,45 +19,45 @@ A <icon name="mdi:cog" /> [[docs:resource:generator|generator]] is just a [[docs
 ==== Printing the generator will print the generated data ====
 
 
-The [[docs:tabli:data:head|head command]]  will print the generated data.
+The [[docs:tabul:data:head|head command]]  will print the generated data.
 <unit >
-<code dos>
-tabli data head --limit 30 sequence--datagen.yml@howto 
+<code bash>
+tabul data head --limit 30 sequence--generator.yml@howto
 </code>
-<console>
-The first 30 rows of the data resource (sequence--datagen.yml@howto): 
-seq_int   seq_char   
--------   --------   
-      1   a          
-      2   b          
-      3   c          
-      4   d          
-      5   e          
-      6   f          
-      7   g          
-      8   h          
-      9   i          
-     10   j          
-     11   k          
-     12   l          
-     13   m          
-     14   n          
-     15   o          
-     16   p          
-     17   q          
-     18   r          
-     19   s          
-     20   t          
-     21   u          
-     22   v          
-     23   w          
-     24   x          
-     25   y          
-     26   z          
-     27   ba         
-     28   bb         
-     29   bc         
-     30   bd
+<console height="300px"  scroll="toggle">
+The first 30 rows of the data resource (sequence@memgen):
+seq_int   seq_char
+-------   --------
+      1   a
+      2   b
+      3   c
+      4   d
+      5   e
+      6   f
+      7   g
+      8   h
+      9   i
+     10   j
+     11   k
+     12   l
+     13   m
+     14   n
+     15   o
+     16   p
+     17   q
+     18   r
+     19   s
+     20   t
+     21   u
+     22   v
+     23   w
+     24   x
+     25   y
+     26   z
+     27   1
+     28   2
+     29   3
+     30   4
 </console>
 </unit>
 
@@ -66,18 +65,19 @@ seq_int   seq_char
 ==== Insert in a Sql Table ====
 
 
-You can [[docs:tabli:data:insert|insert]] the generated data into a [[docs:resource:table|table]] in the [[docs:connection:howtos|sqlite database]]
+You can [[docs:tabul:data:insert|insert]] the generated data into a [[docs:resource:sql_table|table]] in the [[docs:connection:howtos|sqlite database]]
 <unit >
-<code dos>
-tabli data insert sequence--datagen.yml@howto sequence@sqlite
+<code bash>
+tabul data insert sequence--generator.yml@howto sequence@sqlite
 </code>
 <console>
-Source                        Target            Latency (ms)   Row Count   Error   Message   
----------------------------   ---------------   ------------   ---------   -----   -------   
-sequence--datagen.yml@howto   sequence@sqlite   58             30
+Transfer results
+input             target            latency   record_count   error_code   error_message
+---------------   ---------------   -------   ------------   ----------   -------------
+sequence@memgen   sequence@sqlite   0.58s               30
 </console>
 </unit>
 
-==== Create a CSV File ====
+==== Create any type of File ====
 
-[[csv]]
+[[..:csv:generate]]

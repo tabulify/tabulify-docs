@@ -1,0 +1,42 @@
+---json
+{
+    "page_id": "3d8ipdc616fgrmowtwh5o"
+}
+---
+====== Meta Data Supplier ======
+
+
+===== About =====
+
+''meta'' is a [[docs:generator:data-supplier|data supplier]] that derives its value from input data resources (such as file name, …) in a [[:docs:flow:pipeline|pipeline]].
+
+
+This data supplier:
+  * is used in the [[:docs:op:enrich|enrich operation]]
+  * to add a [[:docs:resource:virtual_column|virtual column]]
+  * that contains a [[:docs:resource:attribute|data resource attribute]] value (such as the [[:docs:resource:name|file name]]).
+
+
+
+
+===== Example =====
+
+Example of [[:docs:generator:data-supplier|data supplier]] with the [[:docs:resource:name|resource name attribute]]
+<file yml>
+columns:
+  - name: file_name
+    data-supplier:
+      type: meta
+      arguments:
+        attribute: name
+</file>
+
+===== Arguments =====
+
+
+
+
+
+
+^ Argument ^ Default ^ Description ^
+| ''attribute'' | Mandatory | A [[:docs:resource:attribute|data resource attribute]] |

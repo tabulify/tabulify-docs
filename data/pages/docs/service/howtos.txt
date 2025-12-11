@@ -1,0 +1,46 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:postgres:docs:service:howtos" }
+    ],
+    "page_id": "ewoxvx1gm9gl50igq6l9z"
+}
+---
+====== HowTo's  Services ======
+
+
+===== About =====
+''Tabulify'' comes with pre-configured [[service|services]] that are used in the [[howto:howto|How-to's]]
+
+
+
+
+===== List =====
+
+
+
+After a [[howto:getting_started:1_install|fresh installation]], you should see them by listing the [[service|service]].
+
+<unit>
+<code bash>
+tabul service list
+</code>
+<console>
+5 services were found in the configuration vault (/home/tabulify/.tabul/.tabul.yml)
+name        type
+---------   ------
+mysql       docker
+oracle      docker
+postgres    docker
+smtp        docker
+sqlserver   docker
+</console>
+</unit>
+
+where:
+
+  * [[howto:oracle:howto_connection|oracle]] is an [[docs:system:oracle:oracle|oracle database]]
+  * [[howto:sqlserver:howto_connection|sqlserver]] is an [[docs:system:sqlserver:sqlserver|sqlserver database]]
+  * [[howto:mysql:howto_connection|mysql]] is a [[docs:system:mysql:mysql|mysql database]]
+  * [[howto:postgres:howto_connection_service|postgres]] is a [[docs:system:postgres:postgres|postgres database]]
+  * [[howto:email:howto_connection_service|smtp]] is a [[:docs:system:smtp|smtp server]]

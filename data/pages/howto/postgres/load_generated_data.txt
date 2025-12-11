@@ -1,0 +1,134 @@
+---json
+{
+    "description": "This how-to will show you how to fill a table with auto-generated data and the Tabul fill action.",
+    "low_quality_page": "false",
+    "name": "Auto Data Generation",
+    "page_id": "e1q33212r4wh9vrmo6ikr"
+}
+---
+====== Tabul - How to fill a table with auto generated data ======
+
+
+===== About =====
+This [[..:howto|how-to]] will show you how to <icon name="mdi:format-color-fill"/> [[docs:op:fill|fill]] a [[docs:resource:sql_table|table]] with auto-[[docs:generator:generator|generated data]] and the [[docs:tabul:data:fill|Tabul fill action]].
+
+===== Steps =====
+==== Start Postgres ====
+
+
+The next steps will be using the [[howto:postgres:howto_connection_service|postgres howto connection]].
+
+  * You need to [[howto:postgres:howto_connection_service#docker|start the postgres docker image]].
+<unit>
+<code bash>
+tabul service start postgres
+</code>
+<console>
+1 service was started
+Name       Type
+--------   ------
+postgres   docker
+</console>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] your connection to check that the database is up.
+
+<unit>
+<code bash>
+tabul connection ping postgres
+</code>
+<console>
+The connection (postgres) has been pinged successfully
+</console>
+</unit>
+==== Create the target table ====
+
+For the purpose of this ''how-to'', we will work with the ''date_dim'' [[docs:system:tpcds|TPC-DS]] table.
+
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection *@postgres
+</code>
+</unit>
+
+<unit>
+<code bash>
+tabul data create date_dim@tpcds @postgres
+</code>
+<console>
+Results of the create operation
+input            target
+--------------   -----------------
+date_dim@tpcds   date_dim@postgres
+</console>
+</unit>
+==== Fill the date_dim table with 10 rows ====
+With the [[docs:tabul:data:fill|tabul data fill operation]], insert ''10'' rows automatically generated into the [[docs:resource:sql_table|table]] ''date_dim''
+
+
+<unit>
+<code bash>
+tabul data fill --max-record-count 10 date_dim@postgres
+</code>
+<console>
+Transfer results
+input             target              latency   record_count   error_code   error_message
+---------------   -----------------   -------   ------------   ----------   -------------
+date_dim@memgen   date_dim@postgres   0.63s               10
+</console>
+</unit>
+==== Check the result ====
+
+With the [[docs:tabul:data:print|data print command]], we can see the content of the ''date_dim'' table in the [[howto_connection_service|postgres connection]]
+<unit>
+<code bash>
+tabul data print date_dim@postgres
+</code>
+<console>
+date_dim@postgres
+d_date_sk   d_date_id          d_date       d_month_seq   d_week_seq   d_quarter_seq   d_year   d_dow   d_moy   d_dom   d_qoy   d_fy_year   d_fy_quarter_seq   d_fy_week_seq   d_day_name   d_quarter_name   d_holiday   d_weekend   d_following_holiday   d_first_dom   d_last_dom   d_same_day_ly   d_same_day_lq   d_current_day   d_current_week   d_current_month   d_current_quarter   d_current_year
+---------   ----------------   ----------   -----------   ----------   -------------   ------   -----   -----   -----   -----   ---------   ----------------   -------------   ----------   --------------   ---------   ---------   -------------------   -----------   ----------   -------------   -------------   -------------   --------------   ---------------   -----------------   --------------
+        1   a                  2025-10-10             2            1               6       10       0       2       1       0           8                  3               5   r            p                g           x           i                               3            6              10              10   s               q                i                 w                   w
+        2   b                  2025-10-15             9            5               4        9       8       5       5       0           8                 10               1   u            y                n           q           o                               5            6               4               5   x               t                p                 d                   j
+        3   c                  2025-10-19             4            2               1        1       5      10       1       7           9                  0               5   v            b                g           t           l                               6            7               0              10   v               p                y                 v                   o
+        4   d                  2025-10-14             1            0               2       10       0       7       8       8           0                  6               0   j            b                x           h           l                               9            7               8               0   k               t                j                 z                   o
+        5   e                  2025-10-13             6            7               8       10       5       6       5       8           9                  7               9   y            u                v           l           z                               8            1               3               8   h               t                z                 m                   m
+        6   f                  2025-10-12             7            9               9        9       1       7       7       7           1                  7               2   o            n                h           q           m                               9            6               7               3   j               a                b                 g                   s
+        7   g                  2025-10-12             8            2               6        0       0       2       4       6           4                  7               9   b            z                s           z           o                               3            5               7               1   e               u                r                 a                   b
+        8   h                  2025-10-16             0            5               7        8       7       9       4       5           5                  0               9   v            b                h           e           c                               9            4               3               1   b               k                h                 l                   n
+        9   i                  2025-10-11             7            1               0        2       2       4      10      10           6                  0               9   r            n                e           c           l                               4            6              10               0   d               l                u                 q                   r
+       10   j                  2025-10-14             6            7               0        5       0       5       3       5           4                  0               1   h            w                q           b           j                               1            3               3               8   q               r                w                 c                   o
+</console>
+</unit>
+==== Fill the ''date_dim'' table with ''10.000'' rows ====
+
+<unit>
+<code bash>
+tabul data fill --max-record-count 10000 date_dim@postgres
+</code>
+<console>
+Transfer results
+input             target              latency   record_count   error_code   error_message
+---------------   -----------------   -------   ------------   ----------   -------------
+date_dim@memgen   date_dim@postgres   0.846s           10000
+</console>
+</unit>
+==== Check the result ====
+
+And we got ''10.000'' rows
+<unit>
+<code bash>
+tabul data list -a count date_dim@postgres
+</code>
+<console>
+path       media_type   count
+--------   ----------   -----
+date_dim   table        10000
+</console>
+</unit>
+
+==== Next ====
+The generated data follows a default definition but you can define the generated data that you want with the help of a ''data definition'' file.
+
+
+[[load_defined_generated_data|Learn how to fill a table with defined generated data]]
+

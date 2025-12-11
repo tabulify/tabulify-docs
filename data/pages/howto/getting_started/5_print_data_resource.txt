@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "3d8wpq8dr3urcaymj5dld"
+}
+---
 ====== Learning Tabulify - Step 5 - How to print Data Resources ======
 
 
@@ -10,16 +15,17 @@ In the [[4_select_data_resources|previous page]], we learned how to select [[doc
   * ''tail'': to print the last records of content
 
 ===== Print =====
-The [[docs:tabli:data:print|data print]] command print the whole content.
+The [[docs:tabul:data:print|data print]] command print the whole content.
 
 
 Example:
   * with the [[docs:connection:tpcds|tpcs connection]]:
 <unit>
-<code dos>
-tabli data print reason@tpcds
+<code bash>
+tabul data print reason@tpcds
 </code>
 <console>
+reason@tpcds
 r_reason_sk   r_reason_id        r_reason_desc
 -----------   ----------------   -------------------
           1   AAAAAAAABAAAAAAA   Package was damaged
@@ -27,16 +33,18 @@ r_reason_sk   r_reason_id        r_reason_desc
 </unit>
   * or with the ''characters.csv'' file in the [[docs:connection:howto|howto connection]]:
 <unit>
-<code dos>
-tabli data print characters.csv@howto
+<code bash>
+tabul data print characters.csv@howto
 </code>
 <console>
-Last Name           First Name   Birth Date   Wikipedia Page
------------------   ----------   ----------   ---------------------------------------------------
+characters.csv@howto
+last_name           first_name   birth_date   wikipedia_page
+-----------------   ----------   ----------   --------------------------------------------------------------
 Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
 Norman              Don          1935-12-25   https://en.wikipedia.org/wiki/Don_Norman
 Harbison Carnagey   Dale         1888-11-24   https://en.wikipedia.org/wiki/Dale_Carnegie
 Kahneman            Daniel       1934-03-05   https://en.wikipedia.org/wiki/Daniel_Kahneman
+Pittman             Bob          1953-12-28   https://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)
 </console>
 </unit>
 
@@ -44,14 +52,14 @@ Kahneman            Daniel       1934-03-05   https://en.wikipedia.org/wiki/Dani
 The [[#print|print command]] is useful for [[docs:resource:resource|data resource]] with a small [[docs:resource:size|size]] but is not practicable with big [[docs:resource:resource|data resource]] because the output will overflow the console.
 
 That's when you can use one of this command:
-  * the [[docs:tabli:data:head|data head]] command print the first pieces of content of a data resource
-  * the [[docs:tabli:data:tail|data tail]] command print the last pieces of content of a data resource
+  * the [[docs:tabul:data:head|data head]] command print the first pieces of content of a data resource
+  * the [[docs:tabul:data:tail|data tail]] command print the last pieces of content of a data resource
 
 Example with the [[docs:connection:tpcds|tpcs connection]] and the fact table ''customer''
   * ''head''
 <unit>
-<code dos>
-tabli data head --limit 10 customer@tpcds
+<code bash>
+tabul data head --limit 10 customer@tpcds
 </code>
 <console>
 The first 10 rows of the data resource (customer@tpcds):
@@ -71,11 +79,11 @@ c_customer_sk   c_customer_id      c_current_cdemo_sk   c_current_hdemo_sk   c_c
 </unit>
   * ''tail''
 <unit>
-<code dos>
-tabli data tail --limit 10 customer@tpcds
+<code bash>
+tabul data tail --limit 10 customer@tpcds
 </code>
 <console>
-The last 10 rows of the data resource (customer@tpcds):
+The last 10 records of the data resource (customer@tpcds):
 c_customer_sk   c_customer_id      c_current_cdemo_sk   c_current_hdemo_sk   c_current_addr_sk   c_first_shipto_date_sk   c_first_sales_date_sk   c_salutation   c_first_name   c_last_name   c_preferred_cust_flag   c_birth_day   c_birth_month   c_birth_year   c_birth_country   c_login   c_email_address                      c_last_review_date_sk
 -------------   ----------------   ------------------   ------------------   -----------------   ----------------------   ---------------------   ------------   ------------   -----------   ---------------------   -----------   -------------   ------------   ---------------   -------   ----------------------------------   ---------------------
           991   AAAAAAAAPNDAAAAA               431980                 5803                 226                  2451020                 2450990   Sir            William        Aleman        Y                                 7               1           1963   LUXEMBOURG                  William.Aleman@cGd246jZI7Dt2.com                   2452366

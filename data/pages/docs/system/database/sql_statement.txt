@@ -1,0 +1,47 @@
+---json
+{
+    "aliases": [
+        { "path": ":system:database:sql_statement" }
+    ],
+    "page_id": "2avdadlng0va2bf5bkdkn"
+}
+---
+====== SQL Statements ======
+
+
+===== About =====
+''SQL Statements'' are the language of a database.
+
+A [[docs:resource:sql_file|SQL file]] contains one or more SQL statements that are  [[docs:resource:sql_request|send]] to the database.
+
+===== Attributes =====
+
+==== Subset ====
+In SQL, statements are classified by ''subset''. The most known are:
+  * [[docs:resource:sql_dml|Data Manipulation Language (DML)]] (select, update, insert, merge)
+  * [[docs:resource:sql_ddl|Data Definition Language (DDL)]] (create, alter, drop)
+  * ''Data Control Language (DCL)'' (grant/revoke)
+
+When parsing a [[docs:resource:sql_file|SQL file]] in [[docs:resource:sql_file#sql|SQL mode]], you get this information in the ''subset'' column.
+
+
+
+
+Note that all SQL statements can not be categorically categorized. For instance, the [[https://www.sqlite.org/pragma.html|Sqlite Pragma]] can:
+  * get a result with the [[https://www.sqlite.org/pragma.html|Sqlite Pragma function]]
+  * set parameters `PRAGMA analysis_limit = N;`
+
+==== Name ====
+
+The statement name.
+
+Example of values:
+  * select
+  * with
+  * update
+  * create
+
+When parsing a [[docs:resource:sql_file|SQL file]] in [[docs:resource:sql_file#sql|SQL mode]], you get this information in the ''name'' column.
+===== Parameters =====
+
+''SQL Statement'' may be [[docs:system:database:sql_parameterized_statement|parameterized]] to receive arguments known as [[docs:system:database:sql_parameterized_statement|parameters]]

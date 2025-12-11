@@ -1,0 +1,111 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:database:tabul_load_csv" }
+    ],
+    "canonical": ":howto:database:load_csv",
+    "description": "How to upload a CSV file into a SQL table in two steps",
+    "name": "Load a CSV into a DB",
+    "page_id": "01qgahm9kkzmqm0x9bndc"
+}
+---
+
+====== Tabul - How to load a CSV file into a SQL table ======
+
+===== About =====
+How to [[docs:op:upload|load]] a [[docs:connection:cd|local]] <icon name="carbon:csv"/> [[docs:resource:csv|CSV file]] into a [[docs:resource:sql_table|SQL table]] with the [[docs:tabul:data:transfer|data transfer]] command.
+
+
+===== Steps =====
+
+==== Prerequisites ====
+You should have ''Tabulify'' installed on your computer. [[howto:getting_started:1_install]]
+
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection characters@sqlite
+</code>
+</unit>
+==== The CSV file to load ====
+
+We will load the ''characters.csv'' file of the [[docs:connection:howto|HowTo connection]]. The file can be seen with the [[docs:tabul:data:head|head command]].
+<unit>
+<code bash>
+tabul data head characters.csv@howto
+</code>
+<console>
+The first 10 rows of the data resource (characters.csv@howto):
+last_name           first_name   birth_date   wikipedia_page
+-----------------   ----------   ----------   --------------------------------------------------------------
+Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+Norman              Don          1935-12-25   https://en.wikipedia.org/wiki/Don_Norman
+Harbison Carnagey   Dale         1888-11-24   https://en.wikipedia.org/wiki/Dale_Carnegie
+Kahneman            Daniel       1934-03-05   https://en.wikipedia.org/wiki/Daniel_Kahneman
+Pittman             Bob          1953-12-28   https://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)
+</console>
+</unit>
+
+
+<note tip>
+If you want to change a [[docs:resource:csv|CSV property]], use the ''a'' attribute
+
+Example with:
+  * a text file extension,
+  * another separator
+  * and no header
+<code bash>
+tabul data head -a "media-type=csv" -a 'delimiterCharacter=;' -a 'headerRowId=0' characters.txt@howto
+</code>
+</note>
+
+==== Loading the CSV file with the transfer command ====
+
+We can load the above data using the [[docs:tabul:data:transfer|transfer command]] and the [[docs:connection:howtos#sqlite|sqlite built-in database]]
+<unit>
+<code bash>
+tabul data transfer characters.csv@howto @sqlite
+</code>
+<console>
+Transfer results
+input                  target              latency   record_count   error_code   error_message
+--------------------   -----------------   -------   ------------   ----------   -------------
+characters.csv@howto   characters@sqlite   0.62s                5
+</console>
+</unit>
+
+==== Check the data structure ====
+
+We can check with the [[docs:tabul:data:describe|describe command]] that the process has created a table with the same [[docs:resource:structure|structure]].
+<unit >
+<code bash>
+tabul data describe characters@sqlite
+</code>
+<console>
+Structure of the resource characters@sqlite
+position   name             type                precision    scale   primary_key   nullable   autoincrement   comment
+--------   --------------   -----------------   ----------   -----   -----------   --------   -------------   -------
+1          last_name        character varying   2147483647   0                     x                          
+2          first_name       character varying   2147483647   0                     x                          
+3          birth_date       character varying   2147483647   0                     x                          
+4          wikipedia_page   character varying   2147483647   0                     x
+</console>
+</unit>
+
+==== Print the Sql table ====
+
+We can check with the [[docs:tabul:data:print|print command]] that the same data was loaded
+<unit>
+<code bash>
+tabul data print characters@sqlite
+</code>
+<console>
+characters@sqlite
+last_name           first_name   birth_date   wikipedia_page
+-----------------   ----------   ----------   --------------------------------------------------------------
+Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+Norman              Don          1935-12-25   https://en.wikipedia.org/wiki/Don_Norman
+Harbison Carnagey   Dale         1888-11-24   https://en.wikipedia.org/wiki/Dale_Carnegie
+Kahneman            Daniel       1934-03-05   https://en.wikipedia.org/wiki/Daniel_Kahneman
+Pittman             Bob          1953-12-28   https://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)
+</console>
+</unit>

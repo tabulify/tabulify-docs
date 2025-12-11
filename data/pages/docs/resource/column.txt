@@ -1,8 +1,13 @@
+---json
+{
+    "page_id": "8wxwjzu6c06vqxdux6sx2"
+}
+---
 ====== Data Resource - Column ======
 
 
 ===== About =====
-A ''column'' is a collection of data with the same [[docs:common:data_type|data type]]. 
+A ''column'' is a collection of data with the same [[docs:data_type:data_type|data type]]. 
 
 <note>
 [[tabular|tabular data resource]] are a collection of columns.
@@ -12,4 +17,4 @@ A ''column'' is a collection of data with the same [[docs:common:data_type|data 
 ''Tabulify'' supports the addition of column that holds context data via the notion of [[virtual_column|virtual columns]]
 
 ===== Data Generation =====
-The value of a column may be generated via a [[docs:generator:column|column data generator]]
+The value of a column may be generated via a [[docs:generator:data-supplier|column data generator]]

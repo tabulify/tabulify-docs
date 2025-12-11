@@ -2,8 +2,7 @@
 {
     "description": "This how-to shows you how to generate a sequence based on provided values with the column sequence generator.",
     "low_quality_page": "false",
-    "page_id": "eog6re1g6g9n88i9tggw2",
-    "title": "How to generate a sequence based on provided values"
+    "page_id": "eog6re1g6g9n88i9tggw2"
 }
 ---
 ====== Tabulify - How to generate a sequence based on provided values ======
@@ -21,8 +20,8 @@ The sequence will be created with a list of colors.
 To generate data, you need to create a [[docs:resource:generator|generator file]] that will describe the data to be generated.
 
 The below [[docs:resource:generator|data resource generator]]:
-  * has the [[docs:resource:name|name]] ''sequence_color--datagen.yml''
-  * has the [[docs:resource:logicalname|logical name]] ''sequence_color''
+  * has the [[docs:resource:name|name]] ''sequence_color--generator.yml''
+  * has the [[docs:resource:logical_name|logical name]] ''sequence_color''
   * will generate ''10'' values (''MaxRecordCount'' count)
   * has a column named ''id'' that has [[docs:generator:sequence|sequence data generator]] that:
       * starts by default at the value ''1''
@@ -32,30 +31,33 @@ The below [[docs:resource:generator|data resource generator]]:
       * will return the color values provided in the ''values'' property.
 
 <unit>
-<file yaml sequence_color--datagen.yml>
-MaxRecordCount: 10
-Columns:
-  - name: id
-    type: integer
-    comment: A id column to see easily the number of values generated
-    DataGenerator:
-      type: sequence
-  - name: seq_color
-    type: varchar
-    comment: A column with a color sequence date generator
-    DataGenerator:
-      type: sequence
-      # when the last color has been given (black), restart from the first element (blue)
-      reset: true
-      # the list of values returned in sequence
-      values:
-        - blue
-        - red
-        - green
-        - cyan
-        - magenta
-        - yellow
-        - black
+<file yaml sequence_color--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 10
+  Columns:
+    - name: id
+      type: integer
+      comment: A id column to see easily the number of values generated
+      data-supplier:
+        type: sequence
+    - name: seq_color
+      type: varchar
+      comment: A column with a color sequence date generator
+      data-supplier:
+        type: sequence
+        arguments:
+          # when the last color has been given (black), restart from the first element (blue)
+          reset: true
+          # the list of values returned in sequence
+          values:
+            - blue
+            - red
+            - green
+            - cyan
+            - magenta
+            - yellow
+            - black
 
 
 
@@ -63,10 +65,10 @@ Columns:
 </unit>
 ==== Printing the data ====
 
-With the [[docs:tabli:data:print|data print command]], we can print the ''values'' generated.
+With the [[docs:tabul:data:print|data print command]], we can print the ''values'' generated.
 <unit>
-<code dos>
-tabli data print sequence_color--datagen.yml@howto
+<code bash>
+tabul data print sequence_color--generator.yml@howto
 </code>
 <note tip>
 [[docs:connection:howto|howto]] is the connection that contains the files used in the [[..:howto|HowTo's]].

@@ -1,21 +1,26 @@
+---json
+{
+    "page_id": "xsfaiwj296k32a3driqz4"
+}
+---
 ====== Working Path ======
 
 
 ===== About =====
-The ''working path'' is a path from where the relative [[docs:resource:path|path]] are resolved.
+The ''working path'' is a [[:docs:resource:container|container]] path from where the relative [[docs:resource:path|path]] are resolved.
 
 
-  * In a [[docs:system:database|database]], this is the [[docs:resource:schema|schema]]
-  * In a [[docs:system:file|file system]], this is a [[docs:resource:directory|directory]] 
+  * In a [[docs:system:database:database|database]], this is the [[docs:resource:sql_schema|schema]]
+  * In a [[docs:system:file|file system]], this is a [[docs:resource:directory|directory]]
 
-This working path is set by the [[docs:connection:uri|connection url]].
+This working path is set by the [[docs:connection:uri|connection uri]].
 
 
 
 
 ===== How to see the working path ? =====
 
-To see the working path, you can use the [[docs:tabli:connection:info|connection info]] command.
+To see the working path, you can use the [[docs:tabul:connection:info|connection info]] command.
 
 ===== Current directory =====
 
@@ -27,6 +32,6 @@ If you want to see the working path of the tabulify process against the local fi
 
 
 <code bash>
-tabli connection info cd
+tabul connection info cd
 </code>
 

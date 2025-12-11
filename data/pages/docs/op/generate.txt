@@ -1,0 +1,45 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:flow:docs:op:generate" }
+    ],
+    "page_id": "n6mzq6py6di4l1srk5ias"
+}
+---
+====== Generate Supplier ======
+
+
+===== About =====
+
+''generate'' is a [[:docs:flow:supplier|supplier data operation]] that supplies [[:docs:resource:resource|data resources]] with generated data.
+
+
+===== Arguments =====
+
+^ Name ^ Default ^ Description ^
+| [[docs:flow:data_selector|data-selector]] | - | Select [[docs:resource:resource|data resources]] by [[:docs:common:globbing|glob pattern]] |
+| [[docs:flow:data_selector|data-selectors]] | - | A list of [[docs:flow:data_selector|data-selectors]] |
+| ''strict-selection'' | true| When set to true, the ''select'' operation will throw an error if the selection does not return any data resource |
+| [[:docs:flow:processing-type|processing-type]] | [[:docs:flow:stream_pipeline|stream]] | The processing type (''stream'' or ''batch'') |
+| ''stream-record-count'' | | The number of records by data resource generated if the ''stream-granularity'' is set to record  |
+| ''stream-granularity'' | ''record'' | The stream [[:docs:flow:granularity|granularity ]] |
+
+
+And the [[:docs:flow:stream_pipeline#arguments|stream arguments]] if the [[:docs:flow:processing-type|processing-type]] is set to ''stream''.
+===== Type =====
+''generate'' supports the following [[:docs:flow:supplier#type|supplier type]]
+==== Stream ====
+In a stream [[:docs:flow:processing-type|processing]], this supplier create data resources at the [[:docs:flow:stream_pipeline|push interval]]
+
+If the [[:docs:flow:granularity|granulity]] is:
+  * ''record'': new data resources are created from the same [[:docs:resource:generator|generator]] with ''stream-record-count'' records
+  * ''resource'': the [[:docs:resource:generator|generator resources ]] are pushed in the pipeline
+
+
+
+==== Batch ====
+
+In batch mode, the [[:docs:resource:generator|generator data resources]] are directly provided.
+It's equivalent / an alias of the [[docs:op:select|select supplier]]
+
+

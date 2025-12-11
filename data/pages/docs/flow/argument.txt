@@ -1,0 +1,15 @@
+---json
+{
+    "page_id": "uidx4is3kdd2e6sd1z5ke"
+}
+---
+====== Argument ======
+
+
+===== About =====
+''Arguments'' are ''execution'' [[:docs:conf:attribute|attributes]]. 
+
+They can be set on:
+  * a [[:docs:op:op|operation]]
+  * a [[:docs:flow:pipeline|pipeline]]
+  * a [[docs:flow:flow|flow]]

@@ -1,0 +1,54 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:database:attributes" }
+    ],
+    "page_id": "ckr6mff1l8fevls8sbunm"
+}
+---
+====== SQL Connection Attributes ======
+
+
+===== About =====
+
+All database system supports the [[:docs:connection:attribute|standard connection attributes]]
+and the following attributes:
+
+^ Name ^ Description ^ Default value ^
+| BUILDER_CACHE_ENABLED | A builder cache | true |
+| NAME_QUOTING_ENABLED | Enable quoting of SQL name identifier | true |
+| DRIVER | The Jdbc Driver Class |  |
+
+===== List =====
+
+==== BUILDER_CACHE_ENABLED ====
+
+`BUILDER_CACHE_ENABLED` defines if the `builder cache` is used or not.
+
+The builder cache is used to cache the building of relation object such as table, view.
+
+Why? Because a relation object (table, views, ...) may have [[:docs:resource:dependency|dependencies]],
+building them each time as a significative impact as it's a recursive process.
+
+
+==== NAME_QUOTING_ENABLED ====
+Name quoting of quoted identifier is adding a quotation marks at the end and the beginning of the words to:
+  * make it case sensitive
+  * allow:
+    * the use of reserved keywords (ie `char` is not allowed but `"char"` is)
+    * characters such as space, number at first position
+
+
+Relational databases have different behavior around it. By default, we enable it so
+that SQL Developer does not have to type in uppercase.
+
+With `NAME_QUOTING_ENABLED`, you can disable this feature.
+
+Remark that we may disable this feature by database.
+
+For instance, we do for [[docs:system:oracle:oracle|Oracle]]. Why ?
+Because it requires you to put always the quotation mark even in a `SQL SELECT` which is crazy. You can't write `select cat_id`, you need to write `select "cat_id"`
+<blockquote>
+If you name a schema object using a quoted identifier, then you must use the double quotation marks whenever you refer to that object.
+<cite>[[https://docs.oracle.com/en/database/oracle/oracle-database/18/sqlrf/Database-Object-Names-and-Qualifiers.html|Oracle Ref]]</cite>
+</blockquote>

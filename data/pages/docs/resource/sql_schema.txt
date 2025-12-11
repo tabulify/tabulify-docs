@@ -1,0 +1,45 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:schema" }
+    ],
+    "page_id": "uqykftm6bvruzgp3sq7wu"
+}
+---
+====== Data Resource - SQL Schema ======
+
+===== About =====
+A ''schema'' is a [[:docs:resource:container|container]] [[docs:resource:resource|data resource]] of a [[docs:system:database:database|database]] that contains one or more ''Sql Data Resources'' such as [[sql_table|tables]] or [[sql_view|view]]
+
+
+===== URI =====
+The [[docs:resource:data_uri|Data URI]] that defines a schema has the following form:
+<code bash>
+# Fully Qualified
+catalog.schema.@connection
+# With the catalog of the connection if any
+schema.@connection
+# The default schema of the connection
+@connection
+</code>
+where:
+  * ''connection'' is the [[docs:connection:name|connection name]]
+  * ''schema'' is the schema name
+  * ''catalog'' is the catalog name
+
+
+<note>
+It has the same form as a SQL path form where the object name is the empty string.
+</note>
+===== How to see the default schema of a connection ? =====
+
+
+You can see the default schema of your connection with the [[docs:tabul:connection:info|connection info command]].
+
+This is the value set in the [[docs:connection:working_path|working path]]
+
+<code bash>
+tabul connection info sqlite
+</code>
+===== Sample =====
+See [[docs:system:sample_schema]]

@@ -1,0 +1,37 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:postgres:docs:connection:natives" }
+    ],
+    "page_id": "ajnj6g0acm4mlonwu3i0n"
+}
+---
+====== Connection Natives Attribute  ======
+
+
+===== About =====
+''Natives attributes'' are [[docs:connection:attribute|attributes]] of an external third party or library.
+
+Their values are passed without any processing to the underlying system.
+
+JDBC native attribute may be also known as connection parameters
+
+
+
+
+===== How to set them ?=====
+
+You can set them in the ''natives'' attribute of a connection in  [[docs:conf:tabul.yml|the configuration vault]].
+
+Example with the ''ssl'' [[https://jdbc.postgresql.org/documentation/use/#connection-parameters|Postgres Connection Parameter]]
+<code yaml>
+connections:
+   postgres:
+    user: postgres
+    uri: jdbc:postgresql://localhost:5432/postgres
+    natives:
+       # initialize ssl
+       ssl: true
+
+
+</code>

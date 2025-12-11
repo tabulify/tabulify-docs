@@ -1,7 +1,8 @@
 ---json
 {
-    "canonical":"system",
-    "low_quality_page":"false"
+    "canonical": ":system",
+    "low_quality_page": "false",
+    "page_id": "wx0b4edrl915vyjd3egek"
 }
 ---
 
@@ -10,12 +11,8 @@
 {{ :docs:system:undraw_circuit_board.svg?600&ratio=21:9 |}}
 
 ===== About =====
-For ''Tabulify'', a ''system'' is a service where you can:
+For ''Tabulify'', a ''system'' is where you can:
   * store [[docs:resource:resource|data resources]]
-  * and execute [[docs:resource:script|scripts]] (optionally)
-
-
-
-
+  * and [[docs:resource:runtime|execute executables]] (optionally)
 
 

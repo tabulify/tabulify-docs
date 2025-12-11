@@ -1,11 +1,111 @@
+---json
+{
+    "page_id": "b80vws5u0owz4kcj8f3i0"
+}
+---
 ====== Generator - Entity Column Generator ======
 
 
-===== Entity =====
+===== About =====
 
-A ''entity column generator''  is a [[column|column data generator]] that can [[generator|generate]] data created from provided data set such as:
-  * a person
-  * or a country
+A ''entity column generator''  is a [[data-supplier|column data generator]] that [[generator|generates]] data from
+a specific provided csv file located in the [[:docs:connection:built-in|entity connection]].
 
-===== Location =====
-The entity data sets are located in the [[:docs:connection:built-in|entity connection]].
+
+If you want to provide your own data set, you can use the [[data-set|data set generator]].
+
+
+===== Example =====
+
+[[:howto:generator:entity|]]
+
+===== Arguments =====
+
+The list of [[:docs:conf:parameter|arguments]] that you can use in the [[:docs:generator:data-supplier|data supplier]] are:
+
+^ Name ^ Description ^ Default ^
+| ''name'' | The name of the entity | Name of the column |
+| ''column'' | The name of the column to the data from the entity | Name of the column |
+| ''locale'' | The locale of the entity for entity localization | ''en'' |
+| ''meta-columns'' | A map that links a local column to a metadata entity column  | Empty |
+
+===== List and storage =====
+
+All entities are stored under the [[:docs:connection:built-in|entity built-in connection]]
+<unit>
+<code bash>
+tabul data list *@entity
+</code>
+<console>
+path        media_type
+---------   ---------------
+country     inode/directory
+firstname   inode/directory
+gender      inode/directory
+lastname    inode/directory
+prefix      inode/directory
+region      inode/directory
+subregion   inode/directory
+</console>
+</unit>
+
+And every entity may have one or more locale
+
+Example for the `firstname` entity
+<unit>
+<code bash>
+tabul data list firstname/*@entity
+</code>
+<console>
+path                         media_type
+--------------------------   ----------
+firstname/firstname_ca.csv   text/csv
+firstname/firstname_de.csv   text/csv
+firstname/firstname_en.csv   text/csv
+firstname/firstname_es.csv   text/csv
+firstname/firstname_fr.csv   text/csv
+firstname/firstname_gd.csv   text/csv
+firstname/firstname_hu.csv   text/csv
+firstname/firstname_it.csv   text/csv
+firstname/firstname_nl.csv   text/csv
+firstname/firstname_pl.csv   text/csv
+firstname/firstname_pt.csv   text/csv
+firstname/firstname_sk.csv   text/csv
+firstname/firstname_tr.csv   text/csv
+</console>
+</unit>
+
+===== What are Entities? =====
+
+An entity is [[:docs:resource:csv|CSV file]]:
+  * with a name that contains the entity and locale: `entityName_locale`
+    * Example: `firstname_en.csv` are English first names.
+    * The locale defaults to `en` if not provided
+  * where the first column as the same name as the file
+  * that
+    * contains the value to return as first column
+    * contains optionally a numeric weight factor column called `probability`, `weight` or `factor` to create a [[:docs:generator:histogram|histogram (distribution)]]
+    * contains optionally other meta columns (for example ''gender'' for a ''firstname'')
+    * is located under the [[:docs:connection:built-in|entity connection]]
+
+Example with the `firstname_fr.csv` entity file
+<unit>
+<code bash>
+tabul data head firstname/firstname_fr.csv@entity
+</code>
+<console>
+The first 10 rows of the data resource (firstname/firstname_fr.csv@entity):
+firstname   gender   probability
+---------   ------   --------------------------
+Aadam       M        3.14396359513727576E-7
+Aadel       M        6.52081338250694231E-7
+Aadil       M        0.000002142552968537995330
+Aahil       M        2.44530501844010337E-7
+Aakash      M        3.02752049902108036E-7
+Aalia       F        4.77416694076401133E-7
+Aaliya      F        0.000002422016399216864286
+Aaliyah     F        0.000028086074783226330085
+Aalya       F        0.000001490471630287301099
+Aalyah      F        0.000002585036733779537844
+</console>
+</unit>

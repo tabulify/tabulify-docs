@@ -1,0 +1,119 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:oracle:howto:oracle:connection" },
+        { "path": ":howto:oracle:connection" }
+    ],
+    "page_id": "hzub6m2cimgheh048u0vk"
+}
+---
+====== How to create an Oracle connection? ======
+
+
+===== About =====
+This howto shows you how to create a [[:docs:connection:connection|connection]] to an <icon name="logos:oracle"/> [[:docs:system:oracle:oracle|oracle database]].
+
+===== Attributes =====
+
+
+An oracle connection supports :
+  * all [[:docs:connection:attribute|common connection attributes]]
+    * [[:docs:connection:uri|Uri]],
+    * user,
+    * [[:docs:connection:password|password]]
+    * ...
+  * and all [[docs:system:database:connection_attributes|relational connection attributes]]
+    * Driver (Jdbc Class)
+    * ...
+
+===== Example =====
+
+Here are the attributes of the [[howto:oracle:howto_connection|howto connection]]
+<unit>
+<code bash display="none">
+tabul data print --type text .tabul/.tabul.yml@home | yq '.spec.connections.oracle'
+</code>
+<console yaml>
+comment: The howto oracle connection
+driver: oracle.jdbc.OracleDriver
+login-statements: ALTER SESSION SET CURRENT_SCHEMA = tabulify
+name-quoting-enabled: false
+password: oracle
+uri: jdbc:oracle:thin:@localhost:1521/freepdb1
+user: system
+</console>
+</unit>
+
+
+
+
+
+===== How to create =====
+
+You can  create an ''Oracle'' connection:
+  * by directly modifying the [[#Configuration vault]]
+  * or by using the [[#tabul command]]
+
+<note>
+=== Secret ===
+In this howto, the password is expected to be stored in the ''MY_ORACLE_PASSWORD'' [[:docs:conf:os|OS environment variable]] but there is more way to provide secrets.
+
+To know how to pass and handle secrets, read more at [[:docs:conf:secret]]
+</note>
+==== Configuration Vault ====
+
+
+In a [[docs:conf:tabul.yml|Configuration Vault]], to define a Oracle [[docs:connection:connection|connection]] with the name ''myOracle'', you would write:
+\\
+
+<code yaml>
+connections:
+   myOracle:
+     uri: jdbc:oracle:thin:@[host]:[port]/[servicename]
+     # driver is optional
+     driver: oracle.jdbc.OracleDriver
+     user: loginUser
+     password: ${MY_ORACLE_PASSWORD}
+     natives:
+       # https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/ConnectionProperties.html
+       clientId: tabulify
+</code>
+
+
+
+==== Tabul Command ====
+
+With the [[docs:tabul:connection:add|tabul add command of the connection module]], you can add a Oracle connection with the name ''oracleConnectionName'':
+
+<unit display="none">
+<code bash>
+tabul connection delete --not-strict "oracleConnectionName"
+</code>
+</unit>
+
+<tabs>
+   <panel selected>
+      <label>Bash</label>
+<unit>
+<code bash>
+tabul connection add "oracleConnectionName" \
+    "jdbc:oracle:thin:@[host]:[port]/[servicename]" \
+    --user login \
+    --password '${MY_ORACLE_PASSWORD}'
+</code>
+<console>
+</console>
+</unit>
+   </panel>
+
+  <panel>
+    <label>Windows CMD console</label>
+<code bash>
+tabul connection add "oracleConnectionName" "jdbc:oracle:thin:@[host]:[port]/[servicename]" ^
+    --user login ^
+    --password '${MY_ORACLE_PASSWORD}'
+</code>
+   </panel>
+</tabs>
+
+

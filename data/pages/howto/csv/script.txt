@@ -1,0 +1,14 @@
+---json
+{
+    "name": "Script CSV",
+    "page_id": "hvkxipcuefz7nojoviu86"
+}
+---
+====== How to script a CSV? ======
+
+
+===== About =====
+The [[generate|CSV generate howto]] shows you how to generate a CSV file with a [[:docs:generator:generator|generator]]
+but you can also write your own [[:docs:resource:script|script]] to generate any kind of resource.
+
+To learn further how to do it, check this script ''howto'':  [[:howto:script:script_csv|]]

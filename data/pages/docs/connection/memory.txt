@@ -1,0 +1,19 @@
+---json
+{
+    "page_id": "qfz5gvir8fouxs9hd2j11"
+}
+---
+====== Memory Connection ======
+
+
+===== About =====
+
+''memory'' is a [[:docs:connection:built-in|built-in connection]] that stores all data and metadata in RAM and both are discarded when Tabulify finish or restarts.
+
+
+
+It's used internally to create temporary resource when executing [[:docs:flow:pipeline|pipeline]] (ie when we load and process data in memory).
+
+===== Example =====
+
+For example, when you [[:docs:op:split|split]] a data resource in record, for each record, a memory data resource is created.

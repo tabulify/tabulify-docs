@@ -1,11 +1,13 @@
-====== Tabulify - Flow ======
+---json
+{
+    "aliases": [
+        { "path": ":docs:flow:docs:flow:flow" }
+    ],
+    "page_id": "ymlzf6nsxn7d4mecs6b5b"
+}
+---
+====== Flow ======
 
 
 ===== About =====
-''pipeline'' is the script language of ''Tabulify'' and describes a workflow of [[pipeline|pipeline]] that process [[docs:resource:resource|data resources]]
-
-
-
-
-===== Execution =====
-You can execute a pipeline with the [[docs:tabli:flow:execute|flow execute command]]
+A ''flow'' is a series of [[:docs:flow:pipeline|pipeline]]

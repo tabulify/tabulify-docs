@@ -1,0 +1,192 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:sqlserver:datatype" }
+    ],
+    "page_id": "3nv6saebdkp5g6fnwok6n"
+}
+---
+====== Sql Server - Data Type Support ======
+
+
+
+===== About =====
+This page regroups [[docs:data_type:data_type|data type]] support information for the [[:docs:system:sqlserver:sqlserver|Sql Server database]].
+
+
+
+===== List =====
+
+Below is the list of [[:docs:data_type:data_type|data type]] of the [[:howto:sqlserver:howto_connection|SQL Server Howto connection]]
+printed with the [[:docs:tabul:connection:type|connection type]] command.
+
+<unit>
+  * Start the [[:howto:sqlserver:howto_connection|SQL Server HowTo Connection]]
+<code bash>
+tabul service start sqlserver
+</code>
+</unit>
+<unit>
+  * Ping the [[:howto:sqlserver:howto_connection|SQL Server HowTo Connection]]
+<code bash>
+tabul service ping sqlserver
+</code>
+</unit>
+<unit>
+  * List the types
+<code bash>
+tabul connection type sqlserver
+</code>
+<console height="300" scroll="toggle">
+
+Known Types for the connection (sqlserver)
+name                aliases            ansi_type                         max_precision   supported   description
+-----------------   ----------------   -------------------------------   -------------   ---------   ---------------------------------------------------------
+bigint                                 bigint                            19              ✓           Eight-byte integer
+bigint identity                        bigint                            19              ✓           Eight-byte integer
+binary                                 binary                            8000                        Binary data (“byte array”)
+bit                                    bit                               1               ✓           Fixed-length bit string
+char                                   character                         8000            ✓           Fixed-length blank padded character string
+date                                   date                              10              ✓           Calendar date (year, month, day)
+datetime                               timestamp                         23              ✓           Date and time without time zone
+datetime2                              timestamp                         7               ✓           Date and time without time zone
+datetimeoffset                         timestamp with time zone          34              ✓           Date and time, including time zone
+decimal                                decimal                           38              ✓           Exact numeric of selectable precision
+decimal identity                       decimal                           38              ✓           Exact numeric of selectable precision
+float               double precision   double precision                  53              ✓           Double precision floating-point number (8 bytes)
+image                                  long varbinary                    2147483647                  Variable-length binary data (“byte array”)
+int                                    integer                           10              ✓           Four-byte integer
+int identity                           integer                           10              ✓           Four-byte integer
+money                                  decimal                           19              ✓           Exact numeric of selectable precision
+nchar                                  national character                4000            ✓           Fixed-length text in Unicode character set
+ntext                                  long national character varying   1073741823      ✓           Very long variable-length text in a Unicode character set
+numeric                                numeric                           38              ✓           Exact numeric of selectable precision
+numeric identity                       numeric                           38              ✓           Exact numeric of selectable precision
+nvarchar                               national character varying        4000            ✓           Variable-length text in a Unicode character set
+real                                   real                              24              ✓           Single precision floating-point number (4 bytes)
+rowversion          timestamp          binary                                                        Binary data (“byte array”)
+smalldatetime                          timestamp                         16              ✓           Date and time without time zone
+smallint                               smallint                          5               ✓           Two-byte integer
+smallint identity                      smallint                          5               ✓           Two-byte integer
+smallmoney                             decimal                           10              ✓           Exact numeric of selectable precision
+sql variant                                                              8000                        Database Specific type
+sysname                                national character varying        128             ✓           Variable-length text in a Unicode character set
+text                                   long character varying            2147483647      ✓           Very long variable-length character string
+time                                   time                              16              ✓           Time of day without time zone
+tinyint                                tinyint                           3               ✓           One-byte integer (0-255)
+tinyint identity                       tinyint                           3               ✓           One-byte integer (0-255)
+uniqueidentifier                       character                         36              ✓           Fixed-length blank padded character string
+varbinary                              varbinary                         8000                        Variable-length binary data (“byte array”)
+varchar                                character varying                 8000            ✓           Variable-length character string
+xml                                    xml                                               ✓           XML data
+
+</console>
+</unit>
+
+
+
+===== Note =====
+
+
+
+==== Default precision for VARCHAR and NVARCHAR ====
+
+SQL Server use a default precision of ''1'' for ''varchar'' and ''nvarchar'' when not specified.
+
+<blockquote>
+When n isn't specified in a data definition or variable declaration statement, the default length is 1.
+When n isn't specified with the CAST function, the default length is 30.
+<cite>[[https://learn.microsoft.com/en-us/sql/t-sql/data-types/char-and-varchar-transact-sql|varchar]] and [[https://learn.microsoft.com/en-us/sql/t-sql/data-types/nchar-and-nvarchar-transact-sql|nvarchar]] documentation reference</cite>
+</blockquote>
+
+
+We change this behavior to set it:
+  * respectively the tabulify [[:docs:data_type:character#default precision|default varchar and nvarchar value]]
+  * or ''max'' if the default is not specified
+
+Why? The data loading would just fail.
+
+
+
+==== Prevision vs Max Character data Specifier ====
+
+
+Note that the precision for character type (''varchar'', ''nvarchar'') reports the max precision before the `max` specifier was created.
+
+The `max` specifier is equivalent to the [[#clob|SQL CLOB data type]].
+
+
+^ Type declaration ^ Max Storage ^
+| ''varchar(max)'' | up to 2GB of data (`2^31 bytes`) |
+| ''varchar(8000)'' | up to 8000 characters |
+
+By default, when the precision is not specified in a [[:docs:resource:manifest|manifest]], Tabulify uses the maximum numeric precision (ie ''8000'', not the ''max'' specifier)
+
+==== Clob ====
+
+SqlServer does not have a specific data type for the [[https://learn.microsoft.com/en-us/sql/connect/jdbc/using-advanced-data-types?view=sql-server-ver17#blob-and-clob-and-nclob-data-types|CLOB]] type. Instead, you can use the character data type with the ''max'' specifier.
+
+In a cross transfer, if the source table has a ''CLOB'' column and the Sql Server target table does not exist, we create a ''LongVarchar'' column. If the length of your text is greater than `2147483647` you should define a column with the `varchar(max)` type
+
+==== Date/Time Sql Type ====
+
+Over the [[docs:data_type:date_time|time data type]], we map:
+
+  * the standard sql `timestamp` type to the [[https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime2-transact-sql?view=sql-server-ver16|datetime2]] sql server type
+  * the standard sql `timestamp with timezone` type to the [[https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetimeoffset-transact-sql|datetimeoffset]] sql server type
+
+Because Sql Server does not support `time with time zone`, we translate it to the [[https://learn.microsoft.com/en-us/sql/t-sql/data-types/time-transact-sql|time]] sql server type when creating a table from a third database.
+
+
+''SQL Server'' supports several ''timestamp'' type (''datetime2'', ''datetime''), we set as default the recommended ''datetime2''.
+==== Time Zone ====
+
+
+^ Type ^ SQL Server Support ^ Conversion In ^ Conversion Out ^
+| ''time with time zone'' | None | ''Time'' |
+| ''timestamp with time zone'' | ''datetimeoffset'' | | Not supported |
+
+
+Note that the ''datetimeoffset'' is not seen by SQL Server has being a ''timestamp with time zone'' internally and have its own type (''-155'')
+
+We still support it in case of transfer from a third system to SQL Server and make the conversion:
+  * from the standard [[https://docs.oracle.com/javase/8/docs/api/java/time/OffsetDateTime.html|OffsetDateTime]]
+  * to the [[https://learn.microsoft.com/en-us/sql/connect/jdbc/reference/datetimeoffset-class|microsoft.sql.DateTimeOffset]] as explained in the [[https://learn.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types|type documentation]]
+
+Unfortunately, the other way around is not yet supported as it would require consequent additional work (ie converting it at insert and at retrieval)
+
+==== XML ====
+
+As first class citizen, we support the [[https://learn.microsoft.com/en-us/sql/connect/jdbc/using-advanced-data-types?view=sql-server-ver17#xml-data-type|XML type]]
+
+
+
+==== JSON ====
+
+
+As stated on [[https://learn.microsoft.com/en-us/sql/t-sql/data-types/json-data-type?view=sql-server-ver17#feature-availability|its page]], the JSON data type:
+  * is generally available for Azure SQL Database and Azure SQL Managed Instance configured with the Always-up-to-date update policy.
+  * is in preview for SQL Server 2025 (17.x) Preview.
+
+Before that, if your transfer a ''JSON'' column into a SQL Server, we map it to a ''varchar(max)''
+==== Boolean Not Supported ====
+
+
+The native ''boolean'' is not supported by SQL Server.
+
+They recommend to use a [[https://learn.microsoft.com/en-us/sql/t-sql/data-types/bit-transact-sql|bit(1)]].
+
+<blockquote>
+The bit data type can be used to store Boolean values.
+The string values TRUE and FALSE can be converted to bit values:
+  * TRUE is converted to 1,
+  * and FALSE is converted to 0.
+<cite>[[https://learn.microsoft.com/en-us/sql/t-sql/data-types/bit-transact-sql|bit-transact-sql]]</cite>
+</blockquote>
+When transferring a ''boolean'' from a third database to SQL Server, if the table does not exist, we transform it as ''bit(1)''.
+==== Warning: Timestamp is not a date time but a RowVersion binary data ====
+
+You should be aware that ''timestamp'' in SQL Server is not the [[:docs:data_type:date_time|timestamp]] data type but an alias for the ''rowversion'' type ([[https://learn.microsoft.com/en-us/sql/t-sql/data-types/rowversion-transact-sql|Ref]]).
+
+You should use ''datetime2''
+

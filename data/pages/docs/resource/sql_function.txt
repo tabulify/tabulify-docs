@@ -1,0 +1,73 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:sql_stored_function" }
+    ],
+    "page_id": "nuavgkg57s3rx7x65fzck"
+}
+---
+====== SQL Function======
+
+
+===== About =====
+A ''SQL'' ''Stored Function'' is a function that is 
+  * stored in the database.
+  * accessible by name 
+
+
+A stored function may return:
+  * a scalar value
+  * or a result set.
+
+
+
+===== Execution Example =====
+
+
+  * [[:docs:resource:sql_select|SQL Query]] with a scalar function
+```sql
+select upper('lowercase to uppercase')
+```
+  * Upper function as stored procedure (from [[howto:postgres:procedure_with_out_parameter|this Postgres HowTo]]) with the [[:docs:system:database:jdbc_escape|JDBC escape syntax]]
+```sql
+{? = call upper( ? ) }"
+```
+  * [[:docs:resource:sql_select|SQL Query]] with the function ''setoffunc'' that returns a result set (from [[howto:postgres:function_setof|this Postgres HowTo]])
+```sql
+SELECT * FROM setoffunc()
+```
+
+
+
+
+ 
+
+===== Management =====
+
+==== Creation ====
+
+You create a stored function with a [[sql_dml|SQL DML Request]] that contains the SQL statements 
+  * ''CREATE FUNCTION'' 
+  * or ''CREATE OR REPLACE FUNCTION''
+
+==== Execution ====
+
+
+You execute a SQL ''stored function'' by:
+  * using it in a [[:docs:resource:sql_select|SQL Query]].
+  * by calling it as [[:docs:resource:sql_stored_procedure|SQL stored procedure]] with an ''OUT'' parameter
+
+
+
+===== Database Support =====
+
+The different way to call and use a function is database dependent.
+
+
+The below table link to the documentation and to howtos.
+Tabulify supports by default all database SQL syntax.
+
+^ Database ^ Create Function Documentation ^ HowTo ^
+| [[:howto:postgres:postgres|Postgres]] | [[https://www.postgresql.org/docs/current/sql-createfunction.htm|sql-createfunction]] | [[howto:postgres:function_setof|SETOF function]] |
+
+

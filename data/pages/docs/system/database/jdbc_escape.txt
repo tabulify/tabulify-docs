@@ -1,0 +1,174 @@
+---json
+{
+    "page_id": "glyplljqekc7k4cuqdxva"
+}
+---
+====== JDBC Escape Syntax ======
+
+
+
+
+===== About =====
+''JDBC Escape Syntax'' is Java syntaxes sugar on top of SQL.
+
+It's a templating function that permits to translate SQL clause into the different [[database|database]] SQL flavor.
+
+
+
+<note width=300px align=center>
+In the examples below, we use the question  mark ''?''. It's known as a [[:docs:system:database:sql_parameterized_statement|parameter]]
+</note>
+===== Stored Procedure Example  =====
+
+
+
+
+For example, you can call a [[:docs:resource:sql_stored_procedure|stored procedure]] with this escaped SQL syntax
+<code sql>
+{call procedure_name (?, ?)}
+</code>
+and it will be translated by the database (not by tabulify) to:
+  * in Oracle
+<code sql>
+BEGIN procedure_name(?, ?); END;
+</code>
+  * in SQL Server,
+<code sql>
+EXEC procedure_name ?, ?
+</code>
+  * in PostgreSQL
+<code sql>
+CALL procedure_name(?, ?)
+</code>
+
+===== Syntaxes =====
+==== Stored Procedure ====
+
+The escape syntax to call a [[:docs:resource:sql_stored_procedure|stored procedure]] is:
+```sql
+{call <procedure_name> [(<argument-list>)]}
+{call procedure_name (?, ?)}
+```
+or, where a procedure returns a result parameter:
+```sql
+{? = call <procedure_name> [(<argument-list>)]}
+{? = call procedure_name (?, ?)}
+```
+
+==== Scalar function ====
+
+The escape syntax to access a [[:docs:resource:sql_function|scalar function]] is:
+<code sql>
+{fn <function-name> (argument list)}
+</code>
+For example, 
+  * ''concat'' with two arguments to be concatenated:
+<code sql>
+-- called as procedure
+{fn concat("Hello", " ", "World")}
+-- called with a select
+select {fn concat("Hello", " ", "World")}
+</code>
+  * Gets the name of the current database user:
+<code sql>
+-- called as procedure
+{fn user()}
+-- called with a select
+select {fn user()}
+</code>
+  * ''Substring''
+<code sql>
+{fn SUBSTRING(text, 1, 10)}
+</code>
+  * ''Upper''
+<code sql>
+{fn upper( ? ) }
+</code>
+  * All other functions are listed in the [[#specification|JDBC specification section Scalar function]]
+
+They get translated into database-specific functions
+<code sql>
+"Hello" || " " || "World" -- Oracle concat
+SUBSTR(text, 1, 10) -- Oracle substring
+"Hello" + " " + "World" -- SQL Server concat
+SUBSTRING(text, 1, 10) -- SQL Server substring
+</code>
+
+
+
+==== Date/Time literals ====
+
+
+
+<code sql>
+{d 'yyyy-mm-dd'} -- date
+{t 'hh:mm:ss'} -- time
+{ts 'yyyy-mm-dd hh:mm:ss.f...'}  -- timestamp
+</code>
+
+Example:
+<code sql>
+select {d '2023-12-25'}        // Date
+select {t '14:30:00'}          // Time  
+select {ts '2023-12-25 14:30:00'} // Timestamp
+</code>
+
+
+This syntax gets translated to database-specific format
+<code sql>
+DATE '2023-12-25' -- Oracle Date
+'2023-12-25' -- SQL Server Date
+</code>
+
+
+==== Outer Join ====
+
+The escape syntax for an outer join is:
+
+<code sql>
+{oj <outer-join>}
+</code>
+where ''outer-join'' has the form:
+<code sql>
+table {LEFT|RIGHT|FULL} OUTER JOIN {table | <outer-join>} ON search-condition
+</code>
+
+Example:
+<code sql>
+SELECT * FROM {oj TABLE1 LEFT OUTER JOIN TABLE2 ON DEPT_NO = 003420930}
+</code>
+
+
+==== LIKE Escape ====
+
+The following syntax can be used at the end of a LIKE predicate:
+
+<code sql>
+{escape '<escape-character>'}
+</code>
+
+Example:
+<code sql>
+SELECT name FROM Identifiers WHERE Id LIKE '\\_%' {escape '\\'}
+</code>
+
+==== Limit Escape ====
+
+
+The escape syntax for limiting the number of rows returned by a query is:
+<code sql>
+{limit <limit clause>}
+</code>
+where the format for the ''limit clause'' is:
+<code sql>
+rows [offset row_offset]
+</code>
+
+Example:
+<code sql>
+SELECT * FROM TABLE1 WHERE F1 >100 {limit 20}
+</code>
+===== Specification =====
+
+
+More information can be found in the [[https://www.jcp.org/en/jsr/detail?id=221|JDBC Specification JSR 221]], section ''13.4 Escape Syntax'' ([[https://download.oracle.com/otn-pub/jcp/jdbc-4_1-mrel-spec/jdbc4.1-fr-spec.pdf|Direct PDF Link]])

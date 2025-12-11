@@ -1,0 +1,53 @@
+---json
+{
+    "description": "Stop and start services (database, mail, ...)",
+    "page_id": "lw02dh3qd0azp3naayxdh",
+    "template": "holy"
+}
+---
+====== Tabulify Services ======
+
+
+''Services'' represents processes that start and stop [[:docs:system:system|systems]].
+
+
+===== Provider =====
+
+  * [[docker|Docker services]] - Create/Start/Drop docker container
+
+===== Storage =====
+
+The service metadata is stored in the [[docs:conf:tabul.yml|configuration vault]]
+
+
+Example with the [[howto:mysql:howto_connection|howto mysql service]] in [[docs:service:docker|docker]] format
+<code yaml .tabul.yaml>
+services:
+  sqlserver:
+    type: docker
+    image: mcr.microsoft.com/mssql/server:2022-CU18-ubuntu-22.04
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: TheSecret1!
+</code>
+
+As for any value in the configuration vault, you can use:
+  *  plain value
+  * or any [[:docs:conf:secret|secret format]].
+
+===== Tabul Service: List/Info =====
+
+The [[:docs:tabul:service:start|tabul service module]] permits to manage the services at the command line.
+
+===== Attributes =====
+
+All services will have the following [[:docs:conf:attribute|attributes]]
+
+^ Name ^ Description ^
+| ''NAME'' | The name of the service |
+| ''TYPE'' | The type of the service (ie the provider name) |
+| ''IS_STARTED'' | Boolean that returns true if the service is started, false otherwise |
+
+Each [[#provider|service provider]] may bring its own attributes.

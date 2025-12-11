@@ -2,8 +2,7 @@
 {
     "description": "This how-to shows you how to generate a digital Odometer with the column sequence generator.",
     "low_quality_page": "false",
-    "page_id": "upklbuyki3z05zffuz2sm",
-    "title": "How to create an odometer with a sequence generator"
+    "page_id": "upklbuyki3z05zffuz2sm"
 }
 ---
 ====== Tabulify - How to create an odometer with a sequence generator ======
@@ -30,8 +29,8 @@ An ''odometer'' is the indicator in your car dashboard that count the number of 
 To generate data, you need to create a [[docs:resource:generator|generator file]] that will describe the data to be generated.
 
 The below [[docs:resource:generator|data resource generator]]:
-  * has the [[docs:resource:name|name]] ''sequence_odometer--datagen.yml''
-  * has the [[docs:resource:logicalname|logical name]] ''sequence_odometer''
+  * has the [[docs:resource:name|name]] ''sequence_odometer--generator.yml''
+  * has the [[docs:resource:logical_name|logical name]] ''sequence_odometer''
   * has a column named ''id'' that has [[docs:generator:sequence|sequence data generator]] that:
       * starts with the default value ''1''
       * increments by default with the value ''1''
@@ -51,41 +50,46 @@ The below [[docs:resource:generator|data resource generator]]:
       * and ''tick'' the column ''y'' when ''maxTick'' is reached (ie the column ''y'' will generate a new value)
   * will generate ''1000'' values because each column can generate ''10'' element (ie ''10x10x10'')
 <unit>
-<file yaml sequence_odometer--datagen.yml>
-Columns:
-  - name: id
-    type: integer
-    comment: A id column to see easily the number of values generated
-    DataGenerator:
-      type: sequence
-  - name: x
-    type: integer
-    comment: A column with a sequence date generator
-    DataGenerator:
-      type: sequence
-      start: 0
-      # number from 0 to 9 will be generated (10 elements)
-      maxTick: 10
-  - name: y
-    type: integer
-    comment: A column with a sequence timestamp generator
-    DataGenerator:
-      type: sequence
-      start: 0
-      # number from 0 to 9 will be generated (10 elements)
-      maxTick: 10
-      # the x column will go to the next value when this sequence has reach its last value
-      tickerFor: x
-  - name: z
-    type: integer
-    comment: A column with a sequence timestamp generator
-    DataGenerator:
-      type: sequence
-      start: 0
-      # number from 0 to 9 will be generated (10 elements)
-      maxTick: 10
-      # the y column will go to the next value when this sequence has reach its last value
-      tickerFor: y
+<file yaml sequence_odometer--generator.yml>
+kind: generator
+spec:
+  Columns:
+    - name: id
+      type: integer
+      comment: A id column to see easily the number of values generated
+      data-supplier:
+        type: sequence
+    - name: x
+      type: integer
+      comment: A column with a sequence date generator
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 0
+          # number from 0 to 9 will be generated (10 elements)
+          maxTick: 10
+    - name: y
+      type: integer
+      comment: A column with a sequence timestamp generator
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 0
+          # number from 0 to 9 will be generated (10 elements)
+          maxTick: 10
+          # the x column will go to the next value when this sequence has reach its last value
+          tickerFor: x
+    - name: z
+      type: integer
+      comment: A column with a sequence timestamp generator
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 0
+          # number from 0 to 9 will be generated (10 elements)
+          maxTick: 10
+          # the y column will go to the next value when this sequence has reach its last value
+          tickerFor: y
 
 
 
@@ -93,16 +97,16 @@ Columns:
 </unit>
 ==== Printing the data ====
 
-With the [[docs:tabli:data:head|data head command]], we can print the ''values'' generated.
+With the [[docs:tabul:data:head|data head command]], we can print the ''values'' generated.
 <unit>
-<code dos>
-tabli data head --limit 101 sequence_odometer--datagen.yml@howto
+<code bash>
+tabul data head --limit 101 sequence_odometer--generator.yml@howto
 </code>
 <note tip>
 [[docs:connection:howto|howto]] is the connection that contains the files used in the [[..:howto|HowTo's]].
 </note>
 <console>
-The first 101 rows of the data resource (sequence_odometer--datagen.yml@howto):
+The first 101 rows of the data resource (sequence_odometer@memgen):
  id   x   y   z
 ---   -   -   -
   1   0   0   0
@@ -205,7 +209,6 @@ The first 101 rows of the data resource (sequence_odometer--datagen.yml@howto):
  98   0   9   7
  99   0   9   8
 100   0   9   9
-101   1   0   0
 </console>
 </unit>
 

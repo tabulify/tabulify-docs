@@ -1,0 +1,140 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:target_pattern" },
+        { "path": ":docs:resource:target_template" }
+    ],
+    "page_id": "mcam443erusnv2r3xgrtd"
+}
+---
+====== Template String ======
+
+
+===== About =====
+A ''template string'' is a template expression that generates a string such as the [[:docs:resource:path|path of resource]]
+
+
+
+
+You can refer to this pattern:
+  * in the [[docs:flow:template_data_uri|template data uri]] path.
+  * or in an operation with a argument that accepts a ''template string''
+
+===== Syntax =====
+
+A target pattern is a string that contains at minimal a variable expression.
+
+Variable Expression:
+```bash
+${prefix_variable_name}
+# or
+$prefix_variable_name
+```
+where ''prefix'' describe the type of variable provider
+
+^ Prefix ^ Type ^ Type of variables ^
+| ''record'' or ''rec'' | [[:docs:resource:record|record]] | [[#Record Column Values]] |
+| ''input'' or ''in'' | [[:docs:flow:input|input data path]] | [[#Data Path Attributes]] |
+| ''target'' or ''tar'' | [[:docs:flow:target|target data path]] | [[#Data Path Attributes]] |
+| ''pipeline'' or ''pipe'' | [[:docs:flow:pipeline|pipeline]] | [[#Pipeline Attributes]] |
+
+===== List of Variable Providers =====
+
+Each step will describe the accepted variables providers
+
+
+
+
+==== Glob Matched Groups ====
+
+
+In the pattern, you can reference a [[docs:common:globbing|globbing matched wildcard]] from a [[data_selector|data source selector]] using the ''%%$x%%'' syntax where x indicates the index of a glob pattern. ie
+      * ''%%$0%%'' defines the whole expression (ie the whole path)
+      * ''%%$1%%'' defines the first matched wildcard
+      * ''%%$2%%'' defines the second matched wildcard
+      * and so on until ''%%$9%%''.
+
+
+You can see the value of the back reference with the [[docs:tabul:data:list|tabul data list command]].
+If you want to know the value of ''%%$1%%'', just ask for the attribute ''1''
+
+Example with [[docs:system:tpcds|tpcds]] where we want to capture the name of the web table but without the prefix.
+<unit>
+<code bash>
+tabul data list -a 1 web_*@tpcds
+</code>
+<console>
+path          media_type     1
+-----------   ------------   -------
+web_page      sql/relation   page
+web_returns   sql/relation   returns
+web_sales     sql/relation   sales
+web_site      sql/relation   site
+</console>
+</unit>
+==== Data Path Attributes ====
+
+
+In the template, you can reference any [[:docs:conf:attribute|attribute]] of a data path
+
+
+
+Example for a [[docs:resource:logical_name|logical name]] of [[:docs:flow:input|input data resource]]
+<code>
+${input_logical_name}
+</code>
+
+
+You can see all available attributes with the [[docs:tabul:data:info|data info command]].
+
+<unit>
+<code bash>
+tabul data info web_page@tpcds
+</code>
+<console>
+Information about the data resource (web_page@tpcds)
+attribute          value                                                                                              description
+----------------   ------------------------------------------------------------------------------------------------   -----------------------------------------------------
+ABSOLUTE_PATH      web_page                                                                                           The absolute path on the data system
+ACCESS_TIME                                                                                                           The access time (access time)
+COMMENT                                                                                                               A comment
+CONNECTION         tpcds                                                                                              The connection name
+COUNT                                                                                                                 The number of records
+CREATION_TIME                                                                                                         The creation time (birth time)
+DATA_URI           web_page@tpcds                                                                                     The data uri
+KIND               relation                                                                                           The kind of media
+LOGICAL_NAME       web_page                                                                                           The logical name
+MD5                2d3f08a0ad007e5236ed694250e89721                                                                   The Md5 hash
+MEDIA_SUBTYPE      relation                                                                                           The media subType
+MEDIA_TYPE         sql/relation                                                                                       The media type
+NAME               web_page                                                                                           The name of the data resource
+PARENT                                                                                                                The parent
+PATH               web_page                                                                                           The relative path to the default connection path
+SHA384             0d3fcd0bd2dc1aa6c14a6ce4a4c8acff06a6194a4f56f4730bbb371aaf490da1fe318f9f11ba44157ffd53d501e2f551   The Sha384 hash
+SHA384_INTEGRITY   sha384-DT/NC9LcGqbBSmzkpMis/wamGUpPVvRzC7s3Gq9JDaH+MY+fEbpEFX/9U9UB4vVR                            The sha384 value used in the html integrity attribute
+SIZE                                                                                                                  The number of byte
+TABULAR_TYPE       data                                                                                               The tabular type
+UPDATE_TIME                                                                                                           The last update time (modify time)
+</console>
+</unit>
+
+==== Pipeline Attributes ====
+
+If your template is used in a pipeline, you can add any [[:docs:flow:pipeline#attributes|pipeline attributes]].
+
+Example:
+<code>
+${pipeline_start_time}
+</code>
+==== Record Column Values ====
+
+If your step is running on [[docs:flow:granularity|record level]] (Example: [[:docs:op:split|split]])
+you can also add the record value of a column using the ''%%$rec_x%%'' or ''%%${rec_x}%%'' syntax where ''x'' should be replaced by the [[docs:resource:column|column name]].
+
+
+
+Example:
+<code>
+${record_column_name}
+${rec_column_name}
+</code>

@@ -1,9 +1,0 @@
-====== Postgres - CLOB ======
-
-===== CLOB =====
-
-The sql ''CLOB'' data type is not supported by [[postgres|PostgreSql]]. (ie the CLOB feature (''T041-02'') is in [[https://www.postgresql.org/docs/current/unsupported-features-sql-standard.html|the unsupported Features]]). 
-
-''Tabulify'' transform then:
-  * a ''clob'' automatically in a [[https://www.postgresql.org/docs/current/datatype-character.html|text]] postgres data type 
-  * a ''text'' postgres column in a ''clob'' data type for external database.

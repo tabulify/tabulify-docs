@@ -1,0 +1,93 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabul:conf:delete" }
+    ],
+    "low_quality_page": "false",
+    "page_id": "rt2fbt1z1xtnqhmbqvdib"
+}
+---
+====== Tabul - Env Delete Command  ======
+
+
+===== About =====
+The ''delete'' command of the [[..:env:start|env module]] remove a [[docs:conf:global_env|global attribute]] in a [[docs:conf:tabul.yml|configuration vault]].
+
+
+===== Example =====
+
+To remove the [[docs:common:log|loglevel]]
+
+
+<code bash>
+tabul env delete log-level
+</code>
+
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul env delete -h
+</code>
+<console>
+Tabul env delete
+================
+
+Delete a tabulify attribute from the conf file
+
+
+
+Example
+-------
+
+ 1 - To remove the `log-level` attribute, you would use the following command:
+
+
+    tabul env delete log-level
+
+
+
+
+Syntax
+------
+
+
+    tabul env delete <key>
+
+
+where:
+
+
+  Arguments:
+
+    <key>                                                   The attribute to delete (globbing works too)
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

@@ -1,8 +1,7 @@
 ---json
 {
     "description": "The data generator is a module that permits to generate data.",
-    "page_id": "xxxkddnftkzksslsaulzu",
-    "title": "Generate data as you wish"
+    "page_id": "xxxkddnftkzksslsaulzu"
 }
 ---
 ====== Data Generator ======
@@ -12,10 +11,27 @@
 ===== About =====
 <icon name="mdi:cog"/> ''Data Generator'' is a  module that permits to generate data.
 
-It is based on two elements:
-  * the [[docs:resource:generator|generator resource]] that defines and generate data.
+It is based on the following elements:
+  * the [[docs:resource:generator|generator resource]] file that defines and generate data.
   * the [[docs:op:fill|data fill]] operation that ''fill'' [[docs:resource:content|content data resource]] with data.
+  * the [[:docs:op:enrich|enrich operation]] to add virtual columns.
 
 
 
+===== Generators =====
 
+<iterator>
+    <data>select where path glob ':docs:generator*' and path != ':docs:generator:generator' order by path asc </data>
+<grid>
+        <fragment>
+        <box>
+            <card clickable width="300">
+            <page-image ratio="16:9"/>
+            === $name ===
+
+            ${description | head(250,"...")} [[$path| ]]
+            </card>
+        </box>
+        </fragment>
+</grid>
+</iterator>

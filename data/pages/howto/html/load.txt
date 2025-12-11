@@ -1,0 +1,59 @@
+---json
+{
+    "name": "Load HTML table",
+    "page_id": "j9xc8ur9ll79t1c0f5016"
+}
+---
+====== How to load an HTLM table in a database? ======
+
+
+===== About =====
+
+This howto shows you how to load an [[:docs:resource:html|HTML table]] in a [[docs:resource:sql_table|SQL Table]].
+
+Because the [[:docs:resource:html|HTML resource]] is a [[:docs:resource:file|file resource]], it can be used as any [[:docs:flow:source|source]] in any type of [[:docs:op:transfer|transfer]].
+
+
+===== Steps =====
+
+==== Upsert operation ====
+
+Example with the [[:docs:tabul:data:upsert|upsert]] operation and  the [[https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes|10 languages code]]
+<unit>
+<code bash>
+tabul data upsert \
+   https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes \
+   @sqlite
+</code>
+<console>
+Transfer results
+input                                                 target                           latency   record_count   error_code   error_message
+---------------------------------------------------   ------------------------------   -------   ------------   ----------   -------------
+List_of_ISO_639-1_codes@https-en.wikipedia.org\wiki   list_of_iso_639_1_codes@sqlite   0.82s              184
+</console>
+</unit>
+
+
+==== Do we have loaded data? ====
+
+
+<unit>
+<code bash>
+tabul data head list_of_iso_639_1_codes@sqlite
+</code>
+<console>
+The first 10 rows of the data resource (list_of_iso_639_1_codes@sqlite):
+ISO Language Names   Set 1   Set 2   Set 3      Scope           Type            Endonym(s)                        Other Name(s) [note 1]   Notes
+------------------   -----   -----   --------   -------------   -------------   -------------------------------   ----------------------   ------------------------------------
+                                                                                                                                           
+Abkhazian            ab      abk     abk        Individual      Living          Аҧсуа; Apsua; აფსუა               Abkhaz                   
+Afar                 aa      aar     aar        Individual      Living          Qafar af                                                   
+Afrikaans            af      afr     afr        Individual      Living          Afrikaans                                                  
+Akan                 ak      aka     aka + 2    Macrolanguage   Living          Ákán                                                       Twi is tw/twi, Fanti is fat
+Albanian             sq      sqi     alb        sqi + 4         Macrolanguage   Living                            Shqip                    called "Albanian Phylozone" in 639-6
+Amharic              am      amh     amh        Individual      Living          አማርኛ (Amarəñña)                                            
+Arabic               ar      ara     ara + 28   Macrolanguage   Living          اَلْعَرَبِيَّةُ (al-ʿarabiyyah)                            Standard Arabic is arb
+Aragonese            an      arg     arg        Individual      Living          Aragonés                                                   
+Armenian             hy      hye     arm        hye             Individual      Living                            Հայերեն (Hayeren)
+</console>
+</unit>

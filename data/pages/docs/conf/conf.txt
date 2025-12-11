@@ -1,10 +1,15 @@
+---json
+{
+    "page_id": "08oxii2qtghscgr64ghc5"
+}
+---
 ====== Tabulify - Configuration ======
 
 
 ===== About =====
 The ''Tabulify'' platform  can be configured in order via:
-  * the [[docs:tabli:command|command line]] option and flags
-  * the [[docs:conf:file|configuration vault]]
+  * the [[docs:tabul:command|command line]] option and flags
+  * the [[docs:conf:tabul.yml|configuration vault]]
   * the [[docs:conf:os|operating system environment variables]]
 
 

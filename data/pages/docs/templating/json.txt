@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "lfoy3iwbv7n9azdhl0rhk"
+}
+---
 ====== Native Engine - Json Template ======
 
 ===== Template =====
@@ -12,7 +17,7 @@ A ''Json'' template is a [[docs:templating:native|native template]]:
 
 
 ===== Howto =====
-[[howto:templating:create_json_from_tabular_data]]
+[[howto:json:create_json_from_tabular_data]]
 
 
 ===== Example:  catalog of item =====
@@ -33,5 +38,11 @@ where:
   * ''group'', 
   * ''item_code'', 
   * ''price'' 
-  * and ''description'' (from ''%%${group}}%%'', ''%%${item_code}%%'', ''%%${price}%%'' and ''%%${description}%%'') 
-are the column names of the [[docs:flow:source|source]].
+  * and ''description'' 
+are the column names of the [[docs:flow:input|input]]
+and:
+  * ''%%${group}}%%'', 
+  * ''%%${item_code}%%'', 
+  * ''%%${price}%%'' 
+  * and ''%%${description}%%'' 
+are the respective template variables 

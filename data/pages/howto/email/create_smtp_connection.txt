@@ -1,0 +1,94 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:howto:email:smtp_connection" },
+        { "path": ":howto:email:smtp_connection" }
+    ],
+    "page_id": "jw1k2vwzibnp5cxuuq47b"
+}
+---
+====== How to create a SMTP connection? ======
+
+
+===== About =====
+
+This howto shows you how to create a <icon name="email" /> [[:docs:connection:smtp|smtp connection]] to a [[:docs:system:smtp|SMTP system]]
+
+===== Attributes =====
+
+
+An oracle connection supports :
+  * all [[:docs:connection:attribute|common connection attributes]]
+    * [[:docs:connection:uri|Uri]],
+    * user,
+    * [[:docs:connection:password|password]]
+    * ...
+  * and all [[:docs:connection:smtp|Smtp connection attributes]]
+    * Auth
+    * ...
+
+===== Example =====
+
+Here are the attributes of the [[howto:email:howto_connection_service|howto connection]]
+<unit>
+<code bash display="none">
+tabul data print --type text .tabul/.tabul.yml@home | yq '.spec.connections.smtp'
+</code>
+<console yaml>
+
+comment: HowTo Smtp Connection
+from: support@tabulify.com
+to: support@tabulify.com
+uri: smtp://localhost:1025
+
+</console>
+</unit>
+
+
+
+===== How to create =====
+
+You can  create an [[:docs:connection:smtp|Smtp connection]]:
+  * by directly modifying the [[#Configuration vault]]
+  * or by using the [[#tabul command]]
+
+<note>
+=== Secret ===
+In this howto, the password is expected to be stored in the ''TABUL_MY_SMTP_PASSWORD'' [[:docs:conf:os|OS environment variable]] but there is more way to provide secrets.
+
+To know how to pass and handle secrets, read more at [[:docs:conf:secret]]
+</note>
+
+
+
+
+==== Configuration Vault ====
+
+In a [[docs:conf:tabul.yml|Configuration Vault]], to define a smtp [[docs:connection:connection|connection]] with the name ''mySmtp'', you could write:
+\\
+
+<code yaml>
+connections:
+  mySmtp:
+    uri: smtp://localhost:587
+    user: user
+    password: ${TABUL_MY_SMTP_PASSWORD}
+    to: Big Foo <foo@tabulify.com>, Big Bar <bar@tabulify.com>
+    from: The Tabulify <tabulify@server.com>
+    tls: true
+    auth: true
+</code>
+
+==== Tabul ====
+
+
+With the [[docs:tabul:connection:add|tabul add command of the connection module]], adding a smtp connection with the name ''smtpConnectionName'':
+
+<code bash>
+tabul connection add "smtpConnectionName" "smtp://localhost:587" \
+    --user login \
+    --password '${TABUL_MY_SMTP_PASSWORD}' \
+    --attribute "from=tabulify@server.com"
+</code>
+
+

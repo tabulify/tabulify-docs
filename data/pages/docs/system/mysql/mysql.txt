@@ -3,31 +3,39 @@
     "aliases": [
         { "path": ":docs:system:mysql" }
     ],
-    "page_id": "sizgoan0iv6rk1bvityc5"
+    "name": "MySQL",
+    "page_id": "sizgoan0iv6rk1bvityc5",
+    "template": "holy"
 }
 ---
 ====== MySql ======
 
 
 ===== About =====
-''MySql'' is a [[docs:system:relational|relational database system]] that is supported as [[docs:flow:source|source]] and [[docs:flow:target|target]].
+<icon name="logos:mysql" /> ''MySql'' is a [[docs:system:database:database|relational database system]] that is supported as [[docs:flow:source|source]] and [[docs:flow:target|target]].
 
-===== Catalog vs Database vs Schema =====
+
+
+
+===== Howto =====
+To follow the [[howto:howto|Howto]], you need to start a MySql container database. 
+
+The steps by steps are available on this page: [[howto:mysql:howto_connection]]
+
+===== Creation =====
+
+See [[:howto:mysql:create_connection|]]
+===== Support =====
+
+
+==== Catalog vs Database vs Schema ====
 In ''MySQL'' (([[https://dev.mysql.com/doc/refman/8.0/en/create-table.html#create-table-name|Reference Fully Qualified Table Name]])) :
   * ''SQL Catalog'' are called  ''database''
   * ''SQL Schema'' are not supported
 
-Because Tabulify is data source agnostic, a ''MySql Catalog'' is known as a [[docs:resource:schema|schema]] (ie the first parent).
+Because Tabulify is data source agnostic, a ''MySql Catalog'' is known as a [[docs:resource:sql_schema|schema]] (ie the first parent).
 
 To known about the historic of it, check this [[https://dev.mysql.com/doc/connector-odbc/en/connector-odbc-usagenotes-functionality-catalog-schema.html|article]]
-
-===== Version =====
-MySql is tested against version [[https://dev.mysql.com/doc/refman/5.7/en/|5.7]].
-
-===== Howto =====
-To follow the [[howto:howto|Howto]], you need to start a MySql container database. The steps by steps are available on this page: [[howto]]
-
-===== Note =====
 
 ==== Upsert ====
 
@@ -41,4 +49,9 @@ insert into `howto`.`d_category` (`cat_id`, `cat_desc`, `load_timestamp`)
 values (1, 'desc', '2020-11-17 13:20:38.5')
 on duplicate key update `load_timestamp` = values(`load_timestamp`)
 ```
+==== Data Type ====
 
+See [[data type]]
+
+==== Version ====
+MySql is tested against version [[https://dev.mysql.com/doc/refman/5.7/en/|5.7]].

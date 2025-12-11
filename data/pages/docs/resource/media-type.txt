@@ -1,0 +1,134 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:type" }
+    ],
+    "page_id": "vilyent2fe7jcopkg7d3p"
+}
+---
+====== Data Resource - Media Type Attribute ======
+
+
+===== About =====
+''media-type'' is a [[attribute|data resource attribute]] that defines at a high-level, the [[structure|structure of the data resource]].
+
+
+===== Detection =====
+
+This attribute is detected automatically if not specified.
+
+If the detection is not successful, the resource is seen as being a [[binary|binary file]].
+
+
+===== How to specify it  =====
+
+You may want to set it:
+  * if you want to treat:
+    * a [[csv|csv file]]
+    * as a [[text|text file]]
+  * if the detection fails (For instance, a web server that does not return any media type)
+
+
+
+
+
+
+==== Cli Option ====
+
+With the [[:docs:tabul:data:start|tabul data command]] such as [[docs:tabul:data:print|print]], [[docs:tabul:data:head|head]] and [[docs:tabul:data:tail|tail]] data command, you can specify the ''type'' (ie ''media type'' with the ''%%--type%%'' [[docs:tabul:option|option]].
+
+This is handy when you want to see the first lines of a document such as [[json|json]] or [[xml|xml]] because by default, ''Tabulify'' treats one document as one [[:docs:flow:granularity|record]].
+
+Example:
+<unit>
+<code bash>
+tabul data head --type text xml/relation.xml@howto
+</code>
+<console>
+The first 10 rows of the data resource (xml/relation.xml@howto):
+lines
+-----------------------------------------------------------------------------------------------------------------------------------------------
+<?xml version="1.0"?>
+<api batchcomplete="">
+  <query>
+    <normalized>
+      <n from="Relation_(database)" to="Relation (database)"/>
+    </normalized>
+    <pages>
+      <page _idx="23720058" pageid="23720058" ns="0" title="Relation (database)" description="The base data structure of relational databases">
+        <categories>
+          <cl ns="14" title="Category:Articles with example SQL code"/>
+</console>
+</unit>
+
+==== Resource Manifest ====
+
+
+In a [[manifest|manifest]], you can set it
+
+  * in a [[manifest#kind|kind manifest]] in the ''kind'' property
+
+<file yaml resource-manifest.yml>
+kind: csv
+spec:
+  data-uri: https://example.com/path/to/resource
+</file>
+
+  * in a [[manifest#resource|resource manifest]] in the ''media-type'' property.
+
+<file yaml resource-manifest.yml>
+kind: resource
+spec:
+  data-uri: https://example.com/path/to/resource
+  media-type: text/csv
+</file>
+
+===== How to see the media type of a file =====
+
+
+With the [[docs:tabul:data:info|tabul data info]] command, we can see that a [[csv|csv file]] has the type ''text/csv''.
+
+<unit>
+<code bash>
+tabul data info characters.csv@howto
+</code>
+<console>
+Information about the data resource (characters.csv@howto)
+attribute             value                                                                                              description
+-------------------   ------------------------------------------------------------------------------------------------   ----------------------------------------------------------------------
+CHARACTER_SET         UTF-8                                                                                              The character set of the file
+COLUMN_NAME           lines                                                                                              The name of the column when the text content is returned on one column
+COMMENT_CHARACTER     #                                                                                                  The comment character
+DELIMITER_CHARACTER   ,                                                                                                  The delimiter character
+END_OF_RECORD         \n, \r, \r\n                                                                                       The End Of Record string sequence
+ESCAPE_CHARACTER                                                                                                         The escape character
+HEADER_ROW_ID         1                                                                                                  The id of the header row
+IGNORE_EMPTY_LINE     true                                                                                               Ignore empty line
+QUOTE_CHARACTER       "                                                                                                  The quote character
+URI                   file:///opt/tabulify/resources/howto/characters.csv                                                The URI of the file
+ABSOLUTE_PATH         /opt/tabulify/resources/howto/characters.csv                                                       The absolute path on the data system
+ACCESS_TIME           2025-11-10 15:34:45.519261734                                                                      The access time (access time)
+COMMENT                                                                                                                  A comment
+CONNECTION            howto                                                                                              The connection name
+COUNT                 5                                                                                                  The number of records
+CREATION_TIME         2025-11-10 15:34:41.449090141                                                                      The creation time (birth time)
+DATA_URI              characters.csv@howto                                                                               The data uri
+KIND                  csv                                                                                                The kind of media
+LOGICAL_NAME          characters                                                                                         The logical name
+MD5                   d0d7f020d834cde13d0a14733520d4d6                                                                   The Md5 hash
+MEDIA_SUBTYPE         csv                                                                                                The media subType
+MEDIA_TYPE            text/csv                                                                                           The media type
+NAME                  characters.csv                                                                                     The name of the data resource
+PARENT                                                                                                                   The parent
+PATH                  characters.csv                                                                                     The relative path to the default connection path
+SHA384                6e96667d1306abb445b5608ec36d193a6dc775a6adc74844531906bf4691eee5f32ce7c423e38c9c072692f459c57d5f   The Sha384 hash
+SHA384_INTEGRITY      sha384-bpZmfRMGq7RFtWCOw20ZOm3Hdaatx0hEUxkGv0aR7uXzLOfEI+OMnAcmkvRZxX1f                            The sha384 value used in the html integrity attribute
+SIZE                  432                                                                                                The number of byte
+TABULAR_TYPE          data                                                                                               The tabular type
+UPDATE_TIME           2025-11-10 15:34:41.449090141                                                                      The last update time (modify time)
+</console>
+</unit>
+
+===== Specification =====
+
+We follow the [[https://www.iana.org/assignments/media-types/media-types.xhtml|media type]] convention.

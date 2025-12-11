@@ -1,0 +1,177 @@
+---json
+{
+    "page_id": "flgk903gphn1cadb4v2tb"
+}
+---
+====== How to diff a SQL table ? ======
+
+
+===== About =====
+This howto show you how to perform [[:docs:op:diff|diff operation]] between 2 [[docs:resource:sql_table|SQL Tables]] with the [[:docs:tabul:data:diff|data diff command]].
+
+
+===== Steps =====
+
+
+==== Load Data ====
+
+In this step, we load the [[:docs:resource:csv|csv]] resources that we want to compare into [[:docs:system:sqlite:sqlite|sqlite]]
+
+  * Load the ''original'' data resource (also known as the ''source'', ''old'', ''from'' or ''left'' resource)
+<unit>
+<code bash>
+tabul data replace diff/characters_original.csv@howto characters_original@sqlite
+</code>
+<console>
+Transfer results
+input                                target                       latency   record_count   error_code   error_message
+----------------------------------   --------------------------   -------   ------------   ----------   -------------
+diff/characters_original.csv@howto   characters_original@sqlite   0.50s                5
+</console>
+</unit>
+  * The ''new'' data resource (also known as the ''target'', ''right'', ''to'' resource)
+<unit>
+<code bash>
+tabul data replace diff/characters_new.csv@howto characters_new@sqlite
+</code>
+<console>
+Transfer results
+input                           target                  latency   record_count   error_code   error_message
+-----------------------------   ---------------------   -------   ------------   ----------   -------------
+diff/characters_new.csv@howto   characters_new@sqlite   0.53s                3
+</console>
+</unit>
+
+==== The data ====
+
+The fact that [[:docs:resource:record|records]] are missing can be easily spotted but there are more subtle differences.
+
+<unit>
+<code bash>
+tabul data print \
+    --strict-selection \
+    characters_new@sqlite \
+    characters_original@sqlite
+</code>
+<console>
+characters_new@sqlite
+Last Name        First Name   Birth Date   Wikipedia Page
+--------------   ----------   ----------   ---------------------------------------------------
+Schwarzenegger   Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+Norman           Don          1935-12-23   https://en.wikipedia.org/wiki/Don_Norman
+Kahneman         Daniel       1934-03-05   https://en.wikipedia.org/wiki/Daniel_Kahneman
+
+
+
+characters_original@sqlite
+last_name           first_name   birth_date   wikipedia_page
+-----------------   ----------   ----------   --------------------------------------------------------------
+Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+Norman              Don          1935-12-25   https://en.wikipedia.org/wiki/Don_Norman
+Harbison Carnagey   Dale         1888-11-24   https://en.wikipedia.org/wiki/Dale_Carnegie
+Kahneman            Daniel       1934-03-05   https://en.wikipedia.org/wiki/Daniel_Kahneman
+Pittman             Bob          1953-12-28   https://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)
+</console>
+</unit>
+
+
+==== Failure Behavior ====
+
+By default, a diff that detects differences will fail (ie return a bad exit code).
+  * The `--no-fail` option changes this behavior.
+  * You don't need to set it normally but as we monitor our documentation for failure, we don't want to fail
+
+==== Perform the diff ====
+
+All diff can be executed with the [[docs:tabul:data:diff|data diff command]] by giving as argument the [[docs:flow:source|source]] and [[docs:flow:target|target]] data resource.
+
+<unit>
+<code bash>
+tabul data diff \
+  --no-fail \
+  characters_original@sqlite characters_new@sqlite
+</code>
+<console>
+Diff Summary Report
+The data resources are not equals.
+from                         to                      equals   record_count   change_count
+--------------------------   ---------------------   ------   ------------   ------------
+characters_original@sqlite   characters_new@sqlite                       5              6
+</console>
+</unit>
+
+
+==== Perform a diff and generate a unified report ====
+
+In this step, we will asked for more details by asking for a [[:docs:op:diff#unified|unified report type]]
+<unit>
+<code bash>
+tabul data diff \
+    --no-fail \
+    --report-type unified \
+    characters_original@sqlite characters_new@sqlite
+</code>
+<console ansi>
+Unified Diff Report between the resources (characters_original@sqlite) and (characters_new@sqlite).
+ - [31mred[0m   for deleted
+ - [32mgreen[0m for added
+ - [34mblue[0m  for type change (example: number as varchar)
+The data resources are not equals.
+diff_status   last_name           first_name   birth_date   wikipedia_page
+-----------   -----------------   ----------   ----------   --------------------------------------------------------------
+=             Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+[32m+             [0m[32mNorman              [0m[32mDon          [0m[32m1935-12-23   [0m[32mhttps://en.wikipedia.org/wiki/Don_Norman[0m
+[32m+             [0m[32mKahneman            [0m[32mDaniel       [0m[32m1934-03-05   [0m[32mhttps://en.wikipedia.org/wiki/Daniel_Kahneman[0m
+[31m-             [0m[31mNorman              [0m[31mDon          [0m[31m1935-12-25   [0m[31mhttps://en.wikipedia.org/wiki/Don_Norman[0m
+[31m-             [0m[31mHarbison Carnagey   [0m[31mDale         [0m[31m1888-11-24   [0m[31mhttps://en.wikipedia.org/wiki/Dale_Carnegie[0m
+[31m-             [0m[31mKahneman            [0m[31mDaniel       [0m[31m1934-03-05   [0m[31mhttps://en.wikipedia.org/wiki/Daniel_Kahneman[0m
+[31m-             [0m[31mPittman             [0m[31mBob          [0m[31m1953-12-28   [0m[31mhttps://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)[0m
+</console>
+</unit>
+
+We can see that the diff is not line by line as if it was a text file. In the next step, we will tell the ''diff'' that we want a diff on the ''last_name''.
+
+==== Perform a diff with a column driver ====
+To improve our comparison, we will define the unique column of our data resource with the ''%%--driver-columns%%'' option.
+<unit>
+<code bash>
+tabul data diff \
+   --no-fail \
+   --report-type unified \
+   --driver-columns "Last Name" \
+   characters_original@sqlite characters_new@sqlite
+</code>
+<console ansi>
+Unified Diff Report between the resources (characters_original@sqlite) and (characters_new@sqlite).
+ - [31mred[0m   for deleted
+ - [32mgreen[0m for added
+ - [34mblue[0m  for type change (example: number as varchar)
+The data resources are not equals.
+diff_status   last_name           first_name   birth_date   wikipedia_page
+-----------   -----------------   ----------   ----------   --------------------------------------------------------------
+=             Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+[32m+1            [0mNorman              Don          [32m1935-12-23   [0mhttps://en.wikipedia.org/wiki/Don_Norman
+[31m-1            [0mNorman              Don          [31m1935-12-25   [0mhttps://en.wikipedia.org/wiki/Don_Norman
+[31m-             [0m[31mHarbison Carnagey   [0m[31mDale         [0m[31m1888-11-24   [0m[31mhttps://en.wikipedia.org/wiki/Dale_Carnegie[0m
+=             Kahneman            Daniel       1934-03-05   https://en.wikipedia.org/wiki/Daniel_Kahneman
+[31m-             [0m[31mPittman             [0m[31mBob          [0m[31m1953-12-28   [0m[31mhttps://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)[0m
+</console>
+</unit>
+
+This time, the unified report tell us that we need to:
+  * update the ''birth date'' of the ''Norman'' record (''+1,-1'', in the ''1'' change)
+  * delete the records
+    * ''Harbison Carnagey''
+    * and ''Pittman''
+from the ''original'' resource to obtain the ''new'' resource
+
+
+
+==== Advanced Diff with a pipeline ====
+
+The [[:docs:op:diff|diff operation]] is an [[:docs:flow:intermediate|intermediate pipeline operation]] that has a lot of [[:docs:op:diff#arguments|arguments]] that are not available with the [[:docs:tabul:data:diff|diff command line]].
+
+If you want to perform an advanced diff, create a [[:docs:flow:pipeline|pipeline]].
+
+
+

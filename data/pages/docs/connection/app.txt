@@ -1,0 +1,59 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:connection:project" }
+    ],
+    "page_id": "ir2kslsnoor7zj9x3jiya"
+}
+---
+====== Connection - App Home Directory ======
+
+
+===== About =====
+''app'' is a [[built-in|built-in connection]] that points to the [[docs:app:app|app]] home directory.
+
+It is automatically created when:
+  * a [[docs:conf:tabul.yml|app file (ie configuration vault)]] is detected in the current directory or the parents.
+  * the ''%%--app-home%%'' is passed as an [[docs:tabul:option|option]]
+  * or the ''%%TABUL_APP_HOME%%'' [[:docs:conf:os|OS environment variable]] is set
+
+===== Example =====
+
+By setting the [[docs:tabul:global|global option]] ''%%--app-home%%'', we are defining a [[docs:app:app|app run]] in the ''tabul-app'' directory from the [[docs:connection:home|user home directory (@user)]]. We can therefore see its [[attribute|attributes]] with the [[docs:tabul:connection:info|info command]].
+<unit display="none">
+Delete the file
+<code bash>
+tabul data drop --no-strict-selection /home/tabulify/tabul-app/.tabul.yml
+</code>
+</unit>
+<unit>
+<code bash>
+tabul --app-home  /home/tabulify/tabul-app connection info app
+</code>
+<console>
+Information about the connection (app)
+Attribute                    Value                              Description
+--------------------------   --------------------------------   --------------------------------------------------------------------
+BOOLEAN_DATA_TYPE            Native                             Boolean data type used to store boolean values
+CHAR_DEFAULT_PRECISION       1                                  Default CHAR precision
+COMMENT                      The project home path              A connection description
+DATE_DATA_TYPE               NATIVE                             Date data type used to store date values
+HOST                                                            Host Server
+MAX_CONCURRENT_THREAD                                           The maximum number of threads that can be created against the system
+MAX_NAME_IN_PATH                                                The maximum number of names in a path
+NAME                         app                                The name of the connection
+NATIVES                                                         Native Driver attributes (jdbc properties, ...)
+NCHAR_DEFAULT_PRECISION      1                                  Default NCHAR precision
+NVARCHAR_DEFAULT_PRECISION   0                                  Default NVARCHAR precision
+ORIGIN                                                          The origin of the connection
+PASSWORD                                                        The user password
+PORT                                                            Host Port
+TABULAR_FILE_TYPE            text/csv                           The default media type when downloading tabular data
+TIMESTAMP_DATA_TYPE          NATIVE                             Timestamp data type used to store timestamp values
+TIME_DATA_TYPE               NATIVE                             Time format data type to store time values
+URI                          file:///home/tabulify/tabul-app/   The uri of the connection
+USER                                                            The user name
+VARCHAR_DEFAULT_PRECISION    0                                  Default VARCHAR precision
+WORKING_PATH                 /home/tabulify/tabul-app           The working path (Schema for database, directory for file system)
+</console>
+</unit>

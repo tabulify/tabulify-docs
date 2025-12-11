@@ -1,13 +1,21 @@
+---json
+{
+    "page_id": "v0owx2213mcawqxofkxx2"
+}
+---
 ====== Data Operation - Delete ======
 
 
 ===== About =====
-''delete'' is a [[transfer|transfer operation]] that remove records from the [[docs:resource:content|data]] of a [[docs:resource:resource|data resource]].
+''delete'' is an alias of the [[transfer|transfer operation]] where:
+  * the operation is ''delete''.
+  * the [[:docs:flow:input|input]] defines the records to delete in the [[:docs:flow:target|target]]
 
 
 
 
-===== Support =====
-==== data delete operation ====
 
-The [[docs:tabli:data:delete|data delete operation]] supports the ''delete'' operation at a record level
+===== Cli =====
+
+
+The ''delete'' operation is also available with the [[docs:tabul:data:delete|data delete command]].

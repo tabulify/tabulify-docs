@@ -1,8 +1,13 @@
+---json
+{
+    "page_id": "i7feoylbar1q36vynpnyt"
+}
+---
 ====== Tabulify - Templating Engine ======
 
 
 ====== Engine ======
-A ''templating'' engine is the process that transform a [[templating|text template]] in [[docs:resource:resource|data resource]] (ie document)
+A ''templating'' engine is the process that transform a [[templating|text template]] in a [[docs:resource:resource|data resource]] (ie document)
 
 ''Tabulify'' supports the following [[templating|templating]] engine :
   * [[native|native]] - the tabulify internal engine

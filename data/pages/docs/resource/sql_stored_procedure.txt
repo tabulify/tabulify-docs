@@ -1,0 +1,69 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:sql_call" }
+    ],
+    "page_id": "muz9u2orymxq1chiu2mxf"
+}
+---
+====== SQL Stored Procedure ======
+
+
+===== About =====
+A ''SQL'' ''Stored procedure'' is a [[docs:system:database:sql_procedure|sql procedure]] that is 
+  * stored in the database.
+  * accessible by name and [[:docs:system:database:sql_parameterized_statement|parameters]]
+
+
+
+===== Management =====
+
+==== Creation ====
+
+You create a stored procedure with a [[sql_dml|SQL DML Request]] that contains the SQL statements 
+  * ''CREATE PROCEDURE'' 
+  * or ''CREATE OR REPLACE PROCEDURE''
+
+==== Execution ====
+
+
+You execute a SQL ''stored procedure'' with a [[sql_dml|SQL DML Fetch]].
+
+Every database has its own syntax to call a procedure. See the [[#section support below]]
+
+But generally the database accepts [[:docs:system:database:jdbc_escape|JDBC escape syntax]] and a procedure can be called as follow for most of the database:
+
+
+```sql
+{call <procedure_name> [(<argument-list>)]}
+```
+or, where a procedure returns a result parameter:
+```sql
+{? = call <procedure_name> [(<argument-list>)]}
+```
+
+
+Example:
+```sql
+{ CALL do_db_maintenance() }
+```
+
+
+===== Support =====
+==== Database ====
+
+Stored procedures are supported by most DBMSs, but there is a fair amount of variation in their syntax and capabilities
+
+^ Database ^ Database Support ^ Tabulify howto ^
+| [[:docs:system:mysql:mysql|MySQL]] |  | [[:howto:mysql:procedure_call]] |
+| [[:docs:system:oracle:oracle|Oracle]] | [[https://docs.oracle.com/cd/B19306_01/appdev.102/b14261/block_declaration.htm|PLSQL DECLARE/BEGIN/END block]] |  |
+| [[:docs:system:postgres:postgres|Postgres]] | [[https://www.postgresql.org/docs/current/sql-call.html|CALL statement]] | [[howto:postgres:procedure_call|Procedure]], [[howto:postgres:procedure_with_out_parameter|Procedure with out parameters]] |
+| [[:docs:system:sqlite:sqlite|SQLite]] | Not supported | |
+| [[:docs:system:sqlserver:sqlserver|SQL Server]] | [[https://learn.microsoft.com/en-us/sql/t-sql/language-elements/begin-end-transact-sql|SQL BEGIN/END block]] |  |
+
+
+==== Parameterized statement ====
+
+We support [[:docs:system:database:sql_parameterized_statement|procedure execution with parameters]]
+
+ 

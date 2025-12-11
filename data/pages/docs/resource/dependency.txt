@@ -1,15 +1,20 @@
+---json
+{
+    "page_id": "yzg4dgn8byq2zbv9t2xaj"
+}
+---
 ====== Data Resource - Dependency ======
 
 
 ===== About =====
 A '' resource  dependency'' (known also as ''dependency  link'') defines a dependency relationship between two [[resource|resources]].
 
-The most known dependency is the [[fkey|foreign key dependencies]] but a [[view|view]] is also dependent on all [[table|tables]] present in its [[select|query]].
+The most known dependency is the [[fkey|foreign key dependencies]] but a [[sql_view|view]] is also dependent on all [[sql_table|tables]] present in its [[sql_select|query]].
 
 
 
 <note tip>
-  * The [[docs:tabli:flag|tabli flag]] ''%%--with-dependencies%%'' permits to add the dependencies to your selection in most of the [[docs:tabli:tabli|tabli]] command. If the flag is not present and that the [[docs:flow:target|target resources]] must be created, the [[fkey|foreign key]] will not be copied.
-  * The [[docs:tabli:data:dep|data dep command]] lists the dependencies.
+  * The [[docs:tabul:flag|tabul flag]] ''%%--with-dependencies%%'' permits to add the dependencies to your selection in most of the [[docs:tabul:tabul|tabul]] command. If the flag is not present and that the [[docs:flow:target|target resources]] must be created, the [[fkey|foreign key]] will not be copied.
+  * The [[docs:tabul:data:dep|data dep command]] lists the dependencies.
 </note>
 

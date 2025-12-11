@@ -1,0 +1,33 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:binary" }
+    ],
+    "page_id": "l6cda6b5ui2kbcqc3b56j"
+}
+---
+====== Binary File ======
+
+
+===== About =====
+A ''binary'' file is a file that has no known [[:docs:resource:structure|structure]].
+
+
+
+
+It's the default [[:docs:resource:media-type|type]] of file when tabulify cannot detect its [[:docs:resource:structure|structure]].
+
+
+===== Executable =====
+
+A ''binary executable'' is a  [[:docs:resource:file|file]] that contains machine code instructions that can be directly run by a computer's processor.
+
+
+^ OS ^ Format ^
+| Windows PE | Portable Executable |
+| Linux ELF | Executable and Linkable Format | 
+| MacOS | Mach-O |
+
+To execute it, you need to represent it as [[command|command]] (ie [[docs:resource:runtime|runtime data resource]])
+
+

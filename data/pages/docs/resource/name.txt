@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "ey9o0lousynq9jvq35k3r"
+}
+---
 ====== Data Resource - Name ======
 
 
@@ -5,7 +10,7 @@
 ''name'' is the full name [[attribute|attribute of a data resource]]. This is also the last part of the [[path|path attribute]].
 
 <note>
-[[logicalname|logicalName]] is the name without the file association part.
+[[logical_name|logicalName]] is the name without the file association part.
 </note>
 ===== Operation =====
 The [[docs:op:rename|rename operation]] changes the name of a data resource.

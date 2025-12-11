@@ -1,9 +1,0 @@
----json
-{
-    "canonical":"beta"
-}
----
-====== Beta ======
-
-
-This sections regroups all beta features documentation that are in preview. This features even if working can still change and are documented to be able to get a [[:contact|feedback]] of early user.

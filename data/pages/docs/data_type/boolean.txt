@@ -1,0 +1,48 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:common:boolean" },
+        { "path": ":docs:data-type:boolean" }
+    ],
+    "page_id": "wchgzklk888984lkloy2u"
+}
+---
+====== Tabulify - Boolean Data Type ======
+
+===== Boolean =====
+This page contains the documentation about how ''Tabulify'' is managing the ''Boolean'' [[data_type|data type]].
+
+
+===== Storage =====
+
+By default, ''Tabulify'' stores ''boolean'' data natively in the target system as ''boolean'' object.
+
+For [[docs:system:system|system]], that does not support the ''boolean'' as data type, ''Tabulify'' may save them as binary integer (ie 0 or 1)
+
+This behavior is controllable with the  ''tabBooleanDataType'' [[docs:connection:attribute|tabulify connection attribute]]
+
+^ Possible Values ^ Description ^
+| ''Native'' (Default) | Save the boolean in the data type of the system |
+| ''Binary'' | Integer (0 or 1) |
+
+
+===== Conversion =====
+
+''Tabulify'' extends the boolean system and recognize natively the following string and number as ''BOOLEAN'' (case indépendant: ''Y'' or ''y'' means ''y'') when transferring data from a system to another.
+
+^ Object (case indépendant) ^ Boolean Value ^
+|true|1|
+|1|1|
+|t|1|
+|yes|1|
+|y|1|
+|on|1|
+|false|0|
+|0|0|
+|no|0|
+|f|0|
+|n|0|
+|off|0|
+|Empty String|NULL|
+|na|NULL|
+|null|NULL|

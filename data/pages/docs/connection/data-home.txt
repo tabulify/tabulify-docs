@@ -1,0 +1,56 @@
+---json
+{
+    "page_id": "l897nd5m2nur5ubsv5w29"
+}
+---
+====== Data Home (XDG_DATA_HOME) Connection ======
+
+
+===== About =====
+
+''data home'' is [[built-in|built-in connection]] that points to the [[https://specifications.freedesktop.org/basedir-spec/latest/|xdg-data-home]] [[docs:resource:directory|directory]] of the [[docs:system:local|local file system]].
+
+===== Usage =====
+
+It's where application data is stored by default.
+
+For instance, in a pipeline, data resources with [[:docs:flow:error_handling#parking|errors are parked]] in this location.
+
+
+
+
+===== Modification =====
+On Linux, you can change this directory by setting the ''XDG_DATA_HOME'' [[:docs:conf:os|env]]
+===== Info =====
+With the [[docs:tabul:connection:info|connection info]] command
+<unit>
+<code bash>
+tabul connection info data-home
+</code>
+<console>
+Information about the connection (data-home)
+Attribute                    Value                                                Description
+--------------------------   --------------------------------------------------   --------------------------------------------------------------------
+BOOLEAN_DATA_TYPE            Native                                               Boolean data type used to store boolean values
+CHAR_DEFAULT_PRECISION       1                                                    Default CHAR precision
+COMMENT                      The data home directory (Default storage for data)   A connection description
+DATE_DATA_TYPE               NATIVE                                               Date data type used to store date values
+HOST                                                                              Host Server
+MAX_CONCURRENT_THREAD                                                             The maximum number of threads that can be created against the system
+MAX_NAME_IN_PATH                                                                  The maximum number of names in a path
+NAME                         data-home                                            The name of the connection
+NATIVES                                                                           Native Driver attributes (jdbc properties, ...)
+NCHAR_DEFAULT_PRECISION      1                                                    Default NCHAR precision
+NVARCHAR_DEFAULT_PRECISION   0                                                    Default NVARCHAR precision
+ORIGIN                       BUILT_IN                                             The origin of the connection
+PASSWORD                                                                          The user password
+PORT                                                                              Host Port
+TABULAR_FILE_TYPE            text/csv                                             The default media type when downloading tabular data
+TIMESTAMP_DATA_TYPE          NATIVE                                               Timestamp data type used to store timestamp values
+TIME_DATA_TYPE               NATIVE                                               Time format data type to store time values
+URI                          file:///home/admin/.local/share/tabul/               The uri of the connection
+USER                                                                              The user name
+VARCHAR_DEFAULT_PRECISION    0                                                    Default VARCHAR precision
+WORKING_PATH                 /home/admin/.local/share/tabul                       The working path (Schema for database, directory for file system)
+</console>
+</unit>

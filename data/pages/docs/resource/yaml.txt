@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "u80gaf2mmsf4drzglsloq"
+}
+---
 ====== Data Resource - Yaml ======
 
 
@@ -5,20 +10,23 @@
 A <icon name="vscode-icons:file-type-yaml-official"/> ''yaml'' file is a [[text|text file]] that contains one or several ''yaml documents''.
 
 
-
-
 ''Tabulify'' supports the following YAML extensions:
   * ''yaml''
   * ''yml''
 
+By default, ''Yaml'' files are seen and loaded as [[:docs:resource:json|json]] (as set in the [[#attributes|style attribute]])
+
+===== Example =====
+
+  * [[:howto:yaml:load_yaml|]]
 ===== Attributes =====
 The [[attribute|attributes]] of a Yaml file are:
 
 ^ Name ^ Description ^
-| ''structure'' | ''file'' - One row, One column returning the file \\ ''document'' (default) - One row by document, One column \\ ''properties'' - One row by document, Multiple columns (one by property)  |
-| ''style'' | ''block'' - The indentation yaml format (ie [[https://yaml.org/spec/1.2.2/#chapter-6-structural-productions|structural production]]) \\ ''json'' (default) - The json format (ie [[https://yaml.org/spec/1.2.2/#chapter-7-flow-style-productions|flow style]]) |
+| ''structure'' | ''document'' (default) - One row by document, One column \\ ''file'' - One row, One column returning the file \\ ''properties'' - One row by document, Multiple columns (one by property)  |
+| ''style'' | ''json'' (default) - The [[docs:resource:json|json]] format (ie [[https://yaml.org/spec/1.2.2/#chapter-7-flow-style-productions|flow style]]) \\ ''block'' - The indentation yaml format (ie [[https://yaml.org/spec/1.2.2/#chapter-6-structural-productions|structural production]]) |
 ^ Because a ''json'' file is also a [[text|text file]], it inherits all [[text#attributes|text attributes]] ^^
-| [[text#arguments|end-of-record]] | For a ''Yaml'' file, ''end of a file (EOF)'' |
+| [[text#arguments|end-of-record]] | For a ''Yaml'' file, end of document |
 | [[text#arguments|column-name]] | The name of the column in the case of a ''file'' or ''document'' structure (Default to ''yaml'') |
 
 

@@ -1,0 +1,90 @@
+---json
+{
+    "page_id": "cra6jo4wjlpjjz86nvak0"
+}
+---
+====== Archive Entry ======
+
+
+===== About =====
+An ''archive entry'' is a [[file|file]] in an [[:docs:resource:archive|archive]].
+
+
+===== Howto =====
+  * [[howto:archive:archive-entry]]
+
+
+
+
+===== Specification =====
+==== Manifest ====
+
+
+You can define an ''archive entry'' with a [[manifest|manifest]].
+
+It is an [[:docs:resource:runtime#executable|executable]]
+that returns any [[:docs:resource:file|resource file]] from:
+  * the [[:docs:resource:archive|archive data uri]]
+  * the [[:docs:resource:archive#path|path entry]]
+
+
+It follows the following format:
+<unit>
+<file yml archive/specification--archive-entry.yml>
+kind: archive-entry
+spec:
+  # The data uri of the archive
+  data-uri: https://downloads.mysql.com/docs/world-db.tar.gz
+  data-def:
+    # The path of the file in the archive
+    entry-path: world-db/world.sql
+
+</file>
+</unit>
+where:
+  * ''entry-path'' is the [[archive#path|entry path]]
+
+
+==== Data Uri ====
+
+The ''archive entry'' [[manifest|manifest]] is an [[runtime#executable|executable]] that returns any [[:docs:resource:file|resource file]]
+
+The data uri is therefore a [[runtime#data uri|runtime data uri]].
+
+<code>
+(name--archive-entry.yml@executableConnection)@executionConnection
+</code>
+where:
+  * ''name--archive-entry.yml'' is the path of the ''archive entry'' [[manifest|manifest]] from the ''executableConnection'' directory
+  * ''executableConnection'' is a [[:docs:system:file|file connection]]
+  * ''executionConnection'' is a [[:docs:system:file|file connection]] where the ''entry'' is extracted
+
+
+===== Columns ======
+
+When reporting on an archive, the [[:docs:resource:record|records]] contains the following archive entry [[:docs:resource:column|columns]] (ie property):
+  * [[#path]]: the path
+  * [[#media_type]]: the media type
+  * [[#size]]: the size
+  * ''update-time'': the last modified time
+
+
+==== Path ====
+The path of an [[:docs:resource:archive-entry|file entry]]
+
+==== Media Type ====
+The [[:docs:resource:media-type|media type]] of an entry is:
+  * a directory for a [[:docs:resource:directory|directory]]
+  * otherwise it's derived from its [[#path]] 
+
+
+==== Size ====
+
+
+The size reporting may be not reported.
+It depends on the archive format.
+
+^ Format ^ Support ^ 
+| ''zip'' | No (''-1'') |
+| ''tar'' | Yes |
+| ''tar.gz'' | Yes |

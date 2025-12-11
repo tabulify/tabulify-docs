@@ -1,11 +1,26 @@
+---json
+{
+    "page_id": "bao7v244gfy5w5xf78cxb"
+}
+---
 ====== Data Operation - Copy ======
 
 
 ===== About =====
 ''copy'' is [[transfer|transfer]] ''data operation'' that will create a ''copy'' of the original [[docs:resource:resource|data resource]] meaning:
-  * with the same [[docs:resource:metadata|metadata (properties and structure)]] 
+  * with the same [[docs:resource:metadata|metadata (properties and structure)]]
   * and with the same [[docs:resource:content|data content]].
 
-A [[compare|diff]] operation should show no difference.
+A [[diff|diff]] operation would show no difference.
 
-The [[docs:tabli:data:copy|data copy operation]] supports the ''copy'' operation.
+
+
+
+===== Prerequisites =====
+
+If the target exists, the target should:
+    * have the same [[docs:resource:metadata|metadata (properties and structure)]]
+    * be empty
+
+===== Cli =====
+The [[docs:tabul:data:copy|tabul data copy command]] implements the ''copy'' operation.

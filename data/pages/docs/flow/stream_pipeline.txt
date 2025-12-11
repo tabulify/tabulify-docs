@@ -1,0 +1,48 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:flow:docs:flow:stream" },
+        { "path": ":docs:flow:stream" }
+    ],
+    "page_id": "87wq7leba1pv4wv0e9czf"
+}
+---
+====== Stream Pipeline ======
+
+
+===== About =====
+
+A ''stream pipeline'' is a [[:docs:flow:pipeline|pipeline]] that has a [[docs:flow:supplier|supplier operation]] with a [[:docs:flow:processing-type|processing type]] set to ''stream''.
+
+
+===== Data Processing =====
+
+A ''stream pipeline'' will:
+  * [[#poll]] a [[:docs:flow:supplier|supplier]] at interval 
+  * send the data resource [[docs:flow:intermediate|down stream]] immediately or at interval (''push-interval'')
+  * executes:
+    * [[docs:flow:processing-type|stream intermediate operation]] immediately
+    * [[docs:flow:processing-type|batch intermediate operation]] at interval (''window-interval'')
+
+
+==== Poll ====
+
+
+  * The polling happens when:
+    * there is no data resource anymore in the queue
+    * the interval determined by the [[#argument|poll-interval argument]] is exhausted
+  * The number of polling is stored in the [[docs:flow:pipeline#metrics|poll counter metrics]]
+===== Arguments =====
+
+Every stream [[pipeline|pipeline]] accepts the following arguments:
+
+^ Name ^ Default ^ Description ^
+| ''poll-interval'' | ''1s'' | The [[docs:common:duration|interval]] between poll (a poll is a request for data resources) |
+| ''push-interval'' | | The [[docs:common:duration|interval ]] between push (a push is the sending of a data resource into the pipeline) |
+| ''window-interval'' | ''2s'' | The [[docs:common:duration|interval]] between execution of [[docs:flow:processing-type|batch]] [[docs:flow:intermediate|intermediate operation]] \\ (generally known as the window) \\ The first execution will be at pipeline start time + window interval |
+
+===== End =====
+
+A stream is not meant to end but you can use the [[docs:flow:pipeline#duration control|duration control argument]] in your [[docs:app:test|tests]].
+
+

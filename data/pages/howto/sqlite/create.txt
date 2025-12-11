@@ -1,0 +1,97 @@
+---json
+{
+    "name": "Create a connection",
+    "page_id": "5b9h73gts8250gd86qb4k"
+}
+---
+====== How to create a SQLite connection? ======
+
+
+===== About =====
+This howto shows you how to add a [[:docs:system:sqlite:sqlite|Sqlite]] [[:docs:connection:connection|connection]].
+
+
+
+
+
+
+===== Attributes =====
+
+
+An sqlite connection supports :
+  * all [[:docs:connection:attribute|common connection attributes]]
+    * [[:docs:connection:uri|Uri]],
+    * user,
+    * [[:docs:connection:password|password]]
+    * ...
+  * and all [[docs:system:database:connection_attributes|relational connection attributes]]
+    * Driver (Jdbc Class)
+    * ...
+
+===== Note on file system =====
+
+When creating a connection, you need to give the path to your Sqlite database file system in your [[:docs:connection:uri|URI]]. If you switch between file system in your [[:docs:common:environment|execution environment]], you can use a [[:docs:conf:os|Operating system variable]]
+
+===== Example =====
+
+Here are the attributes of the [[howto:oracle:howto_connection|howto connection]]
+<unit>
+<code bash display="none">
+tabul data print --type text .tabul/.tabul.yml@home | yq '.spec.connections.sqlite'
+</code>
+<console yaml>
+comment: The sqlite default connection
+driver: org.sqlite.JDBC
+uri: jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3
+</console>
+</unit>
+
+
+
+
+===== How to add =====
+
+
+
+You can create a [[:docs:system:sqlite:sqlite|Sqlite]] connection,
+  * directly in the configuration vault
+  * or via the tabul command
+
+==== Configuration Vault ====
+
+In a [[docs:conf:tabul.yml|Configuration Vault]], to define a sqlite [[docs:connection:connection|connection]] with the name ''mySqlite'', you would write:
+\\
+  * On Linux
+<code yaml>
+connections:
+  mySqlite:
+    uri: jdbc\:sqlite\:////home/leo/work/mydatabase.db
+    driver: org.sqlite.JDBC
+</code>
+   * On Windows
+<code yaml>
+connections:
+  mySqlite:
+    url: jdbc\:sqlite\:///C\:/Users/user/AppData/Local/tabulify/sqlite.db
+    driver: org.sqlite.JDBC
+</code>
+
+
+
+
+
+==== Tabul ====
+
+
+With the [[docs:tabul:connection:add|tabul add command of the connection module]], adding a Sqlite connection with the name ''sqliteConnectionName'':
+
+
+  * On Windows
+<code bash>
+tabul connection add "sqliteConnectionName" "jdbc:sqlite:C:/work/mydatabase.db"
+</code>
+  * On Linux
+<code bash>
+tabul connection add "sqliteConnectionName" "jdbc:sqlite:/home/leo/work/mydatabase.db"
+</code>
+

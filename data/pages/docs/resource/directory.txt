@@ -1,8 +1,13 @@
+---json
+{
+    "page_id": "mri4l6zwjoiz5scauwaud"
+}
+---
 ====== Directory ======
 
 
 ===== About =====
-A ''directory'' is a ''container'' [[docs:system:file|file system]] [[resource|data resource]] that contains [[file|file]] or ''directory''
+A ''directory'' is a [[docs:resource:container|container]] [[docs:system:file|file system]] [[resource|data resource]] that contains [[file|file]] or ''directory''
 
 
 

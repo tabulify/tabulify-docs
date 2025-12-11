@@ -1,13 +1,22 @@
+---json
+{
+    "page_id": "g6nwex8197uisealqf5ax"
+}
+---
 ====== Yaml ======
 
 ===== About =====
 Tabulify uses Yaml as the file format of
-  * [[..:conf:vault|configuration vault]]
-  * and [[docs:flow:pipeline|pipeline]].
+  * [[..:conf:tabul.yml|configuration vault]]
+  * [[docs:flow:pipeline|pipeline]] and [[:docs:flow:flow|flow]]
 
 
+===== Note =====
 
-===== Timestamp Variation =====
+[[:docs:resource:yaml|Yaml is a supported data resource]] so you can read, process, analyze and even [[docs:app:test|test]] them.
+===== Support =====
+
+==== Timestamp Variation ====
 ''Tabulify'' introduces one variation of the ''YAML'' specification in the manipulation of [[#Timestamp|Timestamp]].
 
 In the [[https://yaml.org/type/timestamp.html|Yaml specification, a timestamp]] without timezone is interpreted as having the ''UTC'' timezone. ''Tabulify'' changes this behavior and delete the time zone information.

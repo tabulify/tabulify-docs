@@ -1,9 +1,15 @@
+---json
+{
+    "page_id": "mx3uqukotsnbm8fkj0fhn"
+}
+---
 ====== Data Resource - Count Attribute ======
 
 
 ===== About =====
-''count'' is a [[attribute#common|common data resource attribute]] that gives the number of children.
-  * In the case of a [[docs:resource:table|table]], the children are [[record|records]]
-  * In the case of a [[docs:resource:directory|directory]], the children are contained [[file|files]] and/or [[directory|directories]].
+''count'' is a [[attribute#common|common data resource attribute]] that gives the number of [[record|records]].
+
+It's a logical counter while [[docs:resource:size|size]] is physical one that gives the physical size on disk.
+
 
 

@@ -1,0 +1,46 @@
+---json
+{
+    "page_id": "3f3rfmw1yjh42lom6xiyv"
+}
+---
+====== Docker Services ======
+
+
+===== About =====
+
+Docker is a [[docs:service:service|service]] provider that permits to create/start/stop/drop local docker container.
+
+
+===== Example =====
+
+Example of a service in the [[docs:conf:tabul.yml|configuration vault]]
+<code yaml .tabul.yaml>
+services:
+  sqlserver:
+    type: docker
+    image: mcr.microsoft.com/mssql/server:2022-CU18-ubuntu-22.04
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: TheSecret1!
+</code>
+
+As for any value in the configuration vault, you can use:
+  *  plain value
+  * or any [[:docs:conf:secret|secret format]].
+===== Attributes =====
+
+The Docker service provider supports actually the following [[:docs:conf:attribute|attributes]].
+
+
+^ Name ^ Description ^ Format ^
+| ''NAME'' | The container name | |
+| ''IMAGE'' | The [[https://docs.docker.com/reference/compose-file/services/#image|docker image name]] | ''%%[<registry>/][<project>/]<image>[:<tag>|@<digest>]%%'' |
+| ''PORTS'' | The [[https://docs.docker.com/reference/compose-file/services/#ports|ports binding]] (from host to container) | List of ''%%hostPort:containerPort%%'' |
+| ''ENVIRONMENT'' | The [[https://docs.docker.com/reference/compose-file/services/#environment|environment]] | Map of Key/Pair |
+| ''VOLUMES'' | The [[https://docs.docker.com/reference/compose-file/services/#volumes|volumes]] in short syntax format  | List of ''%%VOLUME:CONTAINER_PATH:ACCESS_MODE%%'' |
+| ''COMMAND'' | The [[https://docs.docker.com/reference/compose-file/services/#command|command]] in exec form | List of args |
+
+
+

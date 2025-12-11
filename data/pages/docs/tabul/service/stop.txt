@@ -1,0 +1,94 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:service:stop" }
+    ],
+    "page_id": "ptgxw0zchlbyemqdgpso0"
+}
+---
+====== Tabul - Stop a Service ======
+
+===== About =====
+''stop'' is a [[docs:tabul:command|command]] of the [[docs:tabul:service:start|service module]] that will stop a [[:docs:service:service|service]].
+
+<note tip>If the service is not started, this operation has no effect and does not return any error.</note>
+
+===== Example =====
+To stop the [[howto:postgres:howto_connection_service|howto postgres docker container]]:
+
+<code bash>
+tabul service stop postgres
+</code>
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul service stop --help
+</code>
+<console>
+Tabul service stop
+==================
+
+Stop one or more services
+
+
+
+Examples
+--------
+
+ 1 - Stop the service sqlserver
+
+
+    tabul service stop sqlserver
+
+
+ 2 - Stop all services that starts with sql
+
+
+    tabul service stop sql*
+
+
+
+
+Syntax
+------
+
+
+    tabul service stop <name-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <name-selector...>                                      One ore several glob pattern that select services by name
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

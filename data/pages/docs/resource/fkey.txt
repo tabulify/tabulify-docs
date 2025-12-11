@@ -1,9 +1,16 @@
+---json
+{
+    "page_id": "g6lz9i4rhguphkb59wqnl"
+}
+---
 ====== Foreign Key (fkey)  ======
 
 
 ===== About =====
-A ''foreign key'' represent a [[docs:resource:dependency|dependency relationship]] between [[docs:resource:table|tables]]. It's a [[docs:system:relational|relational concept]].
+A ''foreign key'' represent a [[docs:resource:dependency|dependency relationship]] between [[docs:resource:sql_table|tables]].
 
-The [[docs:tabli:data:dep|data dep command]] show you the ''foreign key'' dependency.
+It's a [[docs:system:database:database|relational concept]].
+
+The [[docs:tabul:data:dep|data dep command]] show you the ''foreign key'' dependency.
 
 

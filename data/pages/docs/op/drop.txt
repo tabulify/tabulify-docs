@@ -1,15 +1,65 @@
+---json
+{
+    "page_id": "l7xmdut27a9bt5u0a30tq"
+}
+---
 ====== Data Operation - Drop ======
 
 
 ===== About =====
-''drop'' is a [[op|data operations]] that will remove the data and the metadata from the [[docs:connection:connection|connection]].
+''drop'' is a [[:docs:flow:intermediate|intermediate operation]] that will drop the [[:docs:flow:input|inputs]]. It will remove:
+  * their [[:docs:resource:metadata|metadata]]
+  * and their [[docs:resource:content|data (content)]].
 
 
-Example:
-  * A ''drop'' operation on a [[docs:resource:file|file]] is equivalent to a ''remove'' or ''delete''.
-  * A ''drop'' operation on a [[docs:resource:table|sql table]] is equivalent to a ''drop table''.
 
 <note important>
-As there is no way to retrieve the data or metadata, you should use this operations with care and don't forget your backups.
+As there is no way to retrieve the data or metadata, you should use this operation with care.
 </note>
 
+===== System Equivalence =====
+
+  * A ''drop'' operation on a [[docs:resource:file|file]] is equivalent to a ''remove'' or ''delete''.
+  * A ''drop'' operation on a [[docs:resource:sql_table|sql table]] is equivalent to a ''drop table''.
+
+
+
+===== Arguments =====
+
+^ Name ^ Default ^ Description ^
+| ''force'' | ''false'' | Drop the foreign keys for a table |
+| ''cascade'' | ''false'' | Drop recursively the [[:docs:resource:dependency|dependent resources]] |
+| ''processing-type'' | ''batch'' | The [[:docs:flow:processing-type|processing type]] \\ In ''stream'' processing, inputs are dropped one at a time \\ In ''batch'' processing, they are dropped in batch |
+
+
+==== processing-type ====
+
+By default, the [[:docs:flow:processing-type|processing type]] is ''batch'' because it can handle a bad [[docs:resource:sql_view|sql view]].
+
+When ordering the resources in a ''drop'' order, an error may occur if a [[docs:resource:sql_view|sql view]] has a non-valid SQL Statement:
+  * the view is not valid anymore
+  * we can't get its [[:docs:resource:dependency|dependencies]].
+
+''batch'' processing will ignore it and try to drop the [[:docs:flow:input|inputs]] in received order.
+===== Cli =====
+
+The ''drop'' operation is available in the [[:docs:tabul:data:drop|tabul data drop]] cli command
+
+
+===== Note =====
+
+==== How to drop dependent table ? ====
+
+If you execute drop in:
+  * [[:docs:flow:processing-type|batch processing]], the ''drop'' operation will drop them in ''drop'' order automatically.
+  * [[:docs:flow:processing-type|stream processing]], the [[:docs:op:select|select operation]] should have the ''order'' option set to ''drop'' so that the tables are send in the pipeline in a ''drop'' order.
+
+
+
+Otherwise you may see error like:
+```
+Cause: ERROR: cannot drop table call_center because other objects depend on it
+  Detail: constraint catalog_sales_cs_call_center_sk_fkey on table catalog_sales depends on table call_center
+constraint catalog_returns_cr_call_center_sk_fkey on table catalog_returns depends on table call_center
+  Hint: Use DROP ... CASCADE to drop the dependent objects too.
+```

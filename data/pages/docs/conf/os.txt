@@ -1,25 +1,42 @@
+---json
+{
+    "page_id": "pa4qiie8ij0li8pb4lrq1"
+}
+---
 ====== Os Environment Variables ======
 
 
 ===== About =====
-Os Environment Variables can be used:
-  * to set the value of [[docs:conf:attribute|attribute]].
-  * as [[:docs:conf:template|template value]]
+Os Environment Variables can be used to set the value:
+  * of [[:docs:conf:global_env|global attribute]]
+  * of an attribute with a [[#template|template value]]
 
+===== Secret =====
+
+Environment variables are considered [[secret|secret]] only if their names make it [[secret#are_environment_variables_considered_secret|obvious by containing a pattern]]
 
 
 
 ===== Example =====
 
+==== Global Attribute ====
+ 
 If you want to set the [[docs:common:environment|execution environment]], you can
 set it on Linux as:
 
 <code bash>
 env=prod
 # or
-tabli_env=prod
+tabul_env=prod
 # or
-TABLI_ENV=prod
+TABUL_ENV=prod
 </code>
 
 
+==== Template ====
+They can also be used as [[:docs:conf:template]] in [[:docs:common:manifest|manifest]]
+<code yaml>
+connections:
+  connectionName:
+    parameter1: ${MY_OS_ENV}
+</code>

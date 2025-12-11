@@ -1,15 +1,24 @@
+---json
+{
+    "page_id": "dzj3ypi6yrnql5mgpk6hw"
+}
+---
 ====== Sequence Generator ======
 
 
 ===== About =====
-A ''sequence generator'' is a [[column|column data generator]] that [[generator|generates]] a sequence
+A ''sequence generator'' is a [[data-supplier|column data supplier]] that [[generator|generates]] a sequence
   * ''1,2,3, ...''
   * ''a, b, c, ...''
   * ''2011-11-10, 2011-11-09, ...''
   * ''blue, red, ...''
 
-===== Howto =====
-<related pattern="howto:*" />
+
+===== Example =====
+
+  * [[howto/generator/sequence_number]]
+  * [[howto/generator/sequence_odometer]]
+
 
 ===== Glossary =====
 ==== Tick ====
@@ -20,16 +29,18 @@ By default, a ''tick'' happens for each new record but with the [[#properties|pr
 <note>
 This is used mostly to create [[howto:generator:sequence_odometer|odometer data]] when you have multiple columns in a unique constraint.
 </note>
-===== Properties =====
+===== Arguments =====
 
-^ Key ^ Default Value ^ Description ^ Related HowTo ^
+^ Name ^ Default Value ^ Description ^ Related HowTo ^
 | ''step'' | See [[#data type|data type]] | The value of the next step in the sequence | [[howto:generator:sequence_number|number sequence]] |
 | ''start'' | See [[#data type|data type]] | The start value in the sequence | [[howto:generator:sequence_number|number sequence]] |
 | ''offset'' | See [[#data type|data type]] | An ''offset'' value added to the ''start'' value (Used generally with the time data type to have an offset from now) | [[howto:generator:sequence_time|time sequence]] |
-| ''maxTick'' | 0 | The maximum number of times a new value is generated. When the max is reached, the sequence starts over | [[howto:generator:sequence_number|number sequence]] |
+| ''maxTick'' | 0 | The maximum number of times a new value is generated. When the max is reached, the sequence starts over if reset is ''true'' | [[howto:generator:sequence_number|number sequence]] |
 | ''tickerFor'' | None | Used to tick another sequence generator when the value is the last in the sequence | [[howto:generator:sequence_odometer|odometer]] |
 | ''values'' | None | A serie of values that define the sequence | [[howto:generator:sequence_color|color]] |
 | ''reset'' | False \\ except when ''tickerFor'' is set | Restart from the first element when the sequence reaches the last element | [[howto:generator:sequence_color|color]] |
+| ''case-sensitive'' | False | If false, when generating character data, uppercase letters are not used to generate true unique value with [[:docs:common:collation|case-insensitive collation]]|
+
 
 ===== Data Type =====
 
@@ -42,6 +53,6 @@ The below data type are supported:
 | Numeric | 1.0 | Numeric (Rounding Half Down) | 1.0 | 0 | [[howto:generator:sequence_number|Number Howto]] |
 | Decimal | 1.0 | Decimal (Rounding Half Down) | 1.0 | 0 | [[howto:generator:sequence_number|Number Howto]] |
 | Date | -1 | Day | Today | -1 for negative step \\ 0 for positive step | [[howto:generator:sequence_time|Time Howto]] |
-| Timestamp | -10000 | Milli-second | Now | -1 for negative step \\ 0 for positive step | [[howto:generator:sequence_time|Time Howto]] |
+| Timestamp | -1000 | Milli-second | Now | -1 for negative step \\ 0 for positive step | [[howto:generator:sequence_time|Time Howto]] |
 | Varchar | 1 | Letter | ''a'' | 0 | [[howto:generator:sequence_text|Text Howto]] |
 

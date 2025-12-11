@@ -1,0 +1,299 @@
+---json
+{
+    "page_id": "7fznn5ince8c9ugjt3k10"
+}
+---
+====== How to load and analyze YAML documents in a database? ======
+
+
+===== About =====
+
+This [[howto:howto|howto]] will show you how to load and analyze <icon name="vscode-icons:file-type-yaml-official"/> [[docs:resource:yaml|yaml document (files)]] into a [[docs:system:database:database|relational database]].
+
+<note>
+This example uses the [[howto:sqlite:howto_connection|sqlite howto database]] but you may use any other [[docs:system:database:database|relational database]]
+</note>
+
+===== Steps =====
+
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection users@sqlite
+</code>
+</unit>
+
+==== Understanding YAML file ====
+
+At its core a YAML file is just a [[:docs:resource:json|JSON file]] styled in a [[:docs:resource:yaml#attributes|block style]] (([[https://yaml.org/spec/1.2.2/#chapter-6-structural-productions|Yaml Block Style]])).
+
+Tabulify will treat them by default as [[:docs:resource:json|JSON]]. When you load a Yaml, you are loading a Json file (ie the [[:docs:resource:yaml#attributes|yaml style attribute]] has a value of ''json'')
+
+This block style yaml file:
+<unit>
+<code bash>
+tabul data print --type text yaml/phonebook/Arnold.yaml@howto
+</code>
+<console yaml Arnold.yaml>
+
+phones:
+  - "704-555-0150"
+  - "202-555-0150"
+city: Los Angeles
+
+</console>
+</unit>
+
+is equivalent to this json file
+<unit>
+<code bash>
+tabul data print \
+   --pipe-mode \
+   --attribute style=json \
+   yaml/phonebook/Arnold.yaml@howto | jq
+</code>
+<console yaml Arnold.yaml>
+
+{
+  "phones": [
+    "704-555-0150",
+    "202-555-0150"
+  ],
+  "city": "Los Angeles"
+}
+
+</console>
+</unit>
+
+Note that:
+   * `style=json` is optional as this is the default
+   * `--pipe-mode` is used to pipe a raw json into [[https://jqlang.org|jq]] (`pipe-mode` deletes the headers and will not print control characters)
+
+
+==== Yaml relational structure ====
+
+
+By default, a [[docs:resource:yaml|Yaml file]] is seen as a [[docs:resource:tabular|relation]] with one column called ''json''
+
+
+The [[docs:resource:structure|structure]] of the YAML file can be seen with the [[docs:tabul:data:describe|data struct command]].
+
+For instance, for the ''Don.yaml'' file, there is one column:
+  * at the ''position 1''
+  * called ''yaml'' (the value of the [[:docs:resource:yaml#attributes|column name attribute]])
+  * with the ''json'' [[docs:data_type:data_type|data type]]
+<unit>
+<code bash>
+tabul data describe yaml/phonebook/Don.yaml@howto
+</code>
+<console>
+Structure of the resource yaml/phonebook/Don.yaml@howto
+position   name   type   precision   scale   primary_key   nullable   autoincrement   comment
+--------   ----   ----   ---------   -----   -----------   --------   -------------   -------
+1          yaml   json   0           0                     x
+</console>
+</unit>
+
+
+
+==== The Yaml files ====
+To be able to follow along the [[https://www.sqlite.org/json1.html|SQLite examples of the JSON documentation]], we will load the ''yaml data (ie city and phones numbers'' in a ''user'' table.
+
+The [[docs:resource:yaml|Yaml files]] are located in the subdirectory ''yaml/phonebook'' of the [[docs:connection:howto|howto directory]] where there is one file by ''user''.
+
+With the [[docs:tabul:data:list|data list command]], we can list them.
+<unit>
+<code bash>
+tabul data list yaml/phonebook/*.yaml@howto
+</code>
+<console>
+path                         media_type
+--------------------------   ----------
+yaml/phonebook/Arnold.yaml   text/yaml
+yaml/phonebook/Bob.yaml      text/yaml
+yaml/phonebook/Dale.yaml     text/yaml
+yaml/phonebook/Daniel.yaml   text/yaml
+yaml/phonebook/Don.yaml      text/yaml
+</console>
+</unit>
+
+
+
+
+==== Loading the YAML files ====
+
+The below [[docs:tabul:data:insert|data insert command]] will load the YAML files into the ''user'' [[docs:resource:sql_table|table]] of the [[howto:sqlite:howto_connection|sqlite howto]] database.
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection user@sqlite
+</code>
+</unit>
+<unit>
+<code bash>
+tabul data insert yaml/phonebook/*.yaml@howto  user@sqlite
+</code>
+<console>
+Transfer results
+input                              target        latency   record_count   error_code   error_message
+--------------------------------   -----------   -------   ------------   ----------   -------------
+yaml/phonebook/Arnold.yaml@howto   user@sqlite   0.53s                1
+yaml/phonebook/Bob.yaml@howto      user@sqlite   0.8s                 1
+yaml/phonebook/Dale.yaml@howto     user@sqlite   0.7s                 1
+yaml/phonebook/Daniel.yaml@howto   user@sqlite   0.9s                 1
+yaml/phonebook/Don.yaml@howto      user@sqlite   0.8s                 1
+</console>
+</unit>
+
+You can inspect the content with the [[docs:tabul:data:head|head command]]
+
+<unit>
+<code bash>
+tabul data head user@sqlite
+</code>
+<console>
+The first 10 rows of the data resource (user@sqlite):
+yaml
+--------------------------------------------------------------------------------------------------------------------
+{\n  "phones": [\n    "704-555-0150",\n    "202-555-0150"\n  ]\n  ,\n  "city": "Los Angeles"\n}\n
+{\n  "phones": [\n    "323-423-2238",\n    "747-444-3222",\n    "475-202-7142"\n  ]\n  ,\n  "city": "New York"\n}\n
+{\n  "phones": [\n    "731-414-7236",\n    "256-233-3557",\n    "409-645-3618"\n  ]\n  ,\n  "city": "New York"\n}\n
+{\n  "phones": [\n    "425-898-3481",\n    "360-637-7972",\n    "205-533-8271"\n  ]\n  ,\n  "city": "Princeton"\n}\n
+{\n  "phones": [\n    "470-293-7517"\n  ]\n  ,\n  "city": "San Diego"\n}\n
+</console>
+</unit>
+
+==== Changing the name of the YAML column ====
+The name of the YAML column is by default ''yaml'' but we can change it by setting the [[docs:resource:yaml#attributes|columnName json attribute]]
+
+After running the below [[docs:tabul:data:head|head command]], we can see that the column name has changed to ''data''
+<unit>
+<code bash>
+tabul data head --attribute columnName=data yaml/phonebook/Don.yaml@howto
+</code>
+<console>
+The first 10 rows of the data resource (yaml/phonebook/Don.yaml@howto):
+data
+--------------------------------------------------------------------------
+{\n  "phones": [\n    "470-293-7517"\n  ]\n  ,\n  "city": "San Diego"\n}\n
+</console>
+</unit>
+
+==== Adding a column with the logical name of the JSON file  ====
+Because the ''YAML'' content of files does not have any kind of identifier, we can see that the data is actually worthless because we can't relate the ''data'' to a ''user''.
+
+To be able to add context to file loaded, ''Tabulify'' supports the concept of [[docs:resource:virtual_column|virtual columns]] where it's possible to add [[docs:resource:attribute|any attribute information about the file loaded]].
+
+The [[docs:resource:virtual_column|virtual columns]] are specified with the ''--virtual-column'' [[docs:tabul:option|option]] that has the following syntax:
+<code bash>
+--virtual-column virtualColumnName=resourceAttributeName
+</code>
+
+where:
+  * ''virtualColumnName'' is the name of the column added
+  * ''resourceAttributeName'' is the name of [[docs:resource:attribute|resource attribute]].
+
+For instance, if we want to add:
+  * the [[docs:resource:logical_name|logical name attribute]]
+  * into a column called ''name'',
+we would add ''--virtual-column name=logical_name''
+
+With the [[docs:tabul:data:print|print command]], the full command would look like below.
+<unit>
+<code bash>
+tabul data print \
+    --attribute columnName=data \
+    --virtual-column name=logical_name \
+    yaml/phonebook/Bob.yaml@howto
+</code>
+<console>
+yaml/phonebook/Bob.yaml@howto
+data                                                                                                                  name
+-------------------------------------------------------------------------------------------------------------------   ----
+{\n  "phones": [\n    "323-423-2238",\n    "747-444-3222",\n    "475-202-7142"\n  ]\n  ,\n  "city": "New York"\n}\n   Bob
+</console>
+</unit>
+
+==== Reloading the YAML files with the virtual column name ====
+
+
+To reload the YAML files:
+  * with the extra column ''name'' and the [[docs:resource:logical_name|file logical name]]
+  * with a column ''data'' containing the ''YAML document''
+the syntax of the [[docs:tabul:data:replace|tabul data replace]] would be:
+<unit>
+<code bash>
+tabul data replace \
+   --source-attribute columnName=data \
+   --virtual-column name=logical_name \
+   yaml/phonebook/*@howto  user@sqlite
+</code>
+where:
+  * ''replace'' will ''drop'' the target ''user@sqlite''
+  * ''%%--source-attribute columnName=data%%'' will set the [[docs:resource:json#attribute|JSON attribute columnName]] to ''data''
+  * ''%%--virtual-column name=logical_name%%'' will add the [[docs:resource:virtual_column|virtual column]] names ''name'' with the [[docs:resource:logical_name|logical name attribute]]  of the source
+  * ''yaml/phonebook/*@howto'' is the [[docs:flow:data_selector|source data selector]]
+  * ''user@sqlite'' is the [[docs:flow:template_data_uri|target uri]]
+
+Output:
+<console>
+Transfer results
+input                              target        latency   record_count   error_code   error_message
+--------------------------------   -----------   -------   ------------   ----------   -------------
+yaml/phonebook/Arnold.yaml@howto   user@sqlite   0.64s                1
+yaml/phonebook/Bob.yaml@howto      user@sqlite   0.10s                1
+yaml/phonebook/Dale.yaml@howto     user@sqlite   0.9s                 1
+yaml/phonebook/Daniel.yaml@howto   user@sqlite   0.7s                 1
+yaml/phonebook/Don.yaml@howto      user@sqlite   0.8s                 1
+</console>
+</unit>
+
+
+
+The YAML data loaded has now the ''name'' column as identifier.
+<unit>
+<code bash>
+tabul data print user@sqlite
+</code>
+<console>
+user@sqlite
+data                                                                                                                   name
+--------------------------------------------------------------------------------------------------------------------   ------
+{\n  "phones": [\n    "704-555-0150",\n    "202-555-0150"\n  ]\n  ,\n  "city": "Los Angeles"\n}\n                      Arnold
+{\n  "phones": [\n    "323-423-2238",\n    "747-444-3222",\n    "475-202-7142"\n  ]\n  ,\n  "city": "New York"\n}\n    Bob
+{\n  "phones": [\n    "731-414-7236",\n    "256-233-3557",\n    "409-645-3618"\n  ]\n  ,\n  "city": "New York"\n}\n    Dale
+{\n  "phones": [\n    "425-898-3481",\n    "360-637-7972",\n    "205-533-8271"\n  ]\n  ,\n  "city": "Princeton"\n}\n   Daniel
+{\n  "phones": [\n    "470-293-7517"\n  ]\n  ,\n  "city": "San Diego"\n}\n                                             Don
+</console>
+</unit>
+
+==== Performing JSON SQL statement ====
+
+Inspired from the [[https://www.sqlite.org/json1.html#examples_using_json_each_and_json_tree_|SQLite examples of the JSON documentation - section 4.3.1]], we will now run the below SQL with JSON function.
+
+<unit>
+<file sql sqlite/user_phone_json_from_yaml.sql>
+-- https://www.sqlite.org/json1.html#examples_using_json_each_and_json_tree_
+SELECT distinct name
+FROM user, json_tree(user.data, '$.phones')
+WHERE value LIKE '704-%';
+
+</file>
+</unit>
+
+To see the result of this [[docs:resource:sql_select|SQL query]], we will use the [[docs:tabul:data:print|print command]] and see that ''Arnold'' is the user that have a phone number that starts with ''704''.
+
+<unit>
+<code bash>
+tabul data print '(sqlite/user_phone_json_from_yaml.sql@howto)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+(sqlite/user_phone_json_from_yaml.sql@howto)@sqlite
+name
+------
+Arnold
+</console>
+</unit>
+
+==== Next ====
+
+If you want to explore the JSON SQL function of SQLite, you can read the [[https://www.sqlite.org/json1.html|Sqlite JSON documentation]].

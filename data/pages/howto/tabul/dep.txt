@@ -1,0 +1,122 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:tabli:dep" }
+    ],
+    "description": "This how-to will show you how to list data dependencies with the tabul dependency command.",
+    "page_id": "0vzulk9n687m0hod7zua0"
+}
+---
+====== Tabul - How to list the data dependencies ======
+
+
+===== About =====
+[[docs:resource:resource|Data resources]] have <icon name="octicon:package-dependencies-24"/> [[docs:resource:dependency|dependencies]] and the [[docs:tabul:data:dep|tabul data dep]] command lets you list them.
+
+<note info>
+The below output shows you the [[docs:resource:fkey|foreign key dependencies]] but  you may also see ''view dependency'' where the tables in the view query makes them dependencies of the view.
+</note>
+
+===== Example =====
+
+Example with the [[docs:connection:tpcds|Tpcds]] connection.
+<unit>
+<code bash>
+tabul data dep *@tpcds
+</code>
+where:
+  * ''tabul data dep'' is the [[docs:tabul:data:dep|tabul data dep]] command
+  * ''*@tpcds'' is a [[docs:flow:data_selector|data selector]] that selects all data resource (because of the glob ''*'') in the [[docs:connection:tpcds|Tpcds]] connection.
+
+
+
+Output:
+<console>
+id   data_uri                       dependency
+--   ----------------------------   ----------------------------
+ 1   call_center@tpcds              date_dim@tpcds
+ 2   catalog_page@tpcds             date_dim@tpcds
+ 3   catalog_returns@tpcds          call_center@tpcds
+ 4   catalog_returns@tpcds          catalog_page@tpcds
+ 5   catalog_returns@tpcds          catalog_sales@tpcds
+ 6   catalog_returns@tpcds          customer@tpcds
+ 7   catalog_returns@tpcds          customer_address@tpcds
+ 8   catalog_returns@tpcds          customer_demographics@tpcds
+ 9   catalog_returns@tpcds          date_dim@tpcds
+10   catalog_returns@tpcds          household_demographics@tpcds
+11   catalog_returns@tpcds          item@tpcds
+12   catalog_returns@tpcds          reason@tpcds
+13   catalog_returns@tpcds          ship_mode@tpcds
+14   catalog_returns@tpcds          time_dim@tpcds
+15   catalog_returns@tpcds          warehouse@tpcds
+16   catalog_sales@tpcds            call_center@tpcds
+17   catalog_sales@tpcds            catalog_page@tpcds
+18   catalog_sales@tpcds            customer@tpcds
+19   catalog_sales@tpcds            customer_address@tpcds
+20   catalog_sales@tpcds            customer_demographics@tpcds
+21   catalog_sales@tpcds            date_dim@tpcds
+22   catalog_sales@tpcds            household_demographics@tpcds
+23   catalog_sales@tpcds            item@tpcds
+24   catalog_sales@tpcds            promotion@tpcds
+25   catalog_sales@tpcds            ship_mode@tpcds
+26   catalog_sales@tpcds            time_dim@tpcds
+27   catalog_sales@tpcds            warehouse@tpcds
+28   customer@tpcds                 customer_address@tpcds
+29   customer@tpcds                 customer_demographics@tpcds
+30   customer@tpcds                 date_dim@tpcds
+31   customer@tpcds                 household_demographics@tpcds
+32   household_demographics@tpcds   income_band@tpcds
+33   inventory@tpcds                date_dim@tpcds
+34   inventory@tpcds                item@tpcds
+35   inventory@tpcds                warehouse@tpcds
+36   promotion@tpcds                date_dim@tpcds
+37   promotion@tpcds                item@tpcds
+38   store@tpcds                    date_dim@tpcds
+39   store_returns@tpcds            customer@tpcds
+40   store_returns@tpcds            customer_address@tpcds
+41   store_returns@tpcds            customer_demographics@tpcds
+42   store_returns@tpcds            date_dim@tpcds
+43   store_returns@tpcds            household_demographics@tpcds
+44   store_returns@tpcds            item@tpcds
+45   store_returns@tpcds            reason@tpcds
+46   store_returns@tpcds            store@tpcds
+47   store_returns@tpcds            store_sales@tpcds
+48   store_returns@tpcds            time_dim@tpcds
+49   store_sales@tpcds              customer@tpcds
+50   store_sales@tpcds              customer_address@tpcds
+51   store_sales@tpcds              customer_demographics@tpcds
+52   store_sales@tpcds              date_dim@tpcds
+53   store_sales@tpcds              household_demographics@tpcds
+54   store_sales@tpcds              item@tpcds
+55   store_sales@tpcds              promotion@tpcds
+56   store_sales@tpcds              store@tpcds
+57   store_sales@tpcds              time_dim@tpcds
+58   web_page@tpcds                 customer@tpcds
+59   web_page@tpcds                 date_dim@tpcds
+60   web_returns@tpcds              customer@tpcds
+61   web_returns@tpcds              customer_address@tpcds
+62   web_returns@tpcds              customer_demographics@tpcds
+63   web_returns@tpcds              date_dim@tpcds
+64   web_returns@tpcds              household_demographics@tpcds
+65   web_returns@tpcds              item@tpcds
+66   web_returns@tpcds              reason@tpcds
+67   web_returns@tpcds              time_dim@tpcds
+68   web_returns@tpcds              web_page@tpcds
+69   web_returns@tpcds              web_sales@tpcds
+70   web_sales@tpcds                customer@tpcds
+71   web_sales@tpcds                customer_address@tpcds
+72   web_sales@tpcds                customer_demographics@tpcds
+73   web_sales@tpcds                date_dim@tpcds
+74   web_sales@tpcds                household_demographics@tpcds
+75   web_sales@tpcds                item@tpcds
+76   web_sales@tpcds                promotion@tpcds
+77   web_sales@tpcds                ship_mode@tpcds
+78   web_sales@tpcds                time_dim@tpcds
+79   web_sales@tpcds                warehouse@tpcds
+80   web_sales@tpcds                web_page@tpcds
+81   web_sales@tpcds                web_site@tpcds
+82   web_site@tpcds                 date_dim@tpcds
+</console>
+</unit>
+
+

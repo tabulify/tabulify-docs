@@ -1,0 +1,108 @@
+---json
+{
+    "page_id": "q9pbq41y2ngc2515l8mv3"
+}
+---
+====== Tabul - Data Unzip Command ======
+
+===== About =====
+''data unzip'' is a [[docs:tabul:command|command]] of the [[docs:tabul:data:start|data module]] that [[:docs:op:unzip|unzip]] [[:docs:resource:archive|archives]]
+into a ''target'' directory destination.
+
+
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul data unzip --help
+</code>
+<console>
+Tabul data unzip
+================
+
+Unzip one or more archive data resources.
+
+
+
+Examples
+--------
+
+ 1 - To unzip the archive `world-db.tar.gz` into the default directory${entry_path}@tmp, you would execute
+
+
+        tabul data unzip world-db.tar.gz@cd
+
+
+ 2 - To unzip the archive `https://downloads.mysql.com/docs/world-db.tar.gz` into the tmp directory, you would execute
+
+
+        tabul data unzip https://downloads.mysql.com/docs/world-db.tar.gz @tmp
+
+
+
+
+Syntax
+------
+
+
+    tabul data unzip [options|flags] <source-selector...> <target-data-uri>
+
+
+where:
+
+
+  Arguments:
+
+    <source-selector...>                                    A data selector that selects the archive data resources to unzip
+
+    <target-data-uri>                                       A target data uri template that defines the destination directory where the archive entry are extracted
+
+
+  Options:
+
+    --entry-selector <value>                                A glob pattern. If set, only the archive entries that match will be extracted
+
+    --strip-components <value>                              Number of parts striped from the entry path to calculate the destination relative path from the destination directory (equivalent to strip-components in tar)
+
+
+  Data Definition Options:
+
+    -sa,--source-attribute <attributeName=value>            Set a source attribute
+
+
+  Selection Options:
+
+    --strict-selection                                      If set the selection will return an error if no data resources have been selected
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>
+
+
+

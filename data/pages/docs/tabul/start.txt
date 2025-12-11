@@ -1,0 +1,31 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:start" }
+    ],
+    "description": "Tabul is the tabulify (tab) command line (li) client.",
+    "page_id": "dro1ljbupukyluuq2g12h"
+}
+---
+====== Tabulify - Tabul ======
+\\
+
+{{ :docs:tabul:undraw_windows.svg?600&ratio=21:9 |}}
+
+\\
+
+''Tabul'' is the tabulify command line tool that performs:
+  * [[docs:tabul:data:start|data operations]] on [[docs:resource:resource|data resources]]
+  * and configuration tasks
+
+This sections regroups the reference documentation of each [[command|command]].
+
+  * [[docs:tabul:connection:start]]
+  * [[docs:tabul:data:start]]
+  * [[docs:tabul:env:start|]]
+  * [[docs:tabul:flow:start]]
+  * [[docs:tabul:service:start|]]
+  * [[docs:tabul:vault:start|]]
+
+
+

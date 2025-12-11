@@ -1,15 +1,23 @@
+---json
+{
+    "page_id": "i2t0xkn41t1xzw6dibkir"
+}
+---
 ====== Data Resource - Attribute (Property) ======
 
 
 ===== About =====
 A resource ''attribute'' is a [[docs:conf:attribute|attribute]] for a [[resource|data resources]].
 
+===== Type =====
 
 They may be:
-  * derived attributes such as the size
-  * [[docs:resource:data-definition|data definition]] attributes that describes:
-      * their [[structure|structure]] (for instance, the ''headerRowId'' attribute for a [[docs:resource:csv|csv]] determines if there is or not a header row).
-      * and eventually request attributes that are used as request attribute (for instance, a HTTP header for a [[docs:system:http|HTTP resource]]).
+  * ''derived'': value computed such as:
+    * the [[docs:resource:size|size]]
+    * the [[docs:resource:count|count]]
+  * ''literal'': value set such as:
+    * the ''header-row-id'' attribute of a [[docs:resource:csv|csv]] that determines if there is or not a header
+
 
 
 
@@ -22,70 +30,101 @@ They may be:
 ==== See ====
 
 
-You can see this attributes with the [[docs:tabli:data:info|tabli data info]] command
+You can see this attributes with the [[docs:tabul:data:info|tabul data info]] command
 
 <unit>
-<code dos>
-tabli data info characters.csv@howto
+<code bash>
+tabul data info characters.csv@howto
 </code>
 <console>
 Information about the data resource (characters.csv@howto)
-ATTRIBUTE      VALUE
-------------   ----------------------------------------------------------
-AbsolutePath   D:\code\bytle-mono\db-website\src\doc\howto\characters.csv
-Characterset   ISO-8859-2
-Connection     howto
-Count          4
-DataUri        characters.csv@howto
-LogicalName    characters
-Name           characters.csv
-Path           characters.csv
-Size           346
-Type           text/csv
+attribute             value                                                                                              description
+-------------------   ------------------------------------------------------------------------------------------------   ----------------------------------------------------------------------
+CHARACTER_SET         UTF-8                                                                                              The character set of the file
+COLUMN_NAME           lines                                                                                              The name of the column when the text content is returned on one column
+COMMENT_CHARACTER     #                                                                                                  The comment character
+DELIMITER_CHARACTER   ,                                                                                                  The delimiter character
+END_OF_RECORD         \n, \r, \r\n                                                                                       The End Of Record string sequence
+ESCAPE_CHARACTER                                                                                                         The escape character
+HEADER_ROW_ID         1                                                                                                  The id of the header row
+IGNORE_EMPTY_LINE     true                                                                                               Ignore empty line
+QUOTE_CHARACTER       "                                                                                                  The quote character
+URI                   file:///opt/tabulify/resources/howto/characters.csv                                                The URI of the file
+ABSOLUTE_PATH         /opt/tabulify/resources/howto/characters.csv                                                       The absolute path on the data system
+ACCESS_TIME           2025-11-10 15:34:45.519261734                                                                      The access time (access time)
+COMMENT                                                                                                                  A comment
+CONNECTION            howto                                                                                              The connection name
+COUNT                 5                                                                                                  The number of records
+CREATION_TIME         2025-11-10 15:34:41.449090141                                                                      The creation time (birth time)
+DATA_URI              characters.csv@howto                                                                               The data uri
+KIND                  csv                                                                                                The kind of media
+LOGICAL_NAME          characters                                                                                         The logical name
+MD5                   d0d7f020d834cde13d0a14733520d4d6                                                                   The Md5 hash
+MEDIA_SUBTYPE         csv                                                                                                The media subType
+MEDIA_TYPE            text/csv                                                                                           The media type
+NAME                  characters.csv                                                                                     The name of the data resource
+PARENT                                                                                                                   The parent
+PATH                  characters.csv                                                                                     The relative path to the default connection path
+SHA384                6e96667d1306abb445b5608ec36d193a6dc775a6adc74844531906bf4691eee5f32ce7c423e38c9c072692f459c57d5f   The Sha384 hash
+SHA384_INTEGRITY      sha384-bpZmfRMGq7RFtWCOw20ZOm3Hdaatx0hEUxkGv0aR7uXzLOfEI+OMnAcmkvRZxX1f                            The sha384 value used in the html integrity attribute
+SIZE                  432                                                                                                The number of byte
+TABULAR_TYPE          data                                                                                               The tabular type
+UPDATE_TIME           2025-11-10 15:34:41.449090141                                                                      The last update time (modify time)
 </console>
 </unit>
+
 ==== List ====
 
-You can get them in a tabular format with the [[docs:tabli:data:list|tabli data list]] command
+You can get them in a tabular format with the [[docs:tabul:data:list|tabul data list]] command
 
 <unit>
-<code dos>
-tabli data list -a count -a size *@howto
+<code bash>
+tabul data list -a count -a size *@howto
 </code>
-<console>
-count   size
--------------------   ----
-                  6    132
-                  4    346
-                  3    268
-                  5     70
-         2147483647   1446
-9223372036854775807    479
-         2147483647    227
-                 30    501
-                 10    623
-                 30   1512
-                  1      0
-                 30    313
-                 10    589
-                  5   1031
-               1000   1027
-                 30    601
-                 30    321
-                  1     17
-                  4     65
-                  1    301
-                  7    230
-                  2    420
+<console height="300px" scroll="toggle">
+path                        media_type        count   size
+-------------------------   ---------------   -----   ----
+archive                     inode/directory       2       
+books--data-def.yml         text/yaml             1    285
+books-semicolon.csv         text/csv              6    385
+books.csv                   text/csv              6    386
+books_template.json         text/json             1    112
+characters.csv              text/csv              5    432
+command                     inode/directory       6       
+create_foo.sql              text/sql              2     70
+create_view_foo.sql         text/sql              1     32
+dataset                     inode/directory       1       
+diff                        inode/directory       2       
+email                       inode/directory       2       
+generator                   inode/directory       7       
+json                        inode/directory       1       
+mysql                       inode/directory       2       
+oracle                      inode/directory       3       
+pebble                      inode/directory       2       
+pipeline                    inode/directory       8       
+postgres                    inode/directory      15       
+README.md                   text/plain            3    132
+recursive                   inode/directory       1       
+select.yml                  text/yaml             1    332
+sql_query_ddl_country.sql   text/sql              8    559
+sqlite                      inode/directory       4       
+sqlserver                   inode/directory       3       
+warehouse_delete.csv        text/csv              1     17
+warehouse_delete.sql        text/sql              1     65
+warehouse_original.csv      text/csv              1    301
+warehouse_update.sql        text/sql              1    230
+warehouse_upsert.csv        text/csv              2    420
+xml                         inode/directory       1       
+yaml                        inode/directory       1
 </console>
 </unit>
 
 ==== Set ====
 You can set the attributes via:
-  * a [[data-definition#attribute|data definition]]
-  * the [[docs:tabli:option|tabli options]]
-      * ''source-attribute'' or ''target-attribute'' in a [[docs:tabli:data:transfer|transfer command]]
-      * ''attribute'' for others [[docs:tabli:data:start|data command]]
+  * a [[data-definition|data-definition]]: Yaml format in a [[docs:resource:manifest|resource manifest]] or ''data-def'' attributes
+  * the [[docs:tabul:option|tabul options]]
+      * ''source-attribute'' or ''target-attribute'' in a [[docs:tabul:data:transfer|transfer command]]
+      * ''attribute'' for others [[docs:tabul:data:start|data command]]
 
 ==== Add as virtual column ====
 You can add the data resource attribute as extra-column via the [[virtual_column|virtual columns]].
@@ -94,21 +133,43 @@ You can add the data resource attribute as extra-column via the [[virtual_column
 
 
 ===== Type =====
+==== Identifier ====
+
+  * [[data_uri|dataUri]] - the unique identifier of this data resource
+  * type of resource:
+    * [[media-type|media-type]] -  the resource media type (ie ''text/html'')
+    * [[media-type|media-subtype]] -  the resource media subtype (ie ''html'' in ''text/html''), generally the file extension
+    * [[docs:common:manifest|kind]] - kind is a single name representation of a [[docs:resource:media-type|media type]] used in a [[docs:common:manifest|manifest]]
+
 ==== Common ====
 ''Common attributes'' are attributes that you will find on every [[resource|data resources]].
 
 The following attributes are common:
   * [[name|name]] - the name of the [[resource|data resource]]
-  * [[logicalname|logicalName]] - the name of the [[resource|data resource]] without any extension
-  * [[count|count]] - the number of children (Records for a [[table|table]], File or Directory for a [[directory|directory]], ..)
-  * [[size|size]] - the size in byte on disk (may be blank if not yet supported)
-  * [[path|path]] - the relative (if possible) path in the [[docs:connection:connection|connection]]
-  * ''absolutePath'' - the absolute path in the [[docs:connection:connection|connection]]
+  * [[logical_name|logical-name]] - the name of the [[resource|data resource]] without any extension
+  * [[count|count]] - the number of records, a logical count (Row for a [[sql_table|sql table]], File or Directory for a [[directory|directory]], ..)
+  * [[size|size]] - the size in byte on disk, the physical count (maybe blank if not supported)
+  * [[path|path]] - a compact path
+      * in a [[:docs:system:file|file system]] - the relative path from the [[docs:connection:connection|connection]] directory
+      * in a [[:docs:system:database:database|database]] - the sql path (qualified if the [[:docs:resource:sql_schema|schema]] is not the [[docs:connection:connection|connection]] schema)
+  * ''absolute-path'' - the absolute path in the [[docs:connection:connection|connection]]
   * [[docs:connection:connection|connection]] -  the connection name
-  * [[data_uri|dataUri]] - the unique identifier of this data resource
-  * [[type|type]] -  the resource media type (ie "text/html")
-  * [[type|subtype]] -  the resource media subtype (ie "html")
   * ''parent'' - the parent logical name
+  * [[tabular-type|tabular-type]]: the type of tabular (''log'' or ''data'')
+
+
+==== Time ====
+
+  * ''creation-time'' - the creation time (when the resource was created)
+  * ''access-time'' - the last access time (when the resource was last read)
+  * ''update-time'' - the last update time (when the [[docs:resource:content|resource content]] was last changed, known also as modification time)
+
+Note:
+  * They may be null if the [[:docs:system:system|system]] does not support them
+  * The in-memory pipeline data resource are set with a creation time at UTC.
+
+==== Digest ====
+
   * ''md5'' - the ''MD5'' digest
   * ''sha384'' - the ''SHA384'' digest
   * ''sha384_integrity'' - the ''SHA384'' integrity digest used in a integrity HTML attribute.
@@ -117,5 +178,5 @@ The following attributes are common:
 
 ''Specific attributes'' are attributes that are available only for specific ''type'' of data resource.
 
-For instance, for a [[text|text file]], you would have its ''characterSet''.
+For instance, for a [[text|text file]], you would have its ''character-set''.
 

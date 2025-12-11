@@ -1,0 +1,151 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:postgres:clob" }
+    ],
+    "page_id": "3adbccabj2alrzlf5oc5t"
+}
+---
+====== Postgres - Data Type Support ======
+
+===== About =====
+
+This page is about the [[docs:data_type:data_type|data type]] support in [[postgres|Postgres]]
+
+===== List =====
+
+Below is the list of [[:docs:data_type:data_type|data type]] of the [[:howto:postgres:howto_connection_service|Postgres Howto connection]]
+printed with the [[:docs:tabul:connection:type|connection type]] command.
+
+<unit>
+<code bash>
+tabul service start postgres
+</code>
+</unit>
+<unit display=none>
+<code bash>
+tabul service ping postgres
+</code>
+</unit>
+<unit>
+<code bash>
+tabul connection type --supported-only postgres
+</code>
+<console height="300" scroll="toggle">
+Known Types for the connection (postgres)
+name                       aliases                       ansi_type                  max_precision   supported   description
+------------------------   ---------------------------   ------------------------   -------------   ---------   -----------------------------------------------------------------------------
+bigint                     int8                          bigint                     19              ✓           Eight-byte integer
+bigserial                                                bigint                     19              ✓           Eight-byte integer
+bit                                                      bit                        83886080        ✓           Fixed-length bit string
+boolean                    bool                          boolean                                    ✓           Logical Boolean (true/false)
+cardinal number                                          integer                                    ✓           Information schema type: A non-negative integer
+character                  bpchar, char                  character                  10485760        ✓           Fixed-length, blank-padded
+character data                                           character varying                          ✓           Information schema type: A character string (without specific maximum length)
+character varying          varchar                       character varying          10485760        ✓           Variable-length character string
+cidr                                                     character varying                          ✓           IPv4 and IPv6 networks
+date                                                     date                                       ✓           Calendar date (year, month, day)
+double precision           float8                        double precision                           ✓           Double precision floating-point number (8 bytes)
+inet                                                     character varying                          ✓           IPv4 and IPv6 hosts and networks
+integer                    int, int4                     integer                    10              ✓           Four-byte integer
+json                                                     json                                       ✓           Textual JSON data
+jsonb                                                    jsonb                                      ✓           Binary JSON data, decomposed
+macaddr                                                  character                                  ✓           MAC addresses
+macaddr8                                                 character                                  ✓           MAC addresses (EUI-64 format)
+money                                                    double precision                           ✓           Double precision floating-point number (8 bytes)
+name                                                     character varying                          ✓           Internal type for object names
+numeric                    decimal                       numeric                    1000            ✓           Exact numeric of selectable precision
+oid                                                      bigint                                     ✓           Eight-byte integer
+real                       float4                        real                                       ✓           Single precision floating-point number (4 bytes)
+serial                                                   integer                    10              ✓           Four-byte integer
+smallint                   int2                          smallint                   5               ✓           Two-byte integer
+smallserial                                              smallint                   5               ✓           Two-byte integer
+sql identifier                                           character                                  ✓           Information schema type: A character string used for SQL identifiers
+text                                                     clob                                       ✓           Variable unlimited length
+time                       time without time zone        time                       6               ✓           Time of day without time zone
+time stamp                                               timestamp with time zone   6               ✓           Information schema type: A domain over the type timestamp with time zone
+time with time zone        timetz                        time with time zone        6               ✓           Time of day, including time zone
+timestamp                  timestamp without time zone   timestamp                  6               ✓           Date and time without time zone
+timestamp with time zone   timestamptz                   timestamp with time zone   6               ✓           Date and time, including time zone
+uuid                                                     character                  32              ✓           Universally Unique Identifiers (UUID)
+xml                                                      xml                                        ✓           XML data
+yes or no                                                character varying          3               ✓           Information schema type: String with YES or NO
+</console>
+</unit>
+
+
+
+===== Note =====
+
+
+The reference can found on the [[https://www.postgresql.org/docs/current/datatype.html|Postgres Data Type page]].
+
+==== Clob ====
+
+The sql ''CLOB'' data type is not supported by [[postgres|PostgreSql]]. (ie the CLOB feature (''T041-02'') is in [[https://www.postgresql.org/docs/current/unsupported-features-sql-standard.html|the unsupported Features]]).
+
+''Tabulify'' transform then:
+  * a ''clob'' automatically in a [[https://www.postgresql.org/docs/current/datatype-character.html|text]] postgres data type
+  * a ''text'' postgres column in a ''clob'' data type for external database.
+
+==== Float ====
+
+The SQL variable type ''float'' (ie ''float(p)'') does not exists.
+
+We map it to:
+    * ''real'' for a single precision (ie ''float4'')
+    * ''double'' for a double precision (ie ''float8'')
+
+==== Tinyint ====
+
+''tinyint'' does not exist. We map it to ''smallint''
+
+
+==== Unicode character (Nchar and NVarchar) ====
+The unicode character data type ''Nchar'' and ''NVarchar'' does not exist in Postgres (([[https://www.postgresql.org/docs/current/datatype-character.html|Postgres Character Datatype]])).
+
+If you want to transfer Unicode character to Postgres, you need to:
+  * have a database with an [[https://www.postgresql.org/docs/current/multibyte.html|Unicode character set]]
+  * and use the following respective data type ''Char'' and ''Varchar''
+
+If Tabulify need to create a table, it will creates  ''Char'' and ''Varchar'' columns.
+
+==== Decimal ====
+
+Note that if you use ''decimal'' in your ''create table'' statement, the type column created will be a ''numeric'' in Postgres.
+
+It's just a naming difference because the two type are equivalent but if you want to make a [[:docs:op:diff|schema diff]], you will see a name difference.
+
+That's why when migrating from another database, the ''decimal'' data type is mapped to a ''numeric''.
+
+
+==== Postgres Extra Types ====
+
+=== Info-schema datatypes ===
+
+We support the [[https://www.postgresql.org/docs/current/infoschema-datatypes.html|infoschema-datatypes]] so that you query any columns in the [[https://www.postgresql.org/docs/current/information-schema.html|information schema]].
+
+
+=== Network Address Types ===
+
+We support the [[https://www.postgresql.org/docs/current/datatype-net-types.html|Network address type]].
+
+
+
+
+=== UUID ===
+
+We support the [[https://www.postgresql.org/docs/current/datatype-uuid.html|UUID type]].
+
+=== Name ===
+
+We support the [[https://www.postgresql.org/docs/current/datatype-character.html#DATATYPE-CHARACTER-SPECIAL-TABLE|special name type]] (63, varying character)
+
+
+
+==== Unsigned Integer does not exists in Postgres ====
+
+
+Note that unsigned integer (ie positive integer only) does not exists in Postgres.
+
+See this [[https://www.postgresql.org/message-id/3180774.1733588677%40sss.pgh.pa.us|thread for why]]

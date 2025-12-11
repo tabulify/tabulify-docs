@@ -1,0 +1,80 @@
+---json
+{
+    "page_id": "v8oxynmmjrs2dhkvt6n8f"
+}
+---
+====== Regular Expression Generator ======
+
+
+===== About =====
+''regexp'' is a [[:docs:generator:data-supplier|data supplier]] that generates data based on a regular expression.
+
+===== Example =====
+
+  * [[:howto:generator:regexp_number]]
+
+===== Example =====
+
+Generation of a decimal that has:
+  * 3 digits in the integral part
+  * 3 digits in the fractional part
+thanks to the regular expression ''%%[0-9]{3}\.[0-9]{3}%%''
+
+<file yml generator/regexp--generator.yml>
+columns:
+  - name: regexp_double
+    type: Double
+    precision: 6
+    scale: 3
+    data-supplier:
+      type: regexp
+      arguments:
+        expression: '[0-9]{3}\.[0-9]{3}'
+        # an optional seed to get deterministic value between execution
+        seed: 1234L
+</file>
+
+
+===== Arguments =====
+
+==== Expression ====
+
+''expression'' is a [[kb>lang:regexp:regexp|regular expression]] that defines the pattern of the data that should be generated.
+
+The following table shows the supported syntax:
+
+^                        Pattern ^ Description  ^
+|                            `.` | Any symbol. See below details - `Dot pattern generated symbols` section.                                                             |
+|                            `?` | One or zero occurrences                                                                                                              |
+|                            `+` | One or more occurrences                                                                                                              |
+|                            `*` | Zero or more occurrences                                                                                                             |
+|                           `\r` | Carriage return `CR` character                                                                                                       |
+|                           `\t` | Tab `	` character                                                                                                                    |
+|                           `\n` | Line feed `LF` character.                                                                                                            |
+|                           `\d` | A digit. Equivalent to `[0-9]`                                                                                                       |
+|                           `\D` | Not a digit. Equivalent to `[^0-9]`                                                                                                  |
+|                           `\s` | Configurable. By default: Space or Tab. See `WHITESPACE_DEFINITION` property.                                                        |
+|                           `\S` | Anything, but Carriage Return, Space, Tab, Newline, Vertical Tab, Form Feed                                                          |
+|                           `\w` | Any word character. Equivalent to `[a-zA-Z0-9_]`                                                                                     |
+|                           `\W` | Anything but a word character. Equivalent to `[^a-zA-Z0-9_]`                                                                         |
+|                           `\i` | Places same value as capture group with index `i`. `i` is any integer number.                                                        |
+|                  `\Q` and `\E` | Any characters between `\Q` and `\E`, including metacharacters, will be treated as literals.                                         |
+|                  `\b` and `\B` | These characters are ignored. No validation is performed!                                                                            |
+|          `\xXX` and `\x{XXXX}` | Hexadecimal value of unicode characters 2 or 4 hexadecimal digits                                                                    |
+|                       `\uXXXX` | Hexadecimal value of unicode characters 4 hexadecimal digits                                                                         |
+|                      `\p{...}` | Any character in class. See details below before use.                                                                                |
+|                      `\P{...}` | Any character not in class. See details below before use.                                                                            |
+|              `{a}` and `{a,b}` | Repeat a; or min a max b times. Use {n,} to repeat at least n times.                                                                 |
+|                        `[...]` | Single character from ones that are inside brackets. `[a-zA-Z]` (dash) also supported                                                |
+|                       `[^...]` | Single character except the ones in brackets. `[^a]` - any symbol except 'a'                                                         |
+|                           `()` | To group multiple characters for the repetitions                                                                                     |
+|                             %%\\%% | Escape character (use %%\\\\%% (double backslash) to generate single %\% character)                                                        |
+
+==== Seed ====
+
+''seed'' is optional. It's a [[kb>seed|start point in the generation of pseudo-random numbers]].
+
+If set the data will be deterministic between executions.
+===== Limitations =====
+
+Limitations and syntax information can be found on the [[https://github.com/curious-odd-man/RgxGen|RxGen Library]]

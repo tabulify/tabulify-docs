@@ -1,0 +1,293 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:docs:resource:manifest" }
+    ],
+    "page_id": "jp6c1q2skek1wz3b43cy9"
+}
+---
+====== Resource Manifests ======
+
+
+===== About =====
+A [[docs:resource:resource|data resource]] is uniquely identified by 3 elements:
+  * a [[:docs:resource:data_uri|data uri]]
+  * a [[docs:resource:media-type|media type]]
+  * a [[docs:resource:data-definition|data definition]]
+
+''Resource manifests'' are [[:docs:common:manifest|manifests]] that groups this 3 elements
+
+===== Default =====
+
+This section defines the optionality and default value of each element.
+
+^ Type ^ Mandatory ^ Default ^
+| [[:docs:resource:data_uri|data uri]] | true |
+| [[docs:resource:media-type|media type]] | Optional | Derived from the [[:docs:resource:data_uri|data uri]]. \\ Example: for a ''books.csv'' file, the media type is ''text/csv'' |
+| [[docs:resource:data-definition|data definition]] | Optional | Takes the default value for the kind of resource (ie for the kind of [[docs:resource:media-type|media type]]) \\ Example: for a [[:docs:resource:csv|csv]], the default separator is the comma. |
+
+
+===== Kind =====
+
+
+In a ''kind'' manifest:
+  * the [[docs:resource:media-type|media type]] is defined/derived from the ''kind'' value
+  * the [[:docs:resource:data_uri|data-uri]] is optional
+
+==== With Data Uri ====
+
+
+Example for a [[:docs:resource:csv|CSV]]
+
+Note that the [[docs:resource:data_uri|data uri]], ''books.csv@md'' locates the csv file ''books.csv'' in the same directory as the manifest known as the [[:docs:connection:md|md connection (manifest directory)]].
+
+<unit>
+<file yaml books-with-data-uri--csv.yml>
+kind: csv
+spec:
+  data-uri: books.csv@md
+  data-def:
+    logical-name: favorite_books
+    header-row-id: 1
+    delimiter-character: ','
+    columns:
+      - name: asin
+        type: varchar
+        precision: 20
+      - name: description
+        type: varchar
+      - name: price
+        type: double
+      - name: group
+        type: varchar
+
+</file>
+</unit>
+
+When using this manifest, you select the original resource by using the ''data-uri'' of the manifest
+
+Example:
+
+<unit>
+<code bash>
+tabul data print books-with-data-uri--csv.yml@howto
+</code>
+<console>
+books.csv@md
+asin            description                                   price   group
+-------------   -------------------------------------------   -----   ----------
+B007US9NA8      The New Encyclopedia of Modern Bodybuilding   27.18   Sports
+1439199191      How To Win Friends And Influence People       27.18   Psychology
+9780465050659   The Design of Everyday Things                  9.99   Design
+9780465050659   The Design of Everyday Things                  9.99   Psychology
+B00555X8OA      Thinking, Fast and Slow                        8.85   Decision
+B00555X8OA      Thinking, Fast and Slow                        8.85   Psychology
+</console>
+</unit>
+
+==== Without Data Uri ====
+
+Without ''data-uri'', the default value is derived from the manifest file name.
+  * The resource is supposed to be stored in the same directory as the manifest (ie in the [[:docs:connection:md|md]] connection)
+  * The file extension is derived from the ''kind'' value
+
+For example, for the manifest, ''books--csv.yml'', the [[:docs:resource:data_uri|data uri]] would be ''books.csv@md''
+
+<unit>
+<file yaml books--csv.yml>
+kind: csv
+spec:
+  data-def:
+    logical-name: favorite_books
+    header-row-id: 1
+    delimiter-character: ','
+    columns:
+      - name: asin
+        type: varchar
+        precision: 20
+      - name: description
+        type: varchar
+      - name: price
+        type: double
+      - name: group
+        type: varchar
+
+</file>
+</unit>
+
+When using this manifest, to select the resource, you can use the ''data-uri'':
+  * of the manifest
+  * or of the original resource
+
+Example:
+  * From the data uri of manifest
+<unit>
+<code bash>
+tabul data print books--csv.yml@howto
+</code>
+<console>
+books.csv@md
+asin            description                                   price   group
+-------------   -------------------------------------------   -----   ----------
+B007US9NA8      The New Encyclopedia of Modern Bodybuilding   27.18   Sports
+1439199191      How To Win Friends And Influence People       27.18   Psychology
+9780465050659   The Design of Everyday Things                  9.99   Design
+9780465050659   The Design of Everyday Things                  9.99   Psychology
+B00555X8OA      Thinking, Fast and Slow                        8.85   Decision
+B00555X8OA      Thinking, Fast and Slow                        8.85   Psychology
+</console>
+</unit>
+
+  * From the data uri of the csv
+<unit>
+<code bash>
+tabul data print books.csv@howto
+</code>
+<console>
+books.csv@howto
+asin            description                                   price   group
+-------------   -------------------------------------------   -----   ----------
+B007US9NA8      The New Encyclopedia of Modern Bodybuilding   27.18   Sports
+1439199191      How To Win Friends And Influence People       27.18   Psychology
+9780465050659   The Design of Everyday Things                  9.99   Design
+9780465050659   The Design of Everyday Things                  9.99   Psychology
+B00555X8OA      Thinking, Fast and Slow                        8.85   Decision
+B00555X8OA      Thinking, Fast and Slow                        8.85   Psychology
+</console>
+</unit>
+
+
+===== Other =====
+
+We also support the [[#resource]] and [[#data def]] manifest for backward compatibility reason but whenever possible, we recommend to use the [[#kind|kind manifest]] because:
+  * it's more versatile
+  * they will get in future version, a schema in order to get value completion in your editor (known also as intellisense)
+
+There are in total 3 types of manifest to define the 3 data resource elements:
+
+^ Type ^ Description ^
+| [[#kind]] | the manifest with only 2 elements where ''media-type'' is derived from the kind of manifest |
+| [[#resource]] | the generic manifest that defines all 3 elements |
+| [[#data def]] | a manifest that defines only the data definition and that should live next to its resource|
+
+
+In other words, they have the following properties by resource manifest type:
+
+^ Type ^ Define \\ Data Uri ^ Define \\ Media Type ^ Define \\ Data Def ^ Resource that should be selected ^
+| [[#kind|Kind]] | Optional | | Yes | manifest and resource data uri |
+| [[#resource|Resource]] | Yes | Yes | Yes | manifest data uri |
+| [[#data def|Data Def]] |  | | Yes | resource data uri |
+
+
+
+==== Resource ====
+
+The ''resource'' manifest specifies all 3 elements
+  * a [[:docs:resource:data_uri|data uri]]
+  * a [[docs:resource:media-type|media type]]
+  * a [[docs:resource:data-definition|data definition]]
+
+<unit>
+<file yaml books--resource.yml>
+kind: resource
+spec:
+  data-uri: books.csv@md
+  media-type: text/csv
+  data-def:
+    logical-name: favorite_books
+    header-row-id: 1
+    delimiter-character: ','
+    columns:
+      - name: asin
+        type: varchar
+        precision: 20
+      - name: description
+        type: varchar
+      - name: price
+        type: double
+      - name: group
+        type: varchar
+
+</file>
+</unit>
+
+When using this manifest, you select the resource by using the ''data-uri'' of the manifest
+
+Example:
+
+<unit>
+<code bash>
+tabul data print books--resource.yml@howto
+</code>
+<console>
+books.csv@md
+asin            description                                   price   group
+-------------   -------------------------------------------   -----   ----------
+B007US9NA8      The New Encyclopedia of Modern Bodybuilding   27.18   Sports
+1439199191      How To Win Friends And Influence People       27.18   Psychology
+9780465050659   The Design of Everyday Things                  9.99   Design
+9780465050659   The Design of Everyday Things                  9.99   Psychology
+B00555X8OA      Thinking, Fast and Slow                        8.85   Decision
+B00555X8OA      Thinking, Fast and Slow                        8.85   Psychology
+</console>
+</unit>
+
+
+
+
+==== Data Def ====
+
+In a ''data-def'' manifest, only the [[docs:resource:data-definition|data definition]] is present.
+
+
+Example for a [[docs:resource:csv|csv]]
+  * if you have a file called ''books.csv'' in the directory ''howto''
+  * you would create a file called ''books--data-def.yml'' in the same ''howto'' directory
+
+<unit>
+<file yaml books--data-def.yml>
+kind: data-def
+spec:
+  logical-name: favorite_books
+  header-row-id: 1
+  delimiter-character: ','
+  columns:
+    - name: asin
+      type: varchar
+      precision: 20
+    - name: description
+      type: varchar
+    - name: price
+      type: double
+    - name: group
+      type: varchar
+
+</file>
+</unit>
+
+This ''manifest'' should be located next to the data resource in order to define only its data definition.
+
+
+To use this manifest, you would use the [[:docs:resource:data_uri|data uri]] of the original resource
+
+Example:
+<unit>
+<code bash>
+tabul data print books.csv@howto
+</code>
+<console>
+books.csv@howto
+asin            description                                   price   group
+-------------   -------------------------------------------   -----   ----------
+B007US9NA8      The New Encyclopedia of Modern Bodybuilding   27.18   Sports
+1439199191      How To Win Friends And Influence People       27.18   Psychology
+9780465050659   The Design of Everyday Things                  9.99   Design
+9780465050659   The Design of Everyday Things                  9.99   Psychology
+B00555X8OA      Thinking, Fast and Slow                        8.85   Decision
+B00555X8OA      Thinking, Fast and Slow                        8.85   Psychology
+</console>
+</unit>
+
+It has:
+  * the advantage that you do operation on the file, not on the manifest.
+  * the disadvantage that you need to not forget to move the manifest when you move the file

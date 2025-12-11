@@ -1,0 +1,202 @@
+---json
+{
+    "page_id": "aseza8p5s4rxqh037oqbg"
+}
+---
+====== Data Operation - Execute ======
+
+
+===== About =====
+''execute'' is a [[:docs:flow:intermediate|intermediate operation]] that
+  * accepts [[docs:resource:runtime|runtime resources]] as [[:docs:flow:input|inputs]].
+  * executes them
+  * and returns the [[#output result columns|exit code]] as ''output''
+
+
+It's equivalent to a [[:docs:op:transfer|transfer operation]]:
+  * where the ''target'' is optional ([[#target data uri|Set by default]])
+  * with the ''transfer'' [[:docs:flow:output|output]] has ''results''
+  * with a twist known as the [[#execution mode]]
+
+
+
+
+===== Howto =====
+
+  * [[:howto:tpcds:load_tpcds|]]
+  * [[:howto:mysql:sample_schema|]]
+===== Usage =====
+
+
+It allows to:
+  * see a summary of a runtime execution (ie the exit code) without giving any target
+  * perform [[:docs:benchmark|benchmark/performance test]] 
+
+
+
+
+
+
+===== Arguments =====
+
+^ Name ^ Default ^ Description ^
+| ''execution-mode'' | See [[#execution mode]] | The [[#execution mode|mode of execution]] (''transfer'' or ''load'') |
+| ''error-data-uri'' | See [[#error data uri]]  | The report location of unexpected errors  if any happen |
+| ''fail-on-error'' | ''true''  | If an error happens, the step will return a bad exit code |
+| ''output-type'' | ''results'' | The [[:docs:flow:output|output data resource type]]  (''inputs'',''results'',''targets''). \\ Results here: \\ mean ''output result'', the results of all executions, \\ **NOT** the ''runtime result'', the result of a runtime execution |
+| ''output-result-columns'' | | The [[#output result columns|list of columns]] for the ''output result'' |
+| ''processing-type'' | ''batch'' | The [[:docs:flow:processing-type|processing type]] |
+| ''runtime-result-persistence'' | See [[#runtime result persistence]] | If true, the runtime results are stored |
+| ''stop-early'' | ''true'' | If true, the execution will stop at the first error |
+| ''strict-input'' | ''true'' | If true, an [[:docs:flow:input|input]] that is not a [[docs:resource:runtime|runtime]] will throw an [[:docs:flow:error_handling|error]] |
+| ''strict-execution'' | ''false'' | If true, an execution that returns a bad exit value will throw an [[:docs:flow:error_handling|error]] |
+| ''target-data-uri'' | See [[#target data uri]] | A [[:docs:flow:template_data_uri|template data uri]] that define the location of the [[#target data uri|runtime results]] |
+| ''target-data-def'' | Optional | Metadata Data Attributes in [[:docs:resource:data-definition|data definition form]] |
+| ''target-media-type'' | Optional | The [[:docs:resource:media-type|media type]] of the target |
+
+
+
+
+==== Execution Mode ====
+
+
+''Execute'' has 2 modes of executions:
+  * [[#load]],
+  * [[#transfer]]
+
+=== Execution Mode Example ===
+
+
+For a [[:docs:resource:sql_select|Sql SELECT query]], if the ''execution mode'' is:
+  * ''transfer'': the statement is executed and a local iteration over the result set, calculates the count,
+  * ''load'': the statement is wrapped in a COUNT statement and is executed to retrieve the count
+<code sql>
+# example of wrapped count statement
+select count(*) from (the original select)
+</code>
+
+Note that the difference in performance metrics permits to measure the fetch of data on your network.
+
+=== Transfer ===
+
+In a ''transfer'' mode, ''execute'' will:
+  * execute the executable,
+  * fetch, store and report the result
+  * count the number of records on the result
+
+=== Load ===
+In a ''load'' mode, ''execute'' will:,
+  * create a count request, execute it
+  * get the count
+
+
+=== Default Execution Mode ===
+
+The default value is based on the [[:docs:resource:tabular-type|tabular-type]] of the [[:docs:flow:input|inputs]].
+
+
+^ default mode of execution ^ tabular type ^
+| ''load'' | ''data'' |
+| ''transfer'' | ''command'' (''exit code'' column is present)  |
+
+
+
+==== Target Data Uri ====
+
+In this operation, the [[:docs:flow:target|targets]] are the results of each runtime execution (known as ''runtime result'')
+
+You can define where they are stored with:
+  * the ''target-data-uri'', a [[:docs:flow:template_data_uri|template data uri]]
+  * the ''target-data-def'', a [[:docs:resource:data-definition|data definition]]
+  * and ''target-media-type'', a [[:docs:resource:media-type|media type]]
+
+
+Default value:
+<code bash>
+execute/${pipeline_start_time}-pipe-${pipeline_logical_name}/${input_logical_name}.log@tmp
+</code>
+
+
+Note that the ''runtime result'' is stored only if the [[#runtime result persistence|runtime-result-persistence]] has the value ''true''.
+==== Error Data Uri ====
+
+If any unexpected error occurs, the error log is stored in the location defined by the ''error-data-uri'' argument.
+
+
+The ''error-data-uri'' value is a [[:docs:flow:template_data_uri|template data uri]]
+
+The default value is:
+<code bash>
+execute/${pipeline_start_time}-pipe-${pipeline_logical_name}/${input_logical_name}-err.log@tmp
+</code>
+==== Runtime Result Persistence ====
+
+
+
+If ''true'', the result of the runtime execution are stored in the location defined by the [[#target data uri|target data uri]].
+
+
+Note that this attribute has only a effect on a ''transfer'' execution mode and will have no effect with the [[#execution mode|load execution mode]].
+
+
+==== Strict input ====
+
+The input should be a [[docs:resource:runtime|runtime]].
+
+If ''strict-input'' is:
+  * ''true'', an [[:docs:flow:error_handling|error]] is thrown
+  * ''false'', if the input data path is:
+      * a [[:docs:resource:file|file]], it's transformed as a executable executed at its own connection (ie at its own [[:docs:connection:working_path|working directory)]]
+      * not a file, a [[:docs:flow:error_handling|error]] is thrown
+
+
+==== Runtime Result Persistence ====
+
+
+''runtime-result-persistence'' specificies if the results of the execution of a runtime should be stored.
+
+This argument lets you choose to not store this result in ''loop'' execution mode
+
+By default, it's:
+  * ''true'' if the [[#execution mode]] is ''loop''
+  * always ''false'' if the [[#execution mode]] is ''count''
+
+
+
+==== Output Result Columns ====
+
+You can choose the column of the output result with the ''output-result-columns'' argument.
+
+
+^ Name ^ Count \\ Execution Mode \\ Default ^ Loop \\ Execution Mode \\ Default ^ Description ^
+| ''runtime_data_uri'' | x | x | The [[:docs:resource:runtime#data uri|runtime data uri]] (ie uri of the input executed) |
+| ''exit_code'' | x | x | The exit code (if ''0'', no error was seen) |
+| ''count'' | x | x | The record count |
+| ''latency'' | x | x | The [[:docs:common:duration|duration]] in a human string |
+| ''data_uri'' | | x | the [[#target data uri]] or the [[#error data uri|error data uri]] |
+| ''error_message'' | x | x | the error message if any |
+^ Other possible values, not chosen by default ^^
+| ''latency_millis'' |  |  | The [[:docs:common:duration|duration]] in milliseconds |
+| ''result_data_uri'' | | | the [[#target data uri]] where the runtime result is stored |
+| ''runtime_executable_path'' | | | The executable [[:docs:resource:data_uri|data uri]] |
+| ''runtime_connection'' | | | The runtime connection |
+| ''start_time'' | | | the start time (timestamp) |
+| ''end_time'' | | | the end time (timestamp) |
+| ''error_data_uri'' | | | the [[#error data uri|error data uri]] |
+
+
+===== Cli =====
+
+
+The ''execute'' operation is also available at the cli with the [[:docs:tabul:data:execute|data execute command]].
+===== Note =====
+
+
+
+==== Execution on records ====
+
+The ''execute'' operation don't support yet directly [[:docs:flow:granularity|execution of script stored on records]] but you can achieve it by:
+  * generating [[docs:resource:runtime#scripts|executable scripts]] from record with the [[:docs:op:template|template operation]]
+  * and using them in a new pipeline with the [[:docs:op:select|select supplier]]
+
+

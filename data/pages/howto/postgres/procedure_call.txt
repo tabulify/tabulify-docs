@@ -1,0 +1,242 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:howto:postgres:procedure" },
+        { "path": ":howto:postgres:procedure" }
+    ],
+    "page_id": "gmhsqysstmgh58qslji2x"
+}
+---
+====== How to execute a procedure in Postgres? ======
+
+
+===== About =====
+This ''howto'' shows you how to create and execute a [[:docs:system:database:sql_procedure|SQL Procedure]]  in [[:howto:postgres:postgres|Postgres]].
+
+
+This example has been taken from the [[https://www.postgresql.org/docs/current/sql-createprocedure.html#SQL-CREATEPROCEDURE-EXAMPLES|official documentation - Examples]]
+
+
+===== Steps =====
+
+<unit display=none>
+Cleaning
+<code bash>
+tabul data drop --no-strict-selection tbl@postgres
+</code>
+</unit>
+==== Creation of the procedure ====
+
+=== The Create Statements ===
+
+The script ''procedure-create-tbl-procedure.sql'' contains [[:docs:resource:sql_ddl|SQL DDL statements]] that will create:
+  * the ''tbl'' table
+  * and the [[:docs:resource:sql_stored_procedure|stored procedure]].
+
+The content is:
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode postgres/procedure-create-tbl-procedure.sql@howto
+</code>
+<console sql >
+
+-- creation of the table used by the procedure
+create table if not exists tbl
+(
+  num int
+);
+
+-- creation of the procedure
+CREATE OR REPLACE PROCEDURE insert_data(a integer, b integer)
+  LANGUAGE SQL
+AS
+$$
+INSERT INTO tbl
+VALUES (a);
+INSERT INTO tbl
+VALUES (b);
+$$;
+
+</console>
+</unit>
+
+=== Execution of the Create Statements ===
+
+We will [[docs:resource:runtime#execution|execute it]] by:
+  * making it a [[docs:resource:runtime#data uri|executable data uri]] (ie adding the execution connection)
+  * and [[:docs:tabul:data:print|printing it]]
+
+
+<unit>
+<code bash>
+tabul data print '(postgres/procedure-create-tbl-procedure.sql@howto)@postgres'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+(postgres/procedure-create-tbl-procedure.sql@howto)@postgres
+id   count   statement                                            line   error_code   error_message
+--   -----   --------------------------------------------------   ----   ----------   -------------
+ 1       0   create table if not exists tbl\n(\n  num int\n)         2            0                
+ 2       0   CREATE OR REPLACE PROCEDURE insert_data(a integer,      8            0
+</console>
+</unit>
+
+==== Literal Execution of the Procedure ====
+
+In this example, we show you how to call the procedure with the argument passed as literal.
+
+
+=== The literal statement ===
+The statement is:
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode postgres/procedure-call-literal.sql@howto
+</code>
+<console sql >
+
+
+CALL insert_data(1, 2);
+
+
+</console>
+</unit>
+
+=== Execution of the literal statement ===
+
+We will [[docs:resource:runtime#execution|execute it]] by:
+  * making it a [[docs:resource:runtime#data uri|executable data uri]] (ie adding the execution connection)
+  * and [[:docs:tabul:data:print|printing it]]
+
+<unit>
+<code bash>
+tabul data print '(postgres/procedure-call-literal.sql@howto)@postgres'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+(postgres/procedure-call-literal.sql@howto)@postgres
+id   count   statement                   line   error_code   error_message
+--   -----   -------------------------   ----   ----------   -------------
+ 1      -1   CALL insert_data(1, 2);\n      1            0
+</console>
+</unit>
+
+=== Validation Check ===
+
+After execution, you can validate the execution
+  * visually by selecting the ''tbl'' table and checking the presence of the values ''1'' and ''2''
+
+<unit>
+<code bash>
+tabul data print tbl@postgres
+</code>
+<console>
+tbl@postgres
+num
+---
+  1
+  2
+</console>
+</unit>
+  * automatically by executing a [[:docs:tabul:data:diff|diff]]
+
+<unit>
+<code bash>
+tabul data diff postgres/procedure-call-literal-expected.csv@howto tbl@postgres
+</code>
+<console>
+Diff Summary Report
+The data resources are equals.
+from                                                 to             equals   record_count   change_count
+--------------------------------------------------   ------------   ------   ------------   ------------
+postgres/procedure-call-literal-expected.csv@howto   tbl@postgres   ✓                   2              0
+</console>
+</unit>
+
+==== Parametrized Execution of the Procedure ====
+
+=== The parametrized statement ===
+The [[:docs:system:database:sql_parameterized_statement|parametrized statement]] to execute the ''insert_data''  [[:docs:system:database:sql_procedure|sql procedure]] is:
+<unit>
+<file sql postgres/procedure-call-parametrized.sql>
+CALL insert_data(?, ?);
+
+</file>
+</unit>
+where:
+  * ''call'' is the [[https://www.postgresql.org/docs/current/sql-call.html|call postgres command]] that invokes a procedure
+  * ''insert_data'' is the procedure name
+  * ''(?, ?)'' is the procedure signature with 2 [[:docs:system:database:sql_parameterized_statement#placeholder|parameters placeholders]]
+
+
+=== The Request Data Resource ===
+
+
+
+To make this [[:docs:system:database:sql_statement|statement]] [[docs:resource:runtime|executable]], we need to create a [[:docs:resource:sql_request#manifest|sql request manifest]] so that we can define the [[:docs:system:database:sql_parameterized_statement#parameters|parameters]]
+
+
+<unit>
+<file yml postgres/procedure-call-parametrized--sql-request.yml>
+kind: sql-request
+spec:
+  # the runtime data uri
+  # * takes the file (procedure-call-parametrized.sql)
+  # * located in the same directory as this manifest (md)
+  # * and execute it against (postgres)
+  data-uri: (procedure-call-parametrized.sql@md)@postgres
+  # the data definition
+  data-def:
+    parameters:
+      # the parameter for the first placeholder
+      - value: 1 # the value passed to the procedure
+      # the parameter for the second placeholder
+      - value: 2 # the value passed to the procedure
+
+</file>
+</unit>
+
+=== The execution ===
+
+We will [[docs:resource:runtime#execution|execute]] this [[:docs:resource:manifest|manifest]] by [[:docs:tabul:data:print|printing]] it
+
+<unit>
+<code bash>
+tabul data print postgres/procedure-call-parametrized--sql-request.yml@howto
+</code>
+
+Output:
+<console>
+(procedure-call-parametrized.sql@md)@postgres
+id   count   statement                   line   error_code   error_message
+--   -----   -------------------------   ----   ----------   -------------
+ 1      -1   CALL insert_data(?, ?);\n      1            0
+</console>
+</unit>
+
+=== Validation Check ===
+
+We can see the ''4'' records
+<unit>
+<code bash>
+tabul data print tbl@postgres
+</code>
+<console>
+tbl@postgres
+num
+---
+  1
+  2
+  1
+  2
+</console>
+</unit>
+
+
+
+===== Next =====
+
+Learn:
+  * [[:howto:postgres:function_setof]]
+  * [[howto:postgres:procedure_with_out_parameter]]
+
+

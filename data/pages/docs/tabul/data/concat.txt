@@ -1,0 +1,173 @@
+---json
+{
+    "page_id": "m1vqd0i1e1dhw2byds2qb"
+}
+---
+====== Tabul - Data Concat Command (Cat) ======
+
+
+===== About =====
+''data concat (cat)'' is a [[docs:tabul:tabul|tabul]] [[docs:tabul:command|command]] that supports the [[docs:op:concat|concat data operation]].
+
+
+
+
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul data concat -h
+</code>
+<console height="800px" scroll="toggle">
+Tabul data concat
+=================
+
+Concatenate data resources
+
+
+
+Examples
+--------
+
+ 1 - To concatenate all `log*.txt` files in the current directory to a `log` table located in sqlite, you would execute
+
+
+        tabul data concat log*.txt@cd log@sqlite
+
+
+ 2 - In the current directory to concatenate the files `visit1.csv` and `visit2.csv` to a `visits.csv` file, you would execute
+
+
+        tabul data concat visit1.csv visit2.csv visits.csv
+
+
+
+
+Syntax
+------
+
+
+    tabul data concat [options|flags] <source-selector...> <target-data-uri>
+
+
+where:
+
+
+  Arguments:
+
+    <source-selector...>                                          One or more data selectors that select the data resources to concatenate
+
+    <target-data-uri>                                             The target data uri that defines the receiving target data resource (No templating is allowed)
+
+
+  Cross Data Transfer Options:
+
+    -bs,--buffer-size <buffer-size>                               defines the size of the memory buffer between the source and target threads
+
+    -mdu,--metrics-data-uri <metrics-data-uri>                    defines a target data uri where the data metrics should be exported
+
+    -out,--output-type <output-type>                              The resource that is passed as output
+
+    -pt,--processing-type <processing-type>                       how to process the inputs (one by one or in batch)
+
+    -sfs,--source-fetch-size <source-fetch-size>                  defines the size of the network message from the source to fetch the data
+
+    -so,--source-operation <source-operation>                     defines the data operation (drop or truncate) on the source after transfer. Note: A `move` operation will drop the source.
+
+    -tbs,--target-batch-size <target-batch-size>                  defines the batch size against the target data resource
+
+    -tcf,--target-commit-frequency <target-commit-frequency>      defines the commit frequency in number of batches against the target data resource
+
+    -to,--target-operation <target-operation>                     defines the data operations (drop or truncate) on the existing target before transfer. A `replace` operation will drop the target.
+
+    -twc,--target-worker-count <target-worker-count>              defines the target number of thread against the target connection
+
+    -tmc,--transfer-mapping-columns <transfer-mapping-columns>    defines the columns mapping between the source and the target
+
+    -tmm,--transfer-mapping-method <transfer-mapping-method>      defines the method used to map the source columns to the target columns
+
+    -tms,--transfer-mapping-strict <transfer-mapping-strict>      defines if a map by name or position is strict
+
+    -op,--transfer-operation <transfer-operation>                 defines the transfer operation (insert, update, delete, upsert, merge, copy).
+
+    -tut,--transfer-upsert-type <transfer-upsert-type>            defines the type of upsert operation (merge, insert, insert-update, update-insert).
+
+    -wp,--with-parameters                                         defines if parameters are used in the SQL statement
+
+
+  Data Definition Options:
+
+    -sa,--source-attribute <attributeName=value>                  Set a source attribute
+
+    -ta,--target-attribute <attributeName=value>                  Set a target attribute
+
+
+  Selection Options:
+
+    --strict-selection                                            If set the selection will return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                       If set, the dependencies will be also selected
+
+
+  Options:
+
+    -t,--type <mediaType|mimeType|extensionFile>                  The type of the resource
+
+    -vc,--virtual-column <columnName=resourceAttributeName>       Add a virtual column with the value of a data resource attribute
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                         The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                             The path to a configuration file
+
+    -ee,--exec-env <name>                                         The execution environment (prod or dev)
+
+    -h,--help                                                     Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>                  Set the log level
+
+    -ns,--not-strict                                              A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                        defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                        defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>          defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                                 A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                                   Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                                  Print version information
+</console>
+</unit>
+
+===== FAQ =====
+
+==== What happens if I pass only one source and no target ====
+
+It's an easy shortcut to see the raw content of [[:docs:resource:text|text files]]
+
+Why? Because by default, Tabulify represents all resources in a [[:docs:resource:tabular|tabular fashion]] ie
+  * for a [[:docs:resource:yaml|yaml]], [[:docs:resource:json|json]] document, one record is one document.
+  * for a [[:docs:resource:html|html]], the first table is returned
+  * ...
+
+To see the raw content, you should use [[:docs:tabul:data:print|print]]:
+  * in a [[:docs:op:print#pipe|pipe mode]] fashion (no headers, no column separation)
+  * with the [[:docs:resource:text#media type|text media type]] (ie ''text/plain'')
+<code bash>
+tabul data print --type text --pipe-mode myjson.json@cd
+</code>
+
+
+Because this command is commonly used, we implemented a shortcut to mimic the [[wp>Cat_(Unix)|unix cat command]]
+
+<code bash>
+tabul data cat myjson.json@cd
+</code>
+
+

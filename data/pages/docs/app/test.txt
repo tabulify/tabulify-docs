@@ -1,0 +1,27 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:project:test" }
+    ],
+    "page_id": "oj1ahrahy0j6ah380utuo"
+}
+---
+====== Tests ======
+
+
+===== About =====
+
+A ''test'' is a [[docs:flow:start|flow]] with a [[:docs:op:diff|diff operation]] that should not fail.
+
+
+===== Type =====
+
+There is 2 kind of condition test:
+  * ''empty'': a [[:docs:op:diff|diff]] without a target meaning that your input/source (generally a [[:docs:resource:sql_select|query]]) should return no rows
+  * ''equals'': a [[:docs:op:diff|diff]] where 2 resources are equals
+
+
+
+===== Error Simulation =====
+
+You may simulate an error with the [[:docs:op:error|error operation]]

@@ -1,0 +1,35 @@
+---json
+{
+    "page_id": "wycr2a8h6poen25k4ie8o"
+}
+---
+===== About  =====
+This page details the support of ''integer'' [[data_type#ansi|ansi data type]].
+
+''Integer'' is an exact numeric, logically equivalent to a [[numeric_decimal|numeric/decimal]] without fractional digits (ie ''NUMERIC(*,0)'' or ''DECIMAL(*,0)'')
+===== List =====
+
+^ Name ^ Alias ^ Storage \\ (Bytes) \\ (8 bits) ^ Storage \\ Possible \\ Values ^ Minimum Value Signed ^ Maximum Value Signed ^ Signed \\ Precision \\ (Length)  ^ Minimum \\ Value \\ Unsigned ^ Maximum Value Unsigned ^ Unsigned \\ Precision \\ (Length)  ^
+| ''tinyint'' | ''int1'' | ''1'' | ''2^(1*8)'' | -128 | 127 | 3 | 0 | 255 | 3 |
+| ''smallint'' | ''int2'' | ''2'' | ''2^(2*8)'' | -32,768 | 32,767 | 5 | 0 | 65,535 | 5 |
+| ''mediumint'' | ''int3'' | ''3'' | ''2^(3*8)'' | -8,388,608 | 8,388,607 | 7 | 0 | 16,777,215 | 8 |
+| ''integer'' | ''int4'', ''int'' | ''4'' | ''2^(4*8)'' | -2,147,483,648 | 2,147,483,647 | 10 | 0 | 4,294,967,295 | 10 |
+| ''bigint'' | ''int8'' | ''8'' | ''2^(8*8)'' | -9,223,372,036,854,775,808 | 9,223,372,036,854,775,807 | 19 | 0 | 18,446,744,073,709,551,615 | 20 |
+
+Note the maximum [[precision|precision]] is the number of digits of the value. For instance, the value of a signed integer is ''10'' because ''2,147,483,647'' has 10 digits.
+
+===== Unsigned Support and Conversion =====
+
+
+You should be aware that not all databases supports ''unsigned'' number (For instance, ''Postgres'' does not support them)
+
+If this is the case and that 
+  * you  transfer a table with a ''unsigned integer'' to them, 
+  * the target table does not exist, 
+Tabulify will take the next integer type in precision order.
+
+^ Type ^ Target Type ^
+| ''tinyint unsigned'' | ''smallint'' |
+| ''smallint unsigned'' | ''mediumint'' |
+| ''mediumint unsigned'' | ''integer'' |
+| ''integer unsigned'' | ''bigint'' |

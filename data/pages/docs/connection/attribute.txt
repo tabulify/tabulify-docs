@@ -1,3 +1,12 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:connection:attribute" },
+        { "path": ":docs:connection:variable" }
+    ],
+    "page_id": "f1t46y4qr9efw7xob0gyv"
+}
+---
 ====== Connection - Attributes (Parameters) ======
 
 
@@ -7,35 +16,70 @@ A ''connection attribute'' is a [[docs:conf:attribute|attribute]] of a [[connect
 
 ===== Parameter =====
 
-The connection parameters:
-  * define how to connect to a [[docs:system:system|system connection]] via its [[uri|URL attribute]] 
+The connection attribute of type parameters:
+  * define how to connect to a [[docs:system:system|system connection]] via its [[uri|URI attribute]]
   * and configure the behavior of this connection.
 
 
 The only mandatory parameter variable is the [[uri|URI]].
 
 
-[[built_in_variables#parameters|Built-in parameters]] are parameters used for all connections.
-Each connection type may add its own parameters variable.
+[[#base parameters|Base parameters]] are parameters used for all connections.
+Each connection type has its own parameters variable.
 
 
 ===== Management =====
 
 ==== See ====
-You can see the [[docs:conf:attribute|attributes]] of your connection with the [[docs:tabli:connection:info|connection info command]].
+You can see the [[docs:conf:attribute|attributes]] of your connection with the [[docs:tabul:connection:info|connection info command]].
 
 ==== Set ====
 
 You can set connection parameters:
-  * by editing manually the [[..:conf:file|configuration vault]]
+  * by editing manually the [[..:conf:tabul.yml|configuration vault]]
 <code yaml>
 connections:
   connectionName:
     parameter1: value1
 </code>
-  * with the [[docs:tabli:connection:upsert|connection upsert command]].
-  * with a [[docs:conf:os|operating system variable]]
-<code bash>
-export TABLI_CONNECTION_NAME_PARAMETER1=value1
+  * with the [[docs:tabul:connection:upsert|connection upsert command]].
+  * with a [[:docs:conf:os|OS environment variable]]
+<code yaml>
+connections:
+  connectionName:
+    parameter1: ${MY_OS_ENV}
 </code>
+
+
+
+
+===== Base Parameters =====
+
+''Base Connection Attribute'' are [[attribute|connection attributes]] available to all ''connections''.
+
+
+^ Name ^ Description ^
+| ''URI'' | The connection URI |
+| ''COMMENT'' | A connection description |
+| ''USER'' | The user |
+| ''PASSWORD'' | The password |
+| ''DATE_DATA_TYPE'' | Define the text storage format of a ''Date'' data type (''YYYY-MM-DD'') if not supported by the connection . See [[docs:data_type:date_time|Time storage]] |
+| ''TIMESTAMP_DATA_TYPE'' | Define the text storage format of a ''Timestamp'' data type (''YYYY-MM-DD HH:MM:SS'') if not supported by the connection . See [[docs:data_type:date_time|Time storage]] |
+| ''TIME_DATA_TYPE'' | Define the text storage format of a ''Time'' data type (''HH:MM:SS'') if not supported by the connection . See [[docs:data_type:date_time|Time storage]] |
+| ''BOOLEAN_DATA_TYPE'' | Define the text storage format of a ''Boolean''. See [[docs:data_type:boolean|boolean]] if not supported by the connection |
+| ''VARCHAR_DEFAULT_PRECISION'' | Define the [[:docs:data_type:character#varchar_default_precision|default precision of a Varchar]] |
+| ''NVARCHAR_DEFAULT_PRECISION'' | Define the [[:docs:data_type:character#nvarchar_default_precision|default precision of a NVarchar]] |
+| ''CHAR_DEFAULT_PRECISION'' | Define the [[:docs:data_type:character#char_default_precision|default precision of a char]] |
+| ''NCHAR_DEFAULT_PRECISION'' | Define the [[:docs:data_type:character#nchar_default_precision|default precision of a nchar]] |
+| ''MAX_NAME_IN_PATH'' | The maximum name in a path (for instance, Sqlite supports only one) |
+| ''MAX_CONCURRENT_THREAD'' | The maximum number of concurrent thread for the connection (for instance, Sqlite supports only one) |
+| ''NATIVES'' | The [[docs:connection:natives|native driver connection properties]] as map of key value (jdbc driver properties, ...) |
+
+
+
+Derived: You can't change it
+
+^ Name ^ Description ^
+| ''ORIGIN'' | The origin of the connection data (ie [[docs:connection:built-in|built-in]] or user) |
+
 

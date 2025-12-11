@@ -1,44 +1,44 @@
+---json
+{
+    "page_id": "e9jayrbng9r6pott5kekt"
+}
+---
 ====== Data Resource - Content Resource  ======
 
 
 
 ===== About =====
-A ''content resource'' is an object that contains ''data'' (for instance, a [[table|table]] or a [[file|file]])
-
-
-
-
+A ''content resource'' is a data resource that:
+  * contains ''data'' known as [[#static|static data resource]] (for instance, a [[sql_table|sql table]] or a [[file|file]])
+  * or returns ''data'' known as [[#runtime|runtime data resource]] (for instance, a [[:docs:resource:sql_select|SQL Query]])
 
 
 ===== Type =====
-==== Stored ====
+==== Static ====
 
-A ''stored data resource'' is a ''data resource'' that is stored on disk in a [[docs:connection:connection|connection]] that can be selected with a [[data_selector|data selector]]
+A ''static data resource'' is a ''data resource'' where the content is stored on disk in a [[docs:connection:connection|connection]] that can be selected with a [[..:flow:data_selector|data selector]].
+
 
 The following data operations have impact on the content of stored data resources:
-  * [[docs:op:drop|drop]]
-  * [[docs:op:insert|drop]]
-  * [[docs:op:truncate|truncate]]
-  * [[docs:op:upsert|upsert]]
-  * [[docs:op:insert|insert]]
-  * [[docs:op:update|update]]
-  * [[docs:op:delete|delete]]
+  * [[docs:op:drop|drop]] - drop the resource (delete the resource content included)
+  * [[docs:op:truncate|truncate]] - delete the content via metadata update, not the resource
+  * [[docs:op:upsert|upsert]] - upsert data into the content
+  * [[docs:op:insert|insert]] - insert data into the content
+  * [[docs:op:update|update]] - update the content
+  * [[docs:op:delete|delete]] - delete parts or all of the content
 
-The [[docs:op:compare|compare operation]] can show the difference in content.
 
 ==== Runtime ====
 
-A [[query|query resource]] is:
-  * a [[#stored|stored]] ''data resource'' that contains a [[query|query]] string
-  * a [[#exectuable|exectuable]] ''data resource'' that return its content at runtime (ie the data is not stored but computed).
-
-===== Property =====
-
-==== Executable ====
-
-A [[script|script resource]] is special type of ''data resource'' where the ''content'' is known as the ''script'' and is ''executable''.
+A ''runtime data resource'' returns its content at runtime (ie the data is not stored but computed).
+In tabulify, a runtime data resource is known as a [[docs:resource:runtime|runtime]].
 
 
+===== Diff =====
+
+Difference in content can been seen via:
+  * the [[docs:op:diff|diff operation]]
+  * the [[docs:resource:attribute#digest|digest attributes]] such as MD5.
 
 
 

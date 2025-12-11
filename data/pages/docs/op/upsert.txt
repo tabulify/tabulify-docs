@@ -1,22 +1,52 @@
+---json
+{
+    "page_id": "hmpebv9nzd365me702apt"
+}
+---
 ====== Data Operation -  Upsert ======
 
 
 ===== About =====
 A ''upsert'' operation is an [[op|operation]] against the [[docs:resource:content|data]] that will:
   * try to [[insert|insert]] a record
-  * and [[update|update]] it if it already exists.
+  * and [[update|update]] it if it already exists (when a unique constraint is violated)
 
-The [[docs:tabli:data:upsert|data upsert operation]] supports the ''upsert'' operation.
+
+
+The [[docs:tabul:data:upsert|data upsert operation]] supports the ''upsert'' operation.
 
 
 ===== Requirements =====
   * The [[docs:flow:source|source data resource]] should be in a [[docs:resource:tabular|tabular format]] and have data for all constrained columns of the [[docs:flow:target|target table]].
-  * The [[docs:flow:target|target data resource]] should have a unique column.
+  * The [[docs:flow:target|target data resource]] should have a unique constraint (a primary or a unique key).
 
-===== What happens when multiple target unique constraint matches the source columns =====
-A ''upsert'' does an update when a unique constraint is violated after insertion. This is not possible to specify two unique constraints and therefore ''Tabulify'' needs to choose one.
+
+===== FAQ =====
+
+==== Which unique constraint (primary/unique key) do you choose as update identifier ? ====
+
+
+
+An ''upsert'' can only do an update on one unique constraint identifier.
+
+This is not possible to specify two unique constraints and therefore ''Tabulify'' needs to choose one.
+
 
 If you have multiple [[docs:flow:target|target]] unique constraints matched by the [[docs:flow:source|source]] columns, the process takes as unique constraint:
   * the first [[docs:flow:target|target]] unique key found in the [[docs:flow:source|source]] columns.
   * and if not present the [[docs:flow:target|target]] primary key.
+
+Note that when a unique key is chosen, the other unique constraint (primary and unique key) are discarded in the update.
+
+
+
+==== Why an upsert does not load all my rows ====
+
+An ''upsert'' will load (insert/update) the rows on the unique key, not on the primary key.
+
+So the number of rows loaded (inserted/updated) is the number of distinct value in the unique key.
+
+If you have ''100'' distinct value in your primary key but ''50'' distinct value in your unique key, you will load only ''50'' records.
+
+
 

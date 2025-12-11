@@ -1,0 +1,111 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:execl:excel" },
+        { "path": ":howto:file:excel" }
+    ],
+    "page_id": "eyn35yu1tiz84yzwjz8k3",
+    "template": "holy"
+}
+---
+====== How to read and write an Excel file? ======
+
+===== About =====
+
+This [[..:howto|howto]] will demonstrate you how to read and write to an <icon name="ant-design:file-excel-filled" /> [[:docs:resource:excel|Excel resource]].
+
+===== Steps =====
+
+==== Prerequisites ====
+
+To following this ''howto'', you should have followed the [[howto:getting_started:getting_started|getting started guide]] to have knowledge of:
+  * [[:howto:getting_started:4_select_data_resources|Resource creation and selection]]
+  * [[:howto:getting_started:9_data_generation|Data Generation]]
+
+
+==== Create an Excel file with Random Data ====
+
+The below [[docs:tabul:data:fill|data fill]] command will create a excel resource named ''d_date.xlsx'' in the [[docs:connection:tmp|temporary directory]].
+
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection date_dim.xlsx@tmp
+</code>
+</unit>
+<unit >
+<code bash>
+tabul data copy date_dim--generator.yml@howto date_dim.xlsx@tmp
+</code>
+<console>
+Transfer results
+input             target              latency   record_count   error_code   error_message
+---------------   -----------------   -------   ------------   ----------   -------------
+date_dim@memgen   date_dim.xlsx@tmp   1.848s             100
+</console>
+</unit>
+
+
+==== Check the attributes ====
+
+Check the [[:docs:resource:attribute|attributes]] with the [[:docs:tabul:data:info|data info]] command.
+
+<unit >
+<code bash>
+tabul data info date_dim.xlsx@tmp
+</code>
+<console>
+Information about the data resource (date_dim.xlsx@tmp)
+attribute          value                                                                                              description
+----------------   ------------------------------------------------------------------------------------------------   ---------------------------------------------------------------------
+DATE_FORMAT        yyyy-MM-dd                                                                                         The default date format string (Format Cells > Number > Custom)
+HEADER_ROW_ID      1                                                                                                  The row id of the header row - (0 means no header, 1 the first line) 
+SHEET_NAME                                                                                                            The name of the sheet (By default, the first one)
+TIMESTAMP_FORMAT   yyyy-MM-dd HH:mm:ss                                                                                The default timestamp format string (Format Cells > Number > Custom)
+URI                file:///mnt/wslg/runtime-dir/tabul/date_dim.xlsx                                                   The URI of the file
+ABSOLUTE_PATH      /mnt/wslg/runtime-dir/tabul/date_dim.xlsx                                                          The absolute path on the data system
+ACCESS_TIME        2025-11-10 20:02:00.047151857                                                                      The access time (access time)
+COMMENT                                                                                                               A comment
+CONNECTION         tmp                                                                                                The connection name
+COUNT              100                                                                                                The number of records
+CREATION_TIME      2025-11-10 20:02:00.977187563                                                                      The creation time (birth time)
+DATA_URI           date_dim.xlsx@tmp                                                                                  The data uri
+KIND               vnd.openxmlformats-officedocument.spreadsheetml.sheet                                              The kind of media
+LOGICAL_NAME       date_dim                                                                                           The logical name
+MD5                902bb0d14d12ff82eb487b3b36f420e2                                                                   The Md5 hash
+MEDIA_SUBTYPE      vnd.openxmlformats-officedocument.spreadsheetml.sheet                                              The media subType
+MEDIA_TYPE         application/vnd.openxmlformats-officedocument.spreadsheetml.sheet                                  The media type
+NAME               date_dim.xlsx                                                                                      The name of the data resource
+PARENT                                                                                                                The parent
+PATH               date_dim.xlsx                                                                                      The relative path to the default connection path
+SHA384             8d914f6557c999addfbfa2a37d9b9d4ffae95aa94fa4e85eb55d2e0342b875f5030a6ab2ff0203d357a0d4450e63a5a7   The Sha384 hash
+SHA384_INTEGRITY   sha384-jZFPZVfJma3fv6KjfZudT/rpWqlPpOhetV0uA0K4dfUDCmqy/wID01eg1EUOY6Wn                            The sha384 value used in the html integrity attribute
+SIZE               7176                                                                                               The number of byte
+TABULAR_TYPE       data                                                                                               The tabular type
+UPDATE_TIME        2025-11-10 20:02:00.977187563                                                                      The last update time (modify time)
+</console>
+</unit>
+
+==== Read the data ====
+
+What is the data of the file with the [[docs:tabul:data:head|data head command]]?
+
+<unit>
+<code bash>
+tabul data head date_dim.xlsx@tmp
+</code>
+<console>
+The first 10 rows of the data resource (date_dim.xlsx@tmp):
+d_date_sk   d_date       d_date_id    d_month_seq   d_day_name   d_moy   d_year
+---------   ----------   ----------   -----------   ----------   -----   ------
+      1.0   2025-05-12   2025-05-12      202505.0   Monday         5.0   2025.0
+      2.0   2025-05-11   2025-05-11      202505.0   Sunday         5.0   2025.0
+      3.0   2025-05-10   2025-05-10      202505.0   Saturday       5.0   2025.0
+      4.0   2025-05-09   2025-05-09      202505.0   Friday         5.0   2025.0
+      5.0   2025-05-08   2025-05-08      202505.0   Thursday       5.0   2025.0
+      6.0   2025-05-07   2025-05-07      202505.0   Wednesday      5.0   2025.0
+      7.0   2025-05-06   2025-05-06      202505.0   Tuesday        5.0   2025.0
+      8.0   2025-05-05   2025-05-05      202505.0   Monday         5.0   2025.0
+      9.0   2025-05-04   2025-05-04      202505.0   Sunday         5.0   2025.0
+     10.0   2025-05-03   2025-05-03      202505.0   Saturday       5.0   2025.0
+</console>
+</unit>

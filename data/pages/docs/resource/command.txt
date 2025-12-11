@@ -1,0 +1,182 @@
+---json
+{
+    "page_id": "cowryyhyb8bq2alcdx3xi"
+}
+---
+====== Command Resource ======
+
+
+===== About =====
+A ''command'' is the [[runtime|runtime data resource]] of a [[:docs:system:file|file system]] that represents a [[wp>Command_(computing)|operating system command]].
+
+It supports as [[runtime#executable|executable]]:
+  * [[script|scripts]] (bash, python, ...)
+  * or [[binary#executable|binary executable]]
+
+
+===== Howto =====
+  * [[:howto:script:script]]
+  * [[:howto:script:script_csv]]
+===== Data URI =====
+
+
+
+Example of a ''command'' resource [[runtime#data uri|runtime data uri]]
+  * for a ''hello-world.sh'' [[#script|script with a shebang]]
+  * located in the [[:docs:connection:cd|current directory]]
+  * executed in the [[:docs:connection:tmp|temporary directory]] (working directory)
+
+<code bash>
+(hello-world.sh@cd)@tmp
+</code>
+
+
+
+
+
+A ''command'' [[runtime|runtime data uri]] has an ''executionConnection'' that
+  * is a [[:docs:system:file|file system connection]]
+  * representing the default [[#working directory|working directory]] (ie where the execution takes place)
+
+===== Script Execution =====
+
+
+==== With a Shebang ====
+
+[[:docs:resource:script|Scripts]] are automatically [[runtime#executable|executable]] if they contain a ''shebang'' (ie the path and argument of their interpreter)
+
+
+The ''shebang'' is the first line of a script
+  * starting with a ''#!''
+  * that defines the path and argument of their interpreter.
+
+Example with the  bash script called ''hello-world'' located in the [[:docs:connection:home|home directory]] with the shebang `#!/usr/bin/env bash`
+```bash
+#!/usr/bin/env bash
+echo "Hello World"
+```
+
+This script will be executed:
+  * with as operating system command: ''/usr/bin/env''
+  * and 2 arguments
+    * ''bash''
+    * ''/home/tabulify/hello-world''
+```bash
+/usr/bin/env bash /home/tabulify/hello-world
+```
+
+==== Without a Shebang ====
+
+Without a ''shebang'', you need to use the [[binary|binary executable]] as [[runtime#executable|executable]] and defines the path in its arguments.
+
+
+Example:
+This is the same example as above calling the same bash script but with the [[binary|binary]] as executable.
+```yaml
+kind: command
+spec:
+  # bin being a connection defined with the directory /usr/bin
+  data-uri: (env@bin)@tmp
+  data-def:
+     arguments:
+       - bash
+       - /home/tabulify/hello-world
+```
+===== Manifest =====
+
+Example of ''command'' [[manifest#kind|kind manifest]] for a command
+  * with the fictional script ''hello-world'' script called
+  * with the argument ''World''
+
+
+<code yaml hello-world--command.yml>
+kind: command
+spec:
+  # a runtime data uri
+  data-uri: '(hello-world@home)@tmp'
+  data-def:
+     # A list of arguments passed to the command
+     arguments:
+       - 'World' # first argument
+       - .... # second argument
+     # The location of stdout (Default value)
+     stdout-data-uri: 'execute/${execution_start_time}-${executable_logical_name}.log@tmp'
+     # The location of stderr (Default value)
+     stderr-data-uri: 'execute/${execution_start_time}-${executable_logical_name}-err.log@tmp'
+     # buffer size used when writing to the std files
+     std-buffer-size: 8192
+     # The location of the result returned
+     # Default to the stdout value if not specified
+     # but you may specify any other value if your script output is data elsewhere
+     result-data-uri: 'hello-results.log@tmp'
+     # time-out in duration
+     time-out: '60s'
+     # working directory
+     working-directory: '/tmp'
+</code>
+
+
+===== Attributes =====
+
+All attributes are optional.
+
+^ Attributes ^  Description ^
+| ''arguments'' | Empty List | A list of arguments passed to the command |
+| ''stdout-data-uri'' | See [[#stdout data uri|stdout]] | A [[:docs:flow:template_data_uri|template data uri]] that specifies the location of [[#stdout data uri|stdout]] |
+| ''stderr-data-uri'' | See [[#stderr data uri|stderr]] | A [[:docs:flow:template_data_uri|template data uri]] that specifies the location of [[#stderr data uri|stderr]] |
+| ''std-buffer-size'' | 8192 | The buffer size in bytes when writing to the standard stream (''stdout'' and ''stderr'') |
+| ''result-data-uri'' | See [[#result data uri|result]] | An optional [[:docs:flow:template_data_uri|template data uri]] that specifies the location of the result data path returned |
+| ''time-out'' | ''60s'' | A timeout in [[:docs:common:duration|duration format]] |
+| ''working-directory'' | the [[runtime|execution connection]] directory | The working directory of the execution |
+
+
+A command inherit also all [[attribute|common attributes]]
+
+
+==== Stdout Data Uri ====
+
+''stdout-data-uri'' defines where the standard output of the execution should be stored.
+
+It's a [[:docs:flow:template_data_uri|template data uri]] that accepts
+  * [[:docs:flow:pipeline#attributes|pipeline attribute]] with the ''pipeline_'' prefix
+  * and ''input'' [[:docs:resource:attribute|data resource attributes]]
+
+By default, the standard output (''stdout'') is stored at the [[:docs:connection:tmp|runtime temporary connection]] with the following value:
+<code>
+execute/${execution_start_time}-${executable_logical_name}.log@tmp
+</code>
+
+==== StdErr Data Uri ====
+
+''stderr-data-uri'' defines where the standard error of the execution should be stored.
+
+It's a [[:docs:flow:template_data_uri|template data uri]] that accepts
+  * [[:docs:flow:pipeline#attributes|pipeline attribute]] with the ''pipeline_'' prefix
+  * and ''input'' [[:docs:resource:attribute|data resource attributes]]
+
+By default, the standard error (''stderr'') is stored at the [[:docs:connection:tmp|runtime temporary connection]] with the following value:
+<code>
+execute/${execution_start_time}-${executable_logical_name}-err.log@tmp
+</code>
+
+==== Result Data Uri ====
+
+
+By default, the returned data resource is the [[#Stdout Data Uri|standard output]].
+
+If your script outputs logs in [[#Stdout Data Uri|standard output]] and creates data in another location, you may specify it with the ''result-data-uri''.
+
+==== Working Directory ====
+
+
+The ''working directory'' specifies where the command execution will take place.
+
+By default, it's the directory of the execution connection.
+
+For instance:
+  * in the following [[runtime#data uri|runtime data uri]] ''(hello-world@cd)@tmp''
+  * the execution connection is [[:docs:connection:tmp|tmp, the temporary directory]]
+  * the **default** ''working directory'' is therefore [[:docs:connection:tmp|the temporary directory]]
+
+
+With the ''working-directory'' attribute, you can set another value.

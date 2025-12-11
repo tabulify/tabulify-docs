@@ -1,0 +1,104 @@
+---json
+{
+    "page_id": "95t055gq46bqxkrthchtz"
+}
+---
+====== SQLite Data Type Support ======
+
+
+===== About =====
+SQLite has a permissive type system.
+
+===== Properties =====
+
+==== Affinities ====
+
+The type of value is called an [[https://www.sqlite.org/datatype3.html|affinity]]
+
+An affinity:
+  * has 6 possible values
+    * text
+    * numeric
+    * integer
+    * real
+    * blob
+    * null
+  * is stored at the cell level (row/column) as seen by the citation below.
+
+<blockquote>
+The datatype of a value is associated with the value itself, not with its container.
+<cite>[[https://www.sqlite.org/datatype3.html|datatype3]]</cite>
+</blockquote>
+
+
+==== Type declaration ====
+
+In a ''create table'' statement, SQLite preserves the original type name even if an affinity is applied.
+
+Therefore, you can use any name for instance ''json'' for a ''text''
+
+
+
+===== Text default =====
+
+Due to the data type affinity system, it's possible to have no data type definition on a column.
+
+If this is the case, the data type of the column is empty and we set it to be by default a string (''text'').
+
+In this demo, we show you how the data type may be empty with the [[https://www.sqlite.org/pragma.html#pragma_table_info|table_info pragma]]
+<unit>
+  * The demo [[:docs:resource:sql_file|sql file]] is shown with the [[:docs:tabul:data:concat|cat]] command
+<code bash>
+tabul data cat sqlite/empty_type_demo.sql@howto
+</code>
+<console sql>
+drop table if exists foo;
+create table foo (bar);
+PRAGMA table_info('foo');
+</console>
+</unit>
+  * The [[:docs:resource:sql_request|sql request execution]] against [[:howto:sqlite:howto_connection|the sqlite howto connection]]
+<unit>
+<code bash>
+tabul data print '(sqlite/empty_type_demo.sql@howto)'@sqlite
+</code>
+  * The result, where you can see an empty value in the ''type'' column.
+<console>
+
+(sqlite/empty_type_demo.sql@howto)@sqlite
+cid   name   type   notnull   dflt_value   pk
+---   ----   ----   -------   ----------   --
+  0    bar                0                 0
+
+</console>
+</unit>
+
+
+
+
+===== Transfer Conversion =====
+
+When transferring data from a third database, we don't apply the [[https://www.sqlite.org/datatype3.html#determination_of_column_affinity|type affinity rules]] for type conversion letting SQLite do it.
+
+
+
+
+
+
+If you want that Tabulify do it, you need to set the ''TYPE_AFFINITY_CONVERSION'' connection attribute to ''true''.
+
+It will then transform all external data type to affinity data type with the exception of ''time'' and ''boolean'' (why? See section below)
+
+For instance,
+  * ''float'' would become ''real''
+  * ''double'' would become ''real''
+  * ''smallint'' would become ''integer''
+  * ...
+
+
+===== Time and Boolean Data Type  =====
+''Sqlite'' does not support natively ''time'' and ''boolean'' data types. they are seen as ''numeric''.
+
+''Tabulify'' supports them with an added layer of  functionalities and you can read how on this pages:
+  * [[time]]
+  * [[boolean]]

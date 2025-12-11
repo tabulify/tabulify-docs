@@ -2,8 +2,7 @@
 {
     "description": "This how-to shows you how to generate an  integer sequence (1,2,3,\u2026) with the column sequence generator.",
     "low_quality_page": "false",
-    "page_id": "eh9fj9ievp326r6c0s8sk",
-    "title": "How to generate a sequence of numbers"
+    "page_id": "eh9fj9ievp326r6c0s8sk"
 }
 ---
 ====== Tabulify - How to generate a sequence of numbers ======
@@ -17,8 +16,8 @@ This [[..:howto|how-to]] shows you how to generate an <icon name="ant-design:ord
 To generate data, you need to create a [[docs:resource:generator|generator file]] that will describe the data to be generated.
 
 The below [[docs:resource:generator|data resource generator]]:
-  * has the [[docs:resource:name|name]] ''sequence_number--datagen.yml''
-  * has the [[docs:resource:logicalname|logical name]] ''sequence_number''
+  * has the [[docs:resource:name|name]] ''sequence_number--generator.yml''
+  * has the [[docs:resource:logical_name|logical name]] ''sequence_number''
   * will generate ''14'' values (''MaxRecordCount'' count)
   * has a column named ''id'' that has [[docs:generator:sequence|sequence data generator]] that:
       * starts by default at the value ''1''
@@ -32,60 +31,68 @@ The below [[docs:resource:generator|data resource generator]]:
       * increments every ''0.5'' digits (the ''step'' value)
 
 <unit>
-<file yaml sequence_number--datagen.yml>
-MaxRecordCount: 14
-Columns:
-  - name: id
-    type: integer
-    comment: A id column to see easily the number of values generated
-    DataGenerator:
-      type: sequence
-  - name: seq_int
-    type: integer
-    comment: A column with a complex sequence integer generator
-    DataGenerator:
-      type: sequence
-      start: 3
-      step: 2
-      maxTick: 5
-  - name: seq_float
-    type: float
-    comment: A column with a float sequence generator
-    DataGenerator:
-      type: sequence
-      step: 0.5
-  - name: seq_double
-    type: double
-    comment: A column with a double sequence generator
-    DataGenerator:
-      type: sequence
-      start: 10
-      step: 0.75
-  - name: seq_numeric
-    scale: 2
-    type: numeric
-    comment: A column with a numeric sequence generator
-    DataGenerator:
-      type: sequence
-      start: 3
-      step: 0.255
-  - name: seq_decimal
-    scale: 2
-    type: decimal
-    comment: A column with a decimal sequence generator
-    DataGenerator:
-      type: sequence
-      start: 3
-      step: 0.255
+<file yaml sequence_number--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 14
+  Columns:
+    - name: id
+      type: integer
+      comment: A id column to see easily the number of values generated
+      data-supplier:
+        type: sequence
+    - name: seq_int
+      type: integer
+      comment: A column with a complex sequence integer generator
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 3
+          step: 2
+          maxTick: 5
+          reset: true # after 5 ticks, start over
+    - name: seq_float
+      type: float
+      comment: A column with a float sequence generator
+      data-supplier:
+        type: sequence
+        arguments:
+          step: 0.5
+    - name: seq_double
+      type: double
+      comment: A column with a double sequence generator
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 10
+          step: 0.75
+    - name: seq_numeric
+      scale: 2
+      type: numeric
+      comment: A column with a numeric sequence generator
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 3
+          step: 0.255
+    - name: seq_decimal
+      scale: 2
+      type: decimal
+      comment: A column with a decimal sequence generator
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 3
+          step: 0.255
 
 </file>
 </unit>
 ==== Printing the data ====
 
-With the [[docs:tabli:data:print|data print command]], we can print the ''14 values'' generated.
+With the [[docs:tabul:data:print|data print command]], we can print the ''14 values'' generated.
 <unit>
-<code dos>
-tabli data print sequence_number--datagen.yml@howto
+<code bash>
+tabul data print sequence_number--generator.yml@howto
 </code>
 <note tip>
 [[docs:connection:howto|howto]] is the connection that contains the files used in the [[..:howto|HowTo's]].
@@ -94,10 +101,19 @@ tabli data print sequence_number--datagen.yml@howto
 id   seq_int   seq_float   seq_double   seq_numeric   seq_decimal
 --   -------   ---------   ----------   -----------   -----------
  1         3         1.0         10.0          3.00          3.00
- 2         5         1.5        10.75          3.26          3.26
+ 2         5         1.5        10.75          3.25          3.25
  3         7         2.0         11.5          3.51          3.51
- 4         9         2.5        12.25          3.77          3.77
+ 4         9         2.5        12.25          3.76          3.76
  5        11         3.0         13.0          4.02          4.02
+ 6         3         3.5        13.75          4.27          4.27
+ 7         5         4.0         14.5          4.53          4.53
+ 8         7         4.5        15.25          4.78          4.78
+ 9         9         5.0         16.0          5.04          5.04
+10        11         5.5        16.75          5.29          5.29
+11         3         6.0         17.5          5.55          5.55
+12         5         6.5        18.25          5.80          5.80
+13         7         7.0         19.0          6.06          6.06
+14         9         7.5        19.75          6.31          6.31
 </console>
 </unit>
 ===== Next =====

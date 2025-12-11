@@ -1,11 +1,21 @@
+---json
+{
+    "page_id": "z73zq0c4afvxuwpbztnsn"
+}
+---
 ====== Data Operation - Rename ======
 
 
 ===== About =====
 ''rename'' is a [[op|data operation]] that will juste update the [[docs:resource:path|path attribute]]. This is a [[docs:resource:metadata|metadata operation]] and therefore does not move any [[docs:resource:content|data]] and is really quick.
 
-<note>
-If a [[transfer|transfer operation]] [[move|move]] a [[docs:resource:resource|data resource]] on the same [[docs:connection:connection|connection]], ''Tabulify'' will just performs a ''rename''.
-</note>
+
+===== Optimization =====
+
+As a rename is :
+  * a [[docs:op:move|move]] (ie [[docs:op:copy|copy]] with source drop)
+  * on the same [[:docs:connection:connection|connection]]
+when this kind of transfer is detected, ''Tabulify'' will just performs a ''rename''.
+
 
 

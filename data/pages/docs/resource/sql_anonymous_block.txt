@@ -1,0 +1,60 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:sql_block" }
+    ],
+    "page_id": "ba493nxq0sida9d1unjea"
+}
+---
+====== SQL Anonymous Code Block ======
+
+
+===== About =====
+
+An ''SQL'' ''anonymous code block'' is a [[docs:system:database:sql_procedure|SQL procedure]] with no parameters that returns void.
+
+It's a procedure that is [[docs:resource:sql_stored_procedure|not stored in the database]] but in a local script file.
+
+===== Example =====
+
+From the [[:howto:postgres:anonymous_code_block|Postgres HowTo]]:
+<unit>
+<file sql postgres/do_anonymous_block.sql>
+-- https://www.postgresql.org/docs/current/sql-do.html
+DO
+$$DECLARE r record;
+BEGIN
+    IF
+NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'webuser') THEN
+CREATE ROLE webuser;
+END IF;
+FOR r IN
+SELECT table_schema, table_name
+FROM information_schema.tables
+WHERE table_type = 'VIEW'
+  AND table_schema = 'public' LOOP
+        EXECUTE 'GRANT ALL ON ' || quote_ident(r.table_schema) || '.' || quote_ident(r.table_name) || ' TO webuser';
+END LOOP;
+END$$;
+
+</file>
+</unit>
+===== Support =====
+
+
+^ Database ^ Database Support ^ Tabulify Support (howto) ^
+| [[:docs:system:mysql:mysql|MySQL]] | Not supported ([[docs:resource:sql_stored_procedure|Stored Procedure only]]) | |
+| [[:docs:system:oracle:oracle|Oracle]] | [[https://docs.oracle.com/cd/B19306_01/appdev.102/b14261/block_declaration.htm|PLSQL DECLARE/BEGIN/END block]] | [[:howto:oracle:anonymous_code_block|Oracle Anonymous Code Block statement]] |
+| [[:docs:system:postgres:postgres|Postgres]] | [[https://www.postgresql.org/docs/current/sql-do.html|SQL DO statement]] | [[:howto:postgres:anonymous_code_block|Do statement]] |
+| [[:docs:system:sqlite:sqlite|SQLite]] | Not supported | |
+| [[:docs:system:sqlserver:sqlserver|SQL Server]] | [[https://learn.microsoft.com/en-us/sql/t-sql/language-elements/begin-end-transact-sql|SQL BEGIN/END block]] | [[:howto:sqlserver:anonymous_code_block|SQL Server BEGIN/END statement]] |
+
+
+===== FAQ =====
+
+==== What to do if a Anonymous call block is not supported by the database ====
+
+
+''Anonymous call block'' is not supported by all database.
+  * if they support [[docs:resource:sql_stored_procedure|stored procedure]], you can use them
+  * otherwise you need to use a [[:docs:resource:script|external script]]

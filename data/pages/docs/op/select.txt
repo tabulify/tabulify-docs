@@ -1,13 +1,18 @@
+---json
+{
+    "page_id": "cq4g0pgtofohvxo7azrwb"
+}
+---
 ====== Data Operation - Select (Selection) ======
 
 
 ===== About =====
-''select'' is a [[docs:op:op|data operation]] that selects [[docs:resource:resource|data Resources]].
+''select'' is a [[:docs:flow:supplier|supplier]] [[docs:op:op|data operation]] that selects [[docs:resource:resource|data Resources]].
 
 
 
 <note important>
-This is not the [[docs:resource:select|select sql statement]]. The [[docs:resource:select|select sql statement]] selects [[docs:resource:record|records]] while the ''select'' operation selects [[docs:resource:resource|Data Resources]].
+This is not the [[docs:resource:sql_select|sql select statement]]. The [[docs:resource:sql_select|sql select statement]] selects [[docs:resource:record|records]] while the ''select'' operation selects [[docs:resource:resource|Data Resources]].
 </note>
 
 <note info>
@@ -24,20 +29,24 @@ See the following ''learning guide'' page, to known more: [[howto:getting_starte
 The ''select'' operations has the following arguments.
 
 ^ Argument ^ Default ^ Description ^
-| [[docs:resource:data_selector|data selector]] | - | It will select [[docs:resource:resource|data resources]] by [[docs:resource:name|name]] |
-| the [[docs:op:with-dependencies|with-dependencies]] option | false | If set to true, the [[docs:resource:dependency|dependencies]] will be added |
-| ''strict'' | false | If set to true, the ''select'' operation will throw an error if the selection does not return any data resource |
-| ''type'' | Optional, detected by default | The [[:docs:resource:type|media type]] of the selected resources |
+| [[docs:flow:data_selector|data-selector]] | - | Select [[docs:resource:resource|data resources]] by [[:docs:common:globbing|glob pattern]] |
+| [[docs:flow:data_selector|data-selectors]] | - | A list of [[docs:flow:data_selector|data-selectors]] |
+| [[docs:op:with-dependencies|with-dependencies]] | false | If set to true, the [[docs:resource:dependency|dependencies]] will be added |
+| ''data-def'' | Optional | The [[docs:resource:attribute|data attributes]] defined in a [[:docs:resource:data-definition|data definition]] format |
 | ''logical-name'' | Optional | A [[:docs:conf:template|template logical name]] |
-^ Data Definition ^^^
-| ''data-definition'' | Optional | A inline [[:docs:resource:data-definition|data definition]] |
-| ''attributes'' | a map of key value | The attributes of the data path |
+| ''media-type'' | Optional, detected by default | The [[docs:resource:media-type|media type]] of the selected resources |
+| ''order'' | Natural | The order in which the data resources are returned. Possible value: `natural`, `drop`, `create` (Note that the ''order'' is by connection.) |
+| ''processing-type'' | ''batch'' | The [[:docs:flow:processing-type|processing type]] (''batch'' or ''stream'') |
+| ''strict-selection'' | false | If set to true, the ''select'' operation will throw an error if \\ * the selection does not return any data resource \\ * or any view is invalid |
+
+When the processing type is ''stream'', the [[:docs:flow:stream_pipeline#attributes|stream attributes]] can be used
+
 
 ===== Usage =====
 
 <tabs skin="tabs">
 <tab panel="pipeline" selected="true">Flow</tab>
-<tab panel="tabli" >Tabli Data Command</tab>
+<tab panel="tabul" >Tabul Data Command</tab>
 </tabs>
 <tabpanels>
 <tabpanel id="pipeline">
@@ -52,26 +61,28 @@ pipeline:
     args:
       data-selector: pattern@connection
       with-dependency: (yes|no)
-      strict: yes
+      strict-selection: yes
 </code>
 </tabpanel>
-<tabpanel id="tabli">
-In a [[docs:tabli:data:start|tabli data command]], you set :
-  * the [[docs:resource:data_selector|data selector]] as argument
-  * and the [[docs:op:with-dependencies|with-dependencies]] as [[docs:tabli:flag|flag]]
-  * and the ''not-strict'' as [[docs:tabli:flag|flag]]
+<tabpanel id="tabul">
+In a [[docs:tabul:data:start|tabul data command]], you set :
+  * the [[docs:flow:data_selector|data selector]] as argument
+  * and the [[docs:op:with-dependencies|with-dependencies]] as [[docs:tabul:flag|flag]]
+  * and the ''not-strict'' as [[docs:tabul:flag|flag]]
 
 Example:
 <code bash>
-tabli data command [--not-strict] [--with-dependency] dataSelector
+tabul data command [--not-strict] [--with-dependency] dataSelector
 </code>
+
+You can verify the selected data resources with the [[:docs:tabul:data:list|tabul data list command]].
 </tabpanel>
 </tabpanels>
 
 
 ===== Note on Empty Selection =====
 
-If no ''data resource'' matched the [[docs:resource:data_selector|data selector]], this is not considered an error.
+If no ''data resource'' matched the [[docs:flow:data_selector|data selector]], this is not considered an error.
 This is already the case for all sql statement (ie an update that does not match a row does not return an error)
 
-If you want to throw an error, you should set the ''strict'' option to true.
+If you want to throw an error, you should set the ''strict-selection'' option to true.

@@ -1,0 +1,141 @@
+---json
+{
+    "page_id": "fs3a2xosw0pcd6b51z1wb",
+    "template": "holy"
+}
+---
+====== How to execute a bash script ? ======
+
+
+===== About =====
+
+This `howto` shows you how to execute a ''bash'' [[:docs:resource:script|script]] against the [[:docs:system:local|local file system]].
+
+
+
+===== Steps =====
+
+
+==== The bash script ====
+
+The bash script that will be executed is:
+  * a simple ''hello world'' sample application 
+  * that accepts optionally 1 argument to set the name of the greeted person.
+  * located in the command directory of the [[:docs:connection:howto|howto connection]]
+
+We can print the content with the [[:docs:tabul:data:concat|data cat]] command
+<unit>
+<code bash>
+tabul data cat command/hello-world@howto
+</code>
+<console bash>
+#!/usr/bin/env bash
+
+# First argument is the name and default to "world" if not provided
+name=${1:-World}
+
+# Output the greeting
+echo "Hello $name"
+</console>
+</unit>
+
+
+
+==== Creating the command data uri ====
+
+To make a [[:docs:resource:script|script]] executable, we need to:
+  * represent it as a [[:docs:resource:runtime#data uri|runtime data uri]], 
+  * making it a [[:docs:resource:command|command resource]]
+
+
+In our case, to execute
+  * the script ''command/hello-world''
+  * located in the [[:docs:connection:howto|howto directory]]
+  * against the [[:docs:connection:tmp|temporary directory]] as ''working directory''
+the [[:docs:resource:runtime#data uri|runtime data uri]] is:
+<code>
+(command/hello-world@howto)@tmp
+</code>
+
+==== Executing the command ====
+
+A [[:docs:resource:runtime#excution|runtime is always executed at access/time]], so we will just [[:docs:op:print|print]] it with the  [[:docs:tabul:data:print|tabul data print command]] to execute it.
+
+
+<unit>
+<code bash>
+tabul data print --strict-selection '(command/hello-world@howto)@tmp'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+# We execute it with a strict-selection flag so that we get an error if the executable file is not found.
+</code>
+<console>
+(command/hello-world@howto)@tmp
+lines
+-----------
+Hello World
+</console>
+</unit>
+
+==== Passing an argument ====
+
+
+To pass an argument, we need to create a [[:docs:resource:command#manifest|command manifest]] to set one or more [[:docs:resource:command#attributes|command attributes]]
+
+<unit>
+<code bash>
+tabul data cat command/hello-foo--command.yml@howto
+</code>
+<console yaml>
+kind: command
+spec:
+  # the runtime data uri
+  data-uri: (command/hello-world@howto)@tmp
+  # The data definition (attributes)
+  data-def:
+    # A list of arguments passed to the command
+    arguments:
+      - Foo # The first argument, the name
+</console>
+</unit>
+
+<note align=center width=500px>
+Note that we could have used the following [[:docs:resource:runtime#data uri|runtime data uri]] 
+
+<code yml>
+data-uri: (hello-world@md)@tmp
+</code>
+Why? because the manifest is located next to the script, so we could use the [[:docs:connection:md|md connection (manifest directory)]]
+</note>
+
+[[:docs:tabul:data:print|Printing]] this [[docs:resource:command#manifest|command manifest]] will execute the [[:docs:resource:script|script]] with the ''foo'' argument.
+
+<unit>
+<code bash>
+tabul data print command/hello-foo--command.yml@howto
+</code>
+<console>
+(command/hello-world@howto)@tmp
+lines
+---------
+Hello Foo
+</console>
+</unit>
+
+
+==== Same script, different argument, different resource ====
+
+In the same way, you can copy the manifest, change the arguments and create any resource dynamically
+
+
+
+<unit>
+<code bash>
+tabul data print command/hello-bar--command.yml@howto
+</code>
+<console>
+(command/hello-world@howto)@tmp
+lines
+---------
+Hello Bar
+</console>
+</unit>

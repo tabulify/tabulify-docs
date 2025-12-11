@@ -1,0 +1,127 @@
+---json
+{
+    "page_id": "4xf1nx6lwo2oqe2q1y8gq"
+}
+---
+====== How to generate data with an entity? ======
+
+
+===== About ====
+This howto will show you how to generate data with an [[:docs:generator:entity|entity generator]].
+
+
+
+===== Example =====
+
+
+
+==== Basic ====
+
+Example of a basic entity [[:docs:resource:generator|generator resource]] that uses the `firstname` entity to fill a `firstname` column
+<unit>
+<file yaml generator/entity-basic--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 10
+  Columns:
+    - name: firstname
+      Type: varchar
+      data-supplier:
+        type: entity
+
+
+</file>
+  * You can see the output with [[:docs:tabul:data:print|tabul print]]
+<code bash>
+tabul data print generator/entity-basic--generator.yml@howto
+</code>
+<console>
+firstname
+---------
+Cassandra
+Dodie
+Marcelo
+Vicente
+Elenora
+Albert
+Dimple
+Dollie
+Johnie
+Lenna
+</console>
+</unit>
+
+==== Meta Column Dependency ====
+
+A `firstname` depends on the `gender`. Each entity may have one or more meta columns such as `gender`.
+
+To express this dependency, you can use the ''meta_columns'' attribute to map:
+  * a local column (ie from the generator)
+  * to a entity column (ie from the data set)
+
+<unit>
+<file yaml generator/entity-meta-columns--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 30
+  Columns:
+    - name: gender
+      Type: Varchar
+      data-supplier:
+        type: histogram
+        arguments:
+          Buckets:
+            M: 1.0
+            F: 2.0
+    - name: firstname
+      Type: Varchar
+      data-supplier:
+        type: entity
+        arguments:
+          name: firstname
+          locale: en
+          metaColumns:
+            gender: gender
+
+
+</file>
+  * You can see the output with [[:docs:tabul:data:print|tabul print]]
+<code bash>
+tabul data print generator/entity-meta-columns--generator.yml@howto
+</code>
+<console height="300px" scroll="toggle">
+gender   firstname
+------   ---------
+M        Boris
+F        Britta
+M        Boris
+F        Ashley
+F        Althea
+M        Amal
+F        Britt
+F        Beatris
+F        Betty
+F        Alverta
+F        Ashley
+F        Bonnie
+F        Barbra
+F        Brittani
+F        Amanda
+M        Alphonso
+F        Alyce
+F        Alverta
+F        Britta
+M        Amal
+F        Alysa
+M        Amado
+M        Arnold
+F        Barbara
+F        Beckie
+F        Becky
+F        Bonnie
+M        Arnoldo
+F        Amanda
+F        Ashley
+</console>
+</unit>
+

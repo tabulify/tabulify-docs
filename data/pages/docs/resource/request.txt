@@ -1,0 +1,39 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:query" }
+    ],
+    "page_id": "xmlylzsakxniprhpv0nv6"
+}
+---
+====== Resource - Fetch Request ======
+
+===== About =====
+
+
+A ''fetch request'' is an [[docs:resource:runtime|runtime data resource]]
+  * that performs a request to a [[:docs:service:service|service]]
+  * that returns as response, a [[resource|data resource]]
+
+
+===== Example =====
+
+==== SQL ====
+
+[[sql_request|SQL Request]]
+  * [[docs:resource:sql_select|Select SQL query]]
+  * [[sql_ddl|Data Definition Language (Create)]]
+  * [[sql_dml|Data Manipulation Language (Insert, Update, Merge)]]
+  * [[:docs:system:database:sql_procedure|Procedure/Function]]
+
+==== Http ====
+
+  * [[:docs:system:http|Http Request]]
+
+===== Cli =====
+
+You can:
+  * print the result of a request with the [[:docs:tabul:data:print|print command]]
+  * perform fetch performance test with the [[docs:tabul:data:execute|perf command]]
+
+

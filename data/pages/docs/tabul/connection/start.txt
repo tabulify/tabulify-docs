@@ -1,0 +1,72 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:connection:start" }
+    ],
+    "page_id": "6ylwddfnx76twfhu2akx5"
+}
+---
+====== Tabul - Connection Module ======
+
+
+===== About =====
+''Connection'' is a [[docs:tabul:module|Tabul module]] that helps you manage [[docs:connection:connection|connections]] to [[docs:system:system|systems]]
+
+Within the [[docs:connection:connection|connection]] module, you can:
+  * [[docs:tabul:connection:list]] - list the connections in a table format
+  * [[docs:tabul:connection:info]] - get information on a connection in a forms format.
+  * [[docs:tabul:connection:add]] - create/add a connection in the [[docs:conf:tabul.yml|connection vault]]
+  * [[docs:tabul:connection:delete]] - delete a connection from a [[docs:conf:tabul.yml|connection vault]]
+  * [[docs:tabul:connection:upsert]] - update or create a connection in a [[docs:conf:tabul.yml|connection vault]]
+  * [[ping]] - verify if a connection can be reached
+  * [[type]] - list the data type supported by the connection
+
+
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul connection --help
+</code>
+<console>
+Tabul connection
+================
+
+Management of the Datastore Vault
+
+(Location: /home/tabulify/.tabul/.tabul.yml)
+
+
+
+Syntax
+------
+
+
+    tabul connection <command> [-h,--help]
+
+
+where:
+
+
+  Commands:
+
+    add          Add a connection
+
+    delete       Delete a connection
+
+    info         Show the attributes of a connection
+
+    list         List the connections
+
+    ping         Ping a connection
+
+    type         Show the data types of a connection
+
+    upsert       Update or add a connection if it does't exist
+
+
+  Option:
+
+    -h,--help    Print this help
+</console>
+</unit>

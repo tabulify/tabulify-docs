@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "9v8v719b8h05sk3m51xfe"
+}
+---
 ====== Data Resource - Data URI ======
 
 
@@ -10,7 +15,7 @@ It's a syntax that extends the notion of [[wp>Uniform%20resource%20identifier|UR
 
 
 <note tip>
-If you use it as [[data_selector|data selector]], you would select only [[docs:resource:resource|one data resource]].
+If you use it as [[..:flow:data_selector|data selector]], you would select only [[docs:resource:resource|one data resource]].
 </note>
 
 
@@ -26,38 +31,71 @@ where:
   * ''path'' is the [[path|path]]
   * ''connection'' is the [[docs:connection:name|connection name]]
 
-==== Script ====
+==== Runtime ====
 
-For a [[script|script data resource]]
+For a [[runtime|runtime data resource]], we use a special ''data uri'' syntax:
 <code bash>
-(path@connection)@connection
+(executablePath@executableConnection)@executionConnection
 </code>
 where:
-  * ''path@connection'' is the ''data uri'' of the script
-  * ''connection'' is the [[docs:connection:name|connection name]] where the script is executed
+  * ''executablePath@executableConnection'' is the ''data uri'' of the executable [[:docs:resource:file|file]]
+  * ''executionConnection'' is the [[docs:connection:name|connection name]] where the executable is executed
 
 ===== Management =====
 ==== See ====
-As a ''data uri'' is a [[attribute|data resource attribute]], you can see it with the [[docs:tabli:data:info|data info command]]
+As a ''data uri'' is a [[attribute|data resource attribute]], you can see it with
 
+
+  * the [[docs:tabul:data:list|data list command]]
 <unit>
-<code dos>
-tabli data info characters.csv@howto
+<code bash>
+tabul data list -a data-uri characters.csv@howto
+</code>
+<console>
+path             media_type   data_uri
+--------------   ----------   --------------------
+characters.csv   text/csv     characters.csv@howto
+</console>
+</unit>
+  * or more verbose the [[docs:tabul:data:info|data info command]]
+<unit>
+<code bash>
+tabul data info characters.csv@howto
 </code>
 <console>
 Information about the data resource (characters.csv@howto)
-ATTRIBUTE      VALUE
-------------   ----------------------------------------------------------
-AbsolutePath   D:\code\bytle-mono\db-website\src\doc\howto\characters.csv
-Characterset   ISO-8859-2
-Connection     howto
-Count          4
-DataUri        characters.csv@howto
-LogicalName    characters
-Name           characters.csv
-Path           characters.csv
-Size           346
-Type           text/csv
+attribute             value                                                                                              description
+-------------------   ------------------------------------------------------------------------------------------------   ----------------------------------------------------------------------
+CHARACTER_SET         UTF-8                                                                                              The character set of the file
+COLUMN_NAME           lines                                                                                              The name of the column when the text content is returned on one column
+COMMENT_CHARACTER     #                                                                                                  The comment character
+DELIMITER_CHARACTER   ,                                                                                                  The delimiter character
+END_OF_RECORD         \n, \r, \r\n                                                                                       The End Of Record string sequence
+ESCAPE_CHARACTER                                                                                                         The escape character
+HEADER_ROW_ID         1                                                                                                  The id of the header row
+IGNORE_EMPTY_LINE     true                                                                                               Ignore empty line
+QUOTE_CHARACTER       "                                                                                                  The quote character
+URI                   file:///opt/tabulify/resources/howto/characters.csv                                                The URI of the file
+ABSOLUTE_PATH         /opt/tabulify/resources/howto/characters.csv                                                       The absolute path on the data system
+ACCESS_TIME           2025-11-10 15:34:45.519261734                                                                      The access time (access time)
+COMMENT                                                                                                                  A comment
+CONNECTION            howto                                                                                              The connection name
+COUNT                 5                                                                                                  The number of records
+CREATION_TIME         2025-11-10 15:34:41.449090141                                                                      The creation time (birth time)
+DATA_URI              characters.csv@howto                                                                               The data uri
+KIND                  csv                                                                                                The kind of media
+LOGICAL_NAME          characters                                                                                         The logical name
+MD5                   d0d7f020d834cde13d0a14733520d4d6                                                                   The Md5 hash
+MEDIA_SUBTYPE         csv                                                                                                The media subType
+MEDIA_TYPE            text/csv                                                                                           The media type
+NAME                  characters.csv                                                                                     The name of the data resource
+PARENT                                                                                                                   The parent
+PATH                  characters.csv                                                                                     The relative path to the default connection path
+SHA384                6e96667d1306abb445b5608ec36d193a6dc775a6adc74844531906bf4691eee5f32ce7c423e38c9c072692f459c57d5f   The Sha384 hash
+SHA384_INTEGRITY      sha384-bpZmfRMGq7RFtWCOw20ZOm3Hdaatx0hEUxkGv0aR7uXzLOfEI+OMnAcmkvRZxX1f                            The sha384 value used in the html integrity attribute
+SIZE                  432                                                                                                The number of byte
+TABULAR_TYPE          data                                                                                               The tabular type
+UPDATE_TIME           2025-11-10 15:34:41.449090141                                                                      The last update time (modify time)
 </console>
 </unit>
 

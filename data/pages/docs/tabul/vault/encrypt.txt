@@ -1,0 +1,100 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:vault:encrypt" }
+    ],
+    "page_id": "qd4un1tm3bq2qucsssyt6"
+}
+---
+====== Tabul - Vault Encrypt Command ======
+
+
+===== About =====
+''vault encrypt'' is a [[docs:tabul:command|tabul command]] of the [[start|vault module]] that supports the [[docs:common:vault|encryption]] of sensitive information
+
+===== Example =====
+<unit>
+<code bash>
+tabul --passphrase hardToGuess vault encrypt secret
+</code>
+</unit>
+<!-- The console output is not in the code execution unit because the value changes at each run for greater security -->
+<!-- Needs to be update manually for now -->
+<console>
+The encryption result
+plaintext   ciphertext
+---------   ------------------------------------------------------------------------------------------------------------------------------------------
+secret      tvaultQVE9PT5QSjFYVmpzOGtpQVlyckNVejY4VXNBPT0+ZFpoVGZSQTd3MUJRTkhIelFjZXNIc0FkVGVIbUhFNE1Pc2tsdzhjVkNhbz0+NEZFU1U4SEpqM0wzWWY4VnlCK3BBQT09
+</console>
+
+
+
+
+===== Syntax =====
+
+
+<unit>
+<code bash>
+tabul vault encrypt -h
+</code>
+<console>
+Tabul vault encrypt
+===================
+
+Encrypt sensitive information such as password
+
+
+
+Example
+-------
+
+ 1 - To encrypt the text `alice`, you would execute
+
+
+    tabul vault encrypt --passphrase difficultToGuessPassPhrase! "alice"
+
+
+
+
+Syntax
+------
+
+
+    tabul vault encrypt <plaintext...>
+
+
+where:
+
+
+  Arguments:
+
+    <plaintext...>                                          One or more text to encrypt
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

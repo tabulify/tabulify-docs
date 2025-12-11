@@ -1,0 +1,139 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:query" }
+    ],
+    "page_id": "vlxvusqo1r1pom1buje1q"
+}
+---
+====== Tabul - Data Exec Command ======
+
+
+===== About =====
+The ''data exec''  is a [[docs:tabul:command|command]] that gives you access to the [[:docs:op:execute|execute operation]] via the [[..:tabul|tabul cli]]
+
+It returns the exit status as well as [[:docs:resource:count|count]] and perf metrics.
+
+It permits you to [[docs:resource:request|request]] or [[docs:resource:runtime|execute]] data resource in batch and create a [[docs:benchmark|benchmark workload]]  against a [[docs:system:system|system]].
+
+
+
+
+===== Syntax =====
+<unit name="default">
+<code bash>
+tabul data exec --help
+</code>
+<console>
+Tabul data execute
+==================
+
+This command execute one or multiple runtime resources and returns the exit code
+
+
+Note: If you want to:
+  * show the execution result, you can use
+     * the `print` command (for the full result)
+     * the `head` or `tail` command (for a partial result)
+  * transfer/load the result of a runtime (sql query, ...), you should use one of the `transfer` commands (copy, insert, upsert, ...)
+
+
+
+Examples
+--------
+
+ 1 - Execute all the queries written in the sql files that begins with `dim` in the current directory (ie `cd` connection)
+
+
+        tabul data execute (dim*.sql@cd)@sqlite
+
+
+ 2 - Execute the query file `Query1.sql` against `sqlite` and execute the query file `Query2.sql` against `oracle`
+
+
+        tabul data execute (Query1.sql)@sqlite (Query2.sql)@oracle
+
+
+ 3 - Execute all sql files present in the local directory `project/withQueries` against the `postgres` data store and store the result in the `perf` table.
+
+
+        tabul data execute --output-data-uri perf@postgres (project/withQueries/*.sql)@postgres
+
+
+
+
+Syntax
+------
+
+
+    tabul data execute [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                      One or several runtime data selectors that selects the executable and set the execution connection
+
+
+  Options:
+
+    --error-data-uri <value>                                A template data uri that specifies where to store errors information
+
+    --execution-mode <transfer|load>                        Defines the execution mode
+
+    --no-fail-on-error                                      If set, the exit status will be successful even if execution errors are seen
+
+    --no-runtime-result-persistence                         Should we keep the results of a runtime request
+
+    --no-stop-early                                         If set, the execution will not stop at the first error
+
+    --output-result-columns <value>                         The returned columns of the execution results
+
+    --processing-type <value>                               The processing type of the execution operation
+
+    --strict-input                                          If true, if an input is not a runtime resource, an error is thrown
+
+    --target-data-uri <value>                               A template data uri that specifies where to store the execution results
+
+
+  Selection Options:
+
+    --no-strict-selection                                   If set an empty selection will not return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                 If set, the dependencies will be also selected
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>
+
+
+
+
+

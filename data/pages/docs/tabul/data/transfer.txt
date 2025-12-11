@@ -1,0 +1,185 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:transfer" }
+    ],
+    "page_id": "6zb02fkldx4qhbpakxn1p"
+}
+---
+====== Tabul - Data Transfer Command (copy, download, load, move, rename) ======
+
+
+===== About =====
+The ''transfer'' command supports all [[docs:op:transfer|transfer operations]] between a [[docs:flow:source|source data resource]] and a [[docs:flow:target|target data resource]]
+
+<note>
+The below commands are all command aliases that set the ''transfer-operation'' [[docs:tabul:option|option]] to their respective value and call the ''transfer'' command.
+  * [[concat|concat]]
+  * [[copy|copy]]
+  * [[delete|delete]]
+  * [[insert|insert]]
+  * [[move|move]]
+  * [[replace|replace]]
+  * [[update|update]]
+  * [[upsert|upsert]]
+</note>
+
+===== Default Processing Types =====
+
+In the [[:docs:flow:pipeline|pipeline]] executed by this command, the [[:docs:flow:processing-type|processing type values]] are the following:
+
+^ Operation ^ Value ^ Type ^
+| [[:docs:op:select|select supplier]] | ''batch'' | Constant (Cannot be changed). The selection selects only once and finishes. |
+| [[:docs:op:transfer|transfer]] | ''stream'' | Can be changed with the ''--processing-type'' option |
+
+
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul data transfer -h
+</code>
+<console>
+Tabul data transfer
+===================
+
+Transfer one or more data resources.
+
+
+
+Examples
+--------
+
+ 1 - To download the table `time` from the data store `sqlite` into the file `time.csv`, you would execute
+
+
+        tabul data transfer time@sqlite time.csv
+
+
+ 2 - To download all the table that starts with `dim` from the data store `oracle` into the directory `dim`, you would execute
+
+
+        tabul data transfer dim*@oracle dim
+
+
+ 3 - To download the data of the query defined in the file `QueryToDownload.sql` and executed against the data store `sqlite` into the file `QueryData.csv`, you would execute the following command:
+
+
+        tabul data transfer (QueryToDownload.sql)@sqlite QueryData.csv
+
+
+ 4 - To download the data of all query defined in all `sql` files of the current directory, execute them against the data store `sqlite` and save the results into the directory `result`, you would execute the following command:
+
+
+        tabul data transfer (*.sql)@sqlite result
+
+
+ 5 - Transfer the result of the query `top10product` from sqlite to the table `top10product` of sql server
+
+
+        tabul data transfer (top10product.sql)@sqlite @sqlserver
+
+
+
+
+Syntax
+------
+
+
+    tabul data transfer [options|flags] <source-selector...> <target-data-uri>
+
+
+where:
+
+
+  Arguments:
+
+    <source-selector...>                                          A data selector that select the data resources to transfer
+
+    <target-data-uri>                                             A target data uri (Example: table@connection or foo.csv@cd)
+
+
+  Cross Data Transfer Options:
+
+    -bs,--buffer-size <buffer-size>                               defines the size of the memory buffer between the source and target threads
+
+    -mdu,--metrics-data-uri <metrics-data-uri>                    defines a target data uri where the data metrics should be exported
+
+    -out,--output-type <output-type>                              The resource that is passed as output
+
+    -pt,--processing-type <processing-type>                       how to process the inputs (one by one or in batch)
+
+    -sfs,--source-fetch-size <source-fetch-size>                  defines the size of the network message from the source to fetch the data
+
+    -so,--source-operation <source-operation>                     defines the data operation (drop or truncate) on the source after transfer. Note: A `move` operation will drop the source.
+
+    -tbs,--target-batch-size <target-batch-size>                  defines the batch size against the target data resource
+
+    -tcf,--target-commit-frequency <target-commit-frequency>      defines the commit frequency in number of batches against the target data resource
+
+    -to,--target-operation <target-operation>                     defines the data operations (drop or truncate) on the existing target before transfer. A `replace` operation will drop the target.
+
+    -twc,--target-worker-count <target-worker-count>              defines the target number of thread against the target connection
+
+    -tmc,--transfer-mapping-columns <transfer-mapping-columns>    defines the columns mapping between the source and the target
+
+    -tmm,--transfer-mapping-method <transfer-mapping-method>      defines the method used to map the source columns to the target columns
+
+    -tms,--transfer-mapping-strict <transfer-mapping-strict>      defines if a map by name or position is strict
+
+    -op,--transfer-operation <transfer-operation>                 defines the transfer operation (insert, update, delete, upsert, merge, copy).
+
+    -tut,--transfer-upsert-type <transfer-upsert-type>            defines the type of upsert operation (merge, insert, insert-update, update-insert).
+
+    -wp,--with-parameters                                         defines if parameters are used in the SQL statement
+
+
+  Data Definition Options:
+
+    -sa,--source-attribute <attributeName=value>                  Set a source attribute
+
+    -ta,--target-attribute <attributeName=value>                  Set a target attribute
+
+
+  Selection Options:
+
+    --strict-selection                                            If set the selection will return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                       If set, the dependencies will be also selected
+
+
+  Options:
+
+    -t,--type <mediaType|mimeType|extensionFile>                  The type of the resource
+
+    -vc,--virtual-column <columnName=resourceAttributeName>       Add a virtual column with the value of a data resource attribute
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                         The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                             The path to a configuration file
+
+    -ee,--exec-env <name>                                         The execution environment (prod or dev)
+
+    -h,--help                                                     Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>                  Set the log level
+
+    -ns,--not-strict                                              A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                        defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                        defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>          defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                                 A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                                   Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                                  Print version information
+</console>
+</unit>

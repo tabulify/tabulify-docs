@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "j3gt7vcyuumxrf5mtj30y"
+}
+---
 ====== Data Structure (Data Definition) ======
 
 
@@ -6,7 +11,7 @@ A ''data structure'' defines the structure of a [[resource|data resource]].
 
 This definition may be created:
   * via a [[data-definition|data definition file]]
-  * via a command (Example: for a [[docs:system:database|database]], a ''SQL'' statement known as the ''Data Definition Language (DDL)'')
+  * via a command (Example: for a [[docs:system:database:database|database]], a ''SQL'' statement known as the [[:docs:resource:sql_ddl|Data Definition Language (DDL)]])
   * via the structure of another [[resource|data resource]]
 
 
@@ -15,10 +20,13 @@ This definition may be created:
 ===== Operation =====
 
 ==== Creation ====
-The creation of a data structure in ''Tabulify'' is done via the [[docs:op:create|create operation]].
+The creation of a data structure in ''Tabulify'' is done via:
+  * the [[docs:op:create|create operation]]
+  * [[:docs:resource:sql_ddl|DDL statements]]
+  * or during any [[:docs:op:transfer|transfer]] if the [[:docs:flow:target|target]] does not exist
 
 ==== View ====
-The data structure is viewable via the [[docs:tabli:data:struct|struct operations]]
+The data structure is viewable via the [[docs:tabul:data:describe|describe operation]]
 
 ===== Logical Structure =====
 

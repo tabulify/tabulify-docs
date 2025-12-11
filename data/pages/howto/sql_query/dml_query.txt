@@ -1,0 +1,155 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:sql_query:dml_ddl_query" }
+    ],
+    "name": "SQL DDL Query",
+    "page_id": "rzypaxyhnje5pk0fiz9it"
+}
+---
+====== SQL - How to execute SQL DDL statements (CREATE, ALTER, ..)?  ======
+
+
+===== About =====
+
+This howto will show you how to execute a [[:docs:resource:sql_ddl|SQL DDL query]] that contains multiple:
+  * [[:docs:resource:sql_ddl|DDL]] statements (ie ''CREATE'', ''ALTER'')
+  * and an [[:docs:resource:sql_dml|DML]] (''INSERT'')
+
+===== Steps =====
+
+==== Query file location ====
+
+The file containing this query is located below the [[:docs:connection:howto|howto directory]].
+
+
+This ''DML Query'' creates a ''country'' lookup table.
+
+And we add 2  countries with 2 [[:docs:resource:sql_dml|DML insert statement.]]
+
+With the [[:docs:tabul:data:print|print command]] we can see the content.
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode sql_query_ddl_country.sql@howto
+# --type text disable sql statement parsing
+# --pipe-mode disallow the headers
+</code>
+<console sql>
+-- DDL CREATE
+create table country
+(
+  country        varchar,
+  code2          varchar,
+  coden          varchar,
+  region_code    varchar,
+  subregion_code varchar
+);
+
+-- DDL ALTER
+alter table country
+  add code3 varchar;
+
+
+-- DML without returning clause
+-- The first 2 countries
+INSERT INTO country (country, code2, code3, coden, region_code, subregion_code)
+VALUES ('Afghanistan', 'AF', 'AFG', '4', '142', '34');
+INSERT INTO country (country, code2, code3, coden, region_code, subregion_code)
+VALUES ('Åland Islands', 'AX', 'ALA', '248', '150', '154');
+</console>
+</unit>
+
+Note that you can find the whole data set in the [[:docs:generator:entity|entity connection]].
+
+<unit>
+<code bash>
+tabul data head country/country.csv@entity
+</code>
+<console>
+The first 10 rows of the data resource (country/country.csv@entity):
+country               code2   code3   coden   region_code   subregion_code
+-------------------   -----   -----   -----   -----------   --------------
+Afghanistan           AF      AFG         4           142               34
+Åland Islands         AX      ALA       248           150              154
+Albania               AL      ALB         8           150               39
+Algeria               DZ      DZA        12             2               15
+American Samoa        AS      ASM        16             9               61
+Andorra               AD      AND        20           150               39
+Angola                AO      AGO        24             2              202
+Anguilla              AI      AIA       660            19              419
+Antarctica            AQ      ATA        10                               
+Antigua and Barbuda   AG      ATG        28            19              419
+</console>
+</unit>
+
+==== Cleaning with Drop  ====
+
+To prevent any conflict, you can execute the below command to drop any country tables from the [[docs:connection:howtos|sqlite howto connection]]
+<unit>
+<code bash>
+tabul data drop --no-strict-selection country@sqlite
+# not strict will not fail the command if there is no tables to drop
+</code>
+</unit>
+
+==== Creating the Query data URI ====
+
+A [[:docs:resource:sql_file|SQL file]] becomes [[docs:resource:runtime|executable]] when it's represented as a [[docs:resource:sql_request|SQL Request]] with a [[docs:resource:runtime|runtime data uri]] where:
+  * the first part is a [[docs:flow:data_selector|data selector]] that select the files that contains the ''query''
+  * and the second part is the [[docs:connection:connection|connection]] where the query should run.
+
+
+
+In the below ''executable selector''
+<file>
+(sql_query_ddl_country.sql@howto)@sqlite
+</file>
+  * ''sql_query_ddl_country.sql@howto'' is a [[docs:flow:data_selector|data selector]] that selects the file ''sql_query_ddl_country.sql'' in the [[:docs:connection:howto|howto directory]]
+  * ''sqlite'' is the connection (the [[:howto:sqlite:howto_connection|SQLite Howto connection]]) where the ''query'' is executed.
+
+
+==== Execution ====
+
+A [[docs:resource:sql_request|SQL Request]] is an [[docs:resource:runtime|runtime resource]].
+
+As all executable, they are executed at access time, runtime. It means that they can be used with all [[docs:tabul:data:start|command]] but that if you access them 2 times, you execute them 2 times.
+
+  * If you [[docs:tabul:data:print|print]] it, you execute it
+  * If you [[docs:tabul:data:print|print]] it twice, you execute it twice
+  * If you [[:docs:tabul:data:transfer|transfer]] it, you execute it (You transfer the results of the execution)
+
+In this example, we will execute it with the [[docs:tabul:data:print|data print]] command so that we can see the result.
+<unit>
+<code bash>
+tabul data print '(sql_query_ddl_country.sql@howto)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+(sql_query_ddl_country.sql@howto)@sqlite
+id   count   statement                                               line   error_code   error_message
+--   -----   -----------------------------------------------------   ----   ----------   -------------
+ 1       0   create table country\n(\n  country        varchar,\n       2            0                
+ 2       0   alter table country\nadd code3 varchar                    12            0                
+ 3       1   INSERT INTO country (country, code2, code3, coden,        18            0                
+ 4       1   INSERT INTO country (country, code2, code3, coden,        20            0
+</console>
+</unit>
+
+==== Results ====
+
+
+And as you can see the ''country'' [[docs:resource:sql_table|table]] has been created with 2 rows.
+
+
+<unit>
+<code bash>
+tabul data print country@sqlite
+</code>
+<console>
+country@sqlite
+country         code2   coden   region_code   subregion_code   code3
+-------------   -----   -----   -----------   --------------   -----
+Afghanistan     AF      4       142           34               AFG
+Åland Islands   AX      248     150           154              ALA
+</console>
+</unit>

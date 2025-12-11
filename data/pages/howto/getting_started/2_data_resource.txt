@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "dwa025s8ao6ncxw2wf9j1"
+}
+---
 ====== Learning Tabulify - Step 2 - What's a Data Resource ? ======
 
 
@@ -10,21 +15,29 @@ The first job of a data processing platform such as ''Tabulify'' is to work with
   * A [[docs:resource:file|file]] is a ''data resource''
   * A [[docs:resource:directory|directory]] is a ''data resource''
   * A [[docs:resource:uri|url]] is a ''data resource''
-  * A [[docs:resource:table|database table]] is a ''data resource''
-  * A [[docs:resource:schema|database schema]] is a ''data resource''
+  * A [[docs:resource:sql_table|database table]] is a ''data resource''
+  * A [[docs:resource:sql_schema|database schema]] is a ''data resource''
 
-<note info>
-The ''Tabulify'' platform supports a lot of different ''data resources'' that you can discover in the [[docs:resource:resource|data resources page]].
-</note>
 
 <note important>
-The big strength and innovation of the ''Tabulify'' platform is that all data are uniformly named and manipulated as ''Data Resource''.
+=== Innovate - Everything is a file ===
 
-It means that you can copy a ''csv'' file into a database ''table'' and vice-versa with the same ''command'' as if you were copying a ''file'' to another ''directory''.
+On the ''Tabulify'' platform, all data are uniformly named and manipulated as ''Data Resource''.
+
+It means that you can copy a ''csv'' file into a database ''table'' and vice-versa with the same ''command'' as if you were copying a ''file'' to another ''directory'', following the [[wp>Everything_is_a_file|Everything is a file mantra]].
 </note>
+
+
+===== List =====
+
+The ''Tabulify'' platform supports a lot of different ''data resources'' that you can discover in the [[docs:resource:resource|data resources page]].
+
+
+
+
 ===== Next =====
 
-The ''data resources'' are stored in [[docs:system:system|systems]] that we can reach with a connection.
+The ''data resources'' are stored in [[docs:system:system|systems]] that we can reach via a connection.
 
 <btn>
 [[3_connection|What is a connection ?]]

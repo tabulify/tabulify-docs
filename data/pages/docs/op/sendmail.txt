@@ -1,139 +1,55 @@
+---json
+{
+    "page_id": "8y09xaqtf4f28j2vkpbmf"
+}
+---
 ====== SendMail Operation ======
 
 
 ===== About =====
-''sendMail'' is an [[op|operation]] that sends one or several emails to a [[docs:system:smtp|SMTP server]].
+''sendMail'' is an [[:docs:flow:intermediate|intermediate operation]] that sends one or several emails to a [[docs:system:smtp|SMTP server]].
 
 
-<note tip>
-In a development environment on Windows, you could install the [[https://github.com/ChangemakerStudios/Papercut-SMTP|PaperCut Test SMTP server]]
-to receive, test, and read the emails sent.
-</note>
 
-===== Example =====
+===== HowTo =====
 
-==== Sending data resources ====
-
-In the below [[:docs:flow:pipeline|pipeline]], we:
-  * [[docs:op:select|select]] data resources that will be send as attachement.
-  * and we send them
-<unit>
-<file yaml pipeline/email_resources.yml>
-pipeline:
-  - name: "Select"
-    comment: "This operation select the resources to send"
-    operation: "select"
-    args:
-      data-selector: "email/*.csv@howto"
-  - name: "Send"
-    comment: "Send the selected resources as email attachment"
-    operation: "sendmail"
-    args:
-      target-uri: "@smtp" # smtp is the default smtp connection and is therefore optional
-      to: "support@tabulify.com"
-      subject: "Demo: How to send resources"
-      txt: |
-        Please, find attached the report data
-
-</file>
-If you [[docs:tabli:flow:execute|execute this pipeline]]
-<code bash>
-tabli flow execute pipeline/email_resources.yml@howto
-</code>
-Output:
-<console>
-########
-Executing the pipeline email_resources
-########
-
-List of executions
-ExecutionId   OperationName   DataPathsCount   DataPathsList               
------------   -------------   --------------   -------------------------   
-1             select          1                email\analytics.csv@howto   
-2             send            1                email\analytics.csv@howto
-</console>
-</unit>
-
-==== Sending an email list ====
-
-<unit>
-<file yaml pipeline/email_list.yml>
-pipeline:
-  - name: "Define"
-    comment: "This operation defines a data path with the expected columns of a mailing list"
-    operation: "define"
-    args:
-      data-resource:
-        data-definition:
-          columns: ["to","from","subject","txt","html"]
-        data:
-          - [ "foo@tabulify.com", "support@tabulify.com", "Email for foo", "A textual email body", "<html><body><h1>A html email body</h1></body></html>"]
-          - [ "bar@tabulify.com", "support@tabulify.com", "Email for bar", "A textual email body", "<html><body><h1>A html email body</h1></body></html>"]
-  - name: "Send"
-    comment: "Send the email"
-    operation: "sendmail"
-    args:
-      target-uri: "@smtp" # smtp is the default smtp connection and is therefore optional
-      granularity: "record"
-
-</file>
-If you [[docs:tabli:flow:execute|execute this pipeline]]
-<code bash>
-tabli flow execute pipeline/email_list.yml@howto
-</code>
-Output:
-<console>
-########
-Executing the pipeline email_list
-########
-
-List of executions
-ExecutionId   OperationName   DataPathsCount   DataPathsList                                 
------------   -------------   --------------   -------------------------------------------   
-1             define          1                12b25b90-3b0e-4005-8119-c2c9cd69cca9@memory   
-2             send            1                12b25b90-3b0e-4005-8119-c2c9cd69cca9@memory
-</console>
-</unit>
-
-The result in [[https://github.com/ChangemakerStudios/Papercut-SMTP|PaperCut]].
-
-{{:docs:op:email_list_illustration.png|}}
+  * [[:howto:email:mailing_list|]]
+  * [[howto:email:send_resources|]]
 
 ===== Arguments =====
 
 
 ^ Argument ^ Default ^ Description ^
-| [[:docs:resource:target_uri|target-uri]] | ''@smtp'' | the smtp server to use to send the email (by default, the local smtp server without any authentication) |
-| ''to'' | ''to'' property of the smtp connection | the receiver email addresses |
-| ''to_names'' | ''to_names'' property of the smtp connection | the receiver email addresses name |
+| [[docs:flow:template_data_uri|target-uri]] | ''@smtp'' | the smtp server to use to send the email (by default, the local smtp server without any authentication) |
+| ''to'' | ''to'' property of the smtp connection | the receiver internet email addresses |
 | ''from'' | ''from'' property of the smtp connection \\ if not found ''user@host'' | the sender email address |
-| ''from_name'' | ''from_name'' property of the smtp connection \\ if not found ''user@host'' | the sender email address name |
 | ''cc'' | ''cc'' property of the smtp connection | the carbon copy email addresses (separated by a ;) |
-| ''cc_names'' | ''cc_names'' property of the smtp connection | the carbon copy email address names (separated by a ;) |
 | ''bcc'' | ''bcc'' property of the smtp connection | the blind carbon copy email addresses (separated by a ;) |
-| ''bcc_names'' | ''bcc_names'' property of the smtp connection | the blind carbon copy email address names (separated by a ;) |
-| ''subject'' | the [[docs:resource:logicalname|logical name]] of the resource | the email subject |
+| ''subject'' | the [[docs:resource:logical_name|logical name]] of the resource | the email subject |
 | ''txt'' | | the text body of the email |
 | ''html'' | | the html body of the email |
 | ''body-type'' | ''['html','txt']'' | the resources type seen as email body (ie ''html'' and ''txt'' file are seen as email body and not attachment) |
 | [[:docs:flow:granularity|granularity]] | ''resource'' | with the value: \\ - ''resource'': one email is send with all resources attached \\ - ''record'' - an email is send by record (mailinglist) |
-| ''log-target-uri'' | A [[:docs:resource:target_uri|target-uri]] | the location of the logs that stores the emails sent (By default, the table ''smtp'' in the [[:docs:connection:log|log]]). You can use this parameter to point to a table in your database to exclude email from a list in your selection. |
+| ''log-target-uri'' | A [[docs:flow:template_data_uri|target-uri]] | the location of the logs that stores the emails sent (By default, the table ''smtp'' in the [[:docs:connection:log|log]]). You can use this parameter to point to a table in your database to exclude email from a list in your selection. |
 
 ==== Record run ====
 
-When running the send operation by record, the send operation except the following [[:docs:resource:column|columns]]:
+When running the [[:howto:email:mailing_list|send operation by record]], the send operation except the following [[:docs:resource:column|columns]]:
 
 ^ Column Name ^ Optionality ^ Default ^ Description ^
-| ''to'' | In [[:docs:project:environment|production]], ''mandatory'', \\ in other environment, the ''to'' property of the smtp connection is used || The ''to'' address(es) |
+| ''to'' | In [[docs:common:environment|production]], ''mandatory'', \\ in other environment, the ''to'' property of the smtp connection is used || The ''to'' address(es) |
 | ''to_names'' | yes | ''from'' property of the smtp connection | The ''to'' address names |
 | ''from'' | yes | ''from'' property of the smtp connection | The ''from'' address (only one) |
 | ''from_name'' | yes | The name of the ''from'' address | The ''from'' address name |
 | ''cc'' | yes | The ''cc'' property of the smtp connection | The ''cc'' address (separated by a ;) |
-| ''cc_names'' | yes | The ''cc_names'' property of the smtp connection | The names of the ''cc'' address | 
+| ''cc_names'' | yes | The ''cc_names'' property of the smtp connection | The names of the ''cc'' address |
 | ''bcc'' | yes | The ''bcc'' property of the smtp connection | The ''bcc'' address (separated by a ;) |
-| ''bcc_names'' | yes | The ''bcc_names'' property of the smtp connection | The names of the ''bcc'' address | 
-| ''subject'' | yes | [[docs:resource:logicalname|logical name]] of the resource and record id |
+| ''bcc_names'' | yes | The ''bcc_names'' property of the smtp connection | The names of the ''bcc'' address |
+| ''subject'' | yes | [[docs:resource:logical_name|logical name]] of the resource and record id |
 | ''txt'' | Mandatory if html is not present | none | The email text body |
 | ''html'' | Mandatory if txt is not present | none | The email html body |
 
-No attachements can be send for now in a record run.
+No attachements can be sent for now in a record run.
+
+
+

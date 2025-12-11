@@ -1,23 +1,46 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:connection:smtp" },
+        { "path": ":howto:email:connection_service" },
+        { "path": ":howto:email:howto_connection_service" }
+    ],
+    "page_id": "2bzj3oyia935utmgfj7ik"
+}
+---
 ====== What is the smtp Connection ? ======
 
 
 ===== About =====
-''smtp'' is a [[:docs:connection:built-in|built-in connection]] for a [[:docs:system:smtp|SMTP server system]].
+A ''smtp connection'' is a [[docs:connection:connection|connection]] to a <icon name="email" /> [[:docs:system:smtp|SMTP server system]].
 
-It's the default [[docs:connection:connection|connection]] of [[docs:op:sendmail|sendmail operation]].
+===== Howto =====
+
+  * [[howto:email:create_smtp_connection|]]
+  * [[howto:email:howto_connection_service]]
+  * [[howto:email:mailing_list|]]
+  * [[howto:email:send_resources|]]
+
+===== Default Name =====
+''smtp'' is the default connection name of the [[docs:op:sendmail|sendmail operation]] if not specified
+.
+## Attributes
+
+You can modify the following [[:docs:conf:parameter|parameters]]
+
+In the URI, the host is mandatory.
 
 
-===== Default =====
+^ Name ^ Default ^ Type ^ Description ^
+| URI | | [[:docs:connection:uri|uri]] | ''%%smtp://host[:port]%%'' |
+| PORT | 25 | [[:docs:data_type:integer|integer]] | the smtp port |
+| FROM | user@fqdn | [[:docs:system:smtp#Internet Address|One Internet Address]] | the default `from` address if none is provided |
+| TO | | [[:docs:system:smtp#Internet Address|One or more Internet Addresses]] | the default `to` address if none is provided |
+| TLS | false | [[..:data_type:boolean|boolean]] | enable secured communication with TLS |
+| DEBUG | false | [[..:data_type:boolean|boolean]] | toggle for debug statement |
+| AUTH | false | [[..:data_type:boolean|boolean]] | is the authentication mandatory |
+^ Inherited from [[:docs:connection:attribute|built-in connection attributes]] ^^^^
+| USER | | [[:docs:data_type:character|characters]] | the connection user |
+| PASSWORD | | [[:docs:data_type:character|characters]] | the connection password. See [[:docs:conf:secret|secret]] |
 
-It defaults to the local smtp server as you can see with the [[docs:tabli:connection:list|tabli connection list]].
-<unit>
-<code bash>
-tabli connection list smtp
-</code>
-<console>
-Name    Uri
------   ------------------------------------------------------------
-smtp    smtp://localhost:25
-</console>
-</unit>
 

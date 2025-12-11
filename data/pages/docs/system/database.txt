@@ -1,9 +1,0 @@
-====== Database System ======
-
-
-===== About =====
-A database is a type of [[system|system]] that stores its data in a [[docs:resource:table|table fashion]] and understands SQL statement.
-
-===== Type =====
-  * [[relational]] (with joins and foreign key supports)
-  * ''nosql'' (without joins and foreign key supports)

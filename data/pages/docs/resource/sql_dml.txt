@@ -1,0 +1,32 @@
+---json
+{
+    "name": "Sql DML",
+    "page_id": "5yw26egmruoq1ylo4pk8n"
+}
+---
+====== SQL - Data Manipulation Language (DML) ======
+
+
+
+
+===== About =====
+''DML'' is a [[:docs:system:database:sql_statement#subset|subset of sql statements]] that manipulates the [[docs:resource:content|table content]].
+
+
+
+You can execute ''DML'' statements with a [[docs:resource:sql_request|SQL Request]].
+
+===== Example/HowTo =====
+
+  * [[:howto:sql_query:select_query|]]
+  * [[howto/sql_query/dml_query|How to execute DML Create/Alter and Insert Statements?]]
+===== List =====
+
+  * [[docs:resource:sql_select|SELECT]], 
+  * ''INSERT'', 
+  * ''UPDATE'', 
+  * ''DELETE'',
+  * [[docs:resource:sql_stored_procedure|CALL (Stored Procedure execution)]]
+
+===== Prepared Statement =====
+One difference with other [[sql_file#subset|SQL subset]] is that ''DML'' statement supports [[docs:system:database:sql_parameterized_statement|sql parameterized statement]]

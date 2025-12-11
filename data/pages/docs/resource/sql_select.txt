@@ -1,0 +1,55 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:select" }
+    ],
+    "page_id": "mwtgwbvcbwnltcp50ih8p"
+}
+---
+====== Data Resource - SQL Select Query ======
+
+
+===== About =====
+A ''SQL Select'' data resource is a [[:docs:resource:sql_dml|SQL DML Request]] that contains a ''SELECT'' statement.
+
+===== Howto =====
+
+  * [[:howto:sql_query:select_query|]]
+
+===== Execution =====
+
+
+A [[docs:resource:sql_file|SQL file]] containing a ''select'' statement can be executed if it's represented as an [[docs:resource:sql_request|sql request]] (ie SQL [[docs:resource:runtime|runtime data resource uri]])
+
+For instance,
+  * for a ''top-5-clients.sql'' select sql file
+  * located in the [[:docs:connection:cd|current directory]]
+  * that should be executed against a [[:docs:system:sqlite:sqlite|sqlite database]]
+The [[docs:resource:runtime|runtime data resource]] ''data uri'' would be:
+<code>
+(top-5-clients.sql@cd)@sqlite
+</code>
+===== Attribute =====
+
+
+
+^ Name ^ Default ^ Description ^
+| ''select-metadata-detections'' | ''describe, temporary-view, false-equality'' | Define a list of [[:docs:system:database:query_metadata_detection|detection methods]] used to capture the structure if not defined via a [[:docs:resource:data-definition|data-definition]] |
+
+All common [[:docs:resource:data-definition|data-definition]] attributes are also allowed ([[docs:resource:column|columns]], ...)
+
+
+
+===== Support =====
+
+==== Prepared Statement ====
+We support configurable ''select'' statement with [[docs:system:database:sql_parameterized_statement|prepared statements]]
+
+
+==== How to execute multiple SELECT statements in one script ====
+
+We support as of today, only one ''select'' statement by [[docs:resource:sql_request|SQL Fetch]].
+
+Why? Because a [[docs:resource:request|request]] returns only one resource.
+
+If you want to execute multiple ''SELECT'' statements in one script, you need to use the [[:docs:op:split|split operator]] in a pipeline.

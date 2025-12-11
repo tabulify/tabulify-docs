@@ -1,13 +1,22 @@
+---json
+{
+    "page_id": "agto2688dny7u0ixpxqhc"
+}
+---
 ====== Data Operation - List ======
 
 
 ===== About =====
-''Listing'' is a [[op|data operation]] that shows ''entities'' in a [[docs:resource:tabular|tabular format]]
 
-''Tabulify'' can list:
-  * [[docs:resource:resource|data resources]] with the [[docs:tabli:data:list|tabli data list]] command
-  * [[docs:connection:connection|connection]] with the [[docs:tabli:connection:list|tabli connection list]] command
-  * [[docs:conf:conf|configuration]] with the [[docs:tabli:variable:list|tabli conf list]] command
-  * [[docs:resource:structure|data structure]] (ie column) with the [[docs:tabli:data:struct|tabli data struct]] command
+''list'' is an [[:docs:flow:intermediate|intermediate operation]] that gathers [[docs:resource:attribute|attributes]] of the [[:docs:flow:input|input resources]] and returns them in a [[:docs:resource:tabular|tabular fashion]]
 
 
+===== Cli =====
+
+It's called the ''list'' operation because it's the operation used in the [[:docs:tabul:data:list|list command]].
+
+
+===== Arguments =====
+
+^ Name ^ Default ^ Description ^
+| attributes | [[:docs:resource:name|name]], [[:docs:resource:media-type|media type]] | A list of attributes name to return |

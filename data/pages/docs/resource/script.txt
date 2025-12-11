@@ -1,25 +1,42 @@
+---json
+{
+    "page_id": "ho1bj6lntynsag98yhgr5"
+}
+---
 ====== Data Resource - Script ======
 
 
+
 ===== About =====
-A ''script data resource'' is a special type of [[content|data resource]] where its [[content|content]] is seen as a ''script''
+''Scripts'' are  [[text|text files]] that contains computer language such as:
+  * ''bash''
+  * ''python''
+  * ''javascript''
+  * ...
 
-A ''script'' is one ore more instruction that is executed against a [[docs:connection:connection|connection]]
 
 
 
-===== Type =====
+You can execute them by creating a [[command|command]] (ie a [[docs:resource:runtime|runtime data uri]]) 
 
-There is two kind of script:
-  * a ''pure script'' that returns only an execution status (ie failed or succeeded).
-  * a [[query|query]] that returns a [[resource|data resource]]
 
-===== Data Selectors =====
-A ''script'' is selected via a [[data_selector#composed|composed data selector]]
+===== Howto =====
+  * [[:howto:script:script]]
+===== Example =====
 
-<code>
-(globPattern@ScriptConnection)@targetConnection
+
+
+To execute the 
+  * bash script ''hello-world.sh'' [[#with a shebang]]
+  * located in the [[:docs:connection:cd|current directory (cd)]]
+  * with the working directory as the [[:docs:connection:tmp|temporary directory]]
+
+you would execute the following [[:docs:tabul:data:print|print command]] 
+
+<code bash>
+tabul data print '(hello-world.sh@cd)@tmp'
 </code>
-where:
-  * the first ''data selector'' defines the [[file|file data resources]] (known also as ''script'') where the scripts are written
-  * and the second  part defines the [[docs:connection:connection|connection]] where the script is executed
+
+
+
+

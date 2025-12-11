@@ -1,0 +1,35 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:archive" }
+    ],
+    "name": "Archives (Zip, Tar, ...)",
+    "page_id": "xm5ziaj2oraip3o9fkedk"
+}
+---
+====== Archive ======
+
+
+
+===== About =====
+''Archives'' are compressed directory and are supported as [[resource|resource]]
+
+
+===== Howto =====
+  * [[howto:archive:archive-entry]]
+
+===== Supported format =====
+  * ''zip''
+  * ''tar.gz''
+  * ''tar''
+
+
+
+===== Supported Operations =====
+
+You can:
+  * [[:docs:op:print|print]] an archive to get the list of [[:docs:resource:archive-entry|entry]]. Each [[:docs:resource:record|record]] corresponds to a [[:docs:resource:archive-entry#columns|archive entry columns]]
+  * [[:docs:op:unzip|unzip]] an archive to extract one or more [[:docs:resource:archive-entry|entry]]
+  * define a resource as an [[:docs:resource:archive-entry|archive entry]].
+
+

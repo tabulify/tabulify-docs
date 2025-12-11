@@ -1,0 +1,233 @@
+---json
+{
+    "page_id": "s94jp18akru3dkcm931qv"
+}
+---
+====== Oracle Data Type Support ======
+
+
+===== About =====
+This page regroups the [[oracle|oracle]] [[:docs:data_type:data_type|data type]] support information.
+
+We supports this 2 kind of data type:
+  * the ''built-in'' Oracle data type.
+  * the ''ANSI'' data type (that are mapped to the ''built-in'' data types)
+
+
+
+
+===== List =====
+
+Below is the list of [[:docs:data_type:data_type|data type]] supported by the [[:howto:oracle:howto_connection|howto oracle connection]]
+printed by the [[:docs:tabul:connection:type|connection type]] command.
+
+<unit display=none>
+<code bash>
+tabul service start oracle
+</code>
+</unit>
+<unit display=none>
+<code bash>
+tabul service ping oracle
+</code>
+</unit>
+<unit>
+<code bash>
+tabul connection type oracle
+</code>
+<console height="300" scroll="toggle">
+Known Types for the connection (oracle)
+name                             aliases                                             ansi_type                    max_precision   supported   description
+------------------------------   -------------------------------------------------   --------------------------   -------------   ---------   ----------------------------------------------------
+blob                                                                                 blob                                                     Large binary objects
+boolean                                                                              boolean                                      ✓           Logical Boolean (true/false)
+char                             character, national char                            character                    500             ✓           Fixed-length blank padded character string
+clob                                                                                 clob                                         ✓           Very long variable-length character string
+date                                                                                 date                                         ✓           Calendar date (year, month, day)
+date                                                                                 timestamp                    7               ✓           Date and time without time zone
+date                                                                                 time                         7               ✓           Time of day without time zone
+double precision                                                                     double precision                             ✓           ANSI data type converted to Oracle Float(126)
+float                                                                                float                        63              ✓           Flexible Precision floating-point number
+intervalds                                                                                                        4                           Database Specific type
+intervalym                                                                                                        5                           Database Specific type
+json                                                                                 json                                         ✓           Textual JSON data
+long                                                                                 long character varying       2147483647      ✓           Very long variable-length character string
+long raw                                                                             long varbinary               2147483647                  Variable-length binary data (“byte array”)
+nchar                            national character                                  national character           1000            ✓           Fixed-length text in Unicode character set
+nclob                                                                                national clob                                ✓           Very long variable-length in a Unicode character set
+number                                                                               bit                          1               ✓           Fixed-length bit string
+number                                                                               tinyint                      3               ✓           One-byte integer (0-255)
+number                                                                               bigint                       38              ✓           Eight-byte integer
+number                           decimal, numeric                                    numeric                      38              ✓           Exact numeric of selectable precision
+number                           smallint                                            smallint                     5               ✓           Two-byte integer
+number                           int, integer                                        integer                      10              ✓           Four-byte integer
+nvarchar2                        national char varying, national character varying   national character varying   2000            ✓           Variable-length text in a Unicode character set
+raw                                                                                  varbinary                    2000                        Variable-length binary data (“byte array”)
+real                                                                                 real                         63              ✓           ANSI data type converted to Oracle Float(63)
+ref                                                                                  ref                                                      Reference to a structured type
+struct                                                                               struct                                                   Structured data with named fields
+timestamp                                                                            timestamp                    9               ✓           Date and time without time zone
+timestamp with local time zone                                                                                    11                          Database Specific type
+timestamp with time zone                                                             timestamp with time zone     13              ✓           Date and time, including time zone
+varchar2                         char varying, character varying                     character varying            1000            ✓           Variable-length character string
+vector                                                                                                                                        Database Specific type
+</console>
+</unit>
+
+===== Note =====
+
+==== ANSI Data Type ====
+
+By default, the driver does not have the [[https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/Data-Types.html#GUID-0BC16006-32F1-42B1-B45E-F27A494963FF|ANSI data type]].
+We had them so that they can be used in any manifest.
+
+SQL statements that create tables and clusters can also use these types
+
+^ ANSI SQL Data Type ^ Oracle Data Type ^
+| CHARACTER(n) \\ CHAR(n) | CHAR(n) |
+| CHARACTER VARYING(n) \\ CHAR VARYING(n) | VARCHAR2(n) |
+| NATIONAL CHARACTER(n) \\ NATIONAL CHAR(n) \\ NCHAR(n) | NCHAR(n) |
+| NATIONAL CHARACTER VARYING(n) \\ NATIONAL CHAR VARYING(n) \\ NCHAR VARYING(n) | NVARCHAR2(n) |
+| NUMERIC(p,s) \\ DECIMAL(p,s) | NUMBER(p,s) |
+| INTEGER \\ INT \\ SMALLINT | NUMBER(38) |
+| FLOAT | FLOAT(126) |
+| DOUBLE PRECISION | FLOAT(126) |
+| REAL | FLOAT(63) |
+
+Note that you can create a `SQL integer` of any precision as `NUMERIC(p)` (scale being null)
+
+==== Integer ====
+
+Oracle does not support natively the [[:docs:data_type:integer|ansi integer]] data type. You can use them in a ''create table'' statement but the final column is created with a ''number'' with ''precision'' and without any ''scale''
+
+For [[:docs:generator:generator|data generation]] purpose, we map the ''number'' data type back to [[:docs:data_type:integer|integer type]] with the following rules.
+
+^ Max Number Precision ^ Integer Type ^
+| 3 | tinyint |
+| 5 | smallint |
+| 10 | integer  |
+| 38 | bigint |
+==== Date ====
+
+[[https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/Data-Types.html#SQLRF-GUID-5405B652-C30E-4F4F-9D33-9A4CB2110F1B|Oracle DATE]] is not a real [[:docs:data_type:date_time|ANSI SQL DATE]] because it permits to store time information without the second fractional part. It's a ''ANSI Timestamp(0)''.
+
+Note that for [[:docs:generator:generator|data generation]],
+  * without using any definition, in a automatic way, the ''oracle date'' is not seen as a ''ansi date'' but as an ''ansi timestamp'' and will be filled automatically with date time data.
+  * with a [[:docs:resource:generator|generator manifest]], be sure to set also the [[:docs:resource:data-definition#columns|ansi-type]] to ''date''
+
+
+Tip:
+  * If you want to see the time part of a Oracle Date in ''SQLPlus'', you need to change the [[https://docs.oracle.com/en/database/oracle/oracle-database/19/refrn/NLS_DATE_FORMAT.html|nls_date_format]]
+<code sql>
+ALTER SESSION SET nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+</code>
+
+  * Even if the ''Oracle date'' is a the second precision, a ''+1'' add one ''day'', not 1 ''second''
+
+<code sql>
+SELECT current_date AS current_date,
+       current_date + 1 AS plus_1_day,
+       current_date + 12/24 AS plus_12_hours,
+       current_date + 30/24/60 AS plus_30_minutes,
+       current_date + 15/24/60/60 AS plus_15_seconds
+FROM   dual;
+</code>
+==== Time ====
+
+Oracle does not have any ''time'' data type support. It recommends to use an oracle ''DATE'' with year, month and day set to zero.
+
+
+When transferring a table from a third database to Oracle and if the table does not exist, we apply the following conversion.
+
+^ SQL Type ^ Oracle Type ^
+| ''time'' | ''date'' |
+| ''time with time zone'' | ''timestamp with time zone'' |
+
+==== Character Length Qualifier Support ====
+
+<note>
+TLDR: When copying tables from Oracle to Oracle, Tabulify don't support the ''byte'' qualifier, it will create the column length in ''char''
+</note>
+
+By default and in the ANSI SQL standard, character length (ie precision) is given in ''character''. ''char(3)'' means ''3 characters''
+
+Not in Oracle that
+  * supports also ''byte'' in its [[https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/Data-Types.html#GUID-1BABC478-FB47-4962-9B0C-8B8BD059E733|Character data types]] ie
+    * ''char''
+    * ''varchar2''
+
+<note>This rule does not apply for the Unicode/national character type (''nchar'' and ''nvarchar'')</note>
+
+By adding a length qualifier, you can define the type of length
+Example:
+```sql
+-- 3 characters
+varchar(3 char)
+-- 3 bytes
+varchar(3 byte)
+--- 3 default length qualifier specified by NLS_LENGTH_SEMANTICS parameter
+--- that defaults to byte at installation
+varchar(3)
+```
+The default length qualifier is defined by the [[https://docs.oracle.com/en/database/oracle/oracle-database/21/refrn/NLS_LENGTH_SEMANTICS.html|NLS_LENGTH_SEMANTICS]] parameter that you can retrieve with the below statement.
+<code sql>
+select value from nls_database_parameters where parameter ='NLS_LENGTH_SEMANTICS'
+</code>
+
+The ''byte'' unit is not the standard, is not human friendly, is not applied by Tabulify.
+
+We use ''char'' everywhere as character length unit, therefore, Tabulify:
+  * converts the maximum precision to ''char'' (See the section below)
+  * qualify a type statement when it needs to create a table
+<code sql>
+create table user (
+  name varchar2(50 char)
+  -- in place of varchar2(50)
+)
+</code>
+
+<note>
+Note that the ANSI specification has no concept of length qualifier, for Tabulify:
+<code sql>
+create table users ( name VARCHAR2(50 byte) )
+</code>
+is then equivalent to
+<code sql>
+create table users ( name VARCHAR2(50 char) )
+</code>
+It's actually possible to retrieve this information with the SQL below, but it's actually not implemented.
+<code sql>
+select char_used, char_length
+   FROM all_tab_columns
+   WHERE table_name = ? and owner = ?;
+</code>
+</note>
+
+
+==== How is the Maximum Character Precision Calculated ====
+
+
+
+For instance, for a ''char'' if the database uses the ''AL32UTF8'' character set , the maximum precision is ''500''
+
+Why?
+  * a char has a maximum precision of `2000`
+  * since the ''AL32UTF8'' may encodes characters in one, two, three, or four bytes, we choose ''4'' bytes by character (([[https://docs.oracle.com/database/121/NLSPG/ch6unicode.htm|AL32UTF8 Ref]]))
+  * we show therefore a maximum precision of ''500''
+<code sql>
+500 = 2000 / 4
+</code>
+
+
+
+The character sets are retrieved thanks to this parameters:
+^ Type of character data type ^ Character set ^
+| National Character (ie unicode) | NLS_NCHAR_CHARACTERSET |
+| Character | NLS_CHARACTERSET |
+
+
+
+
+
+
+

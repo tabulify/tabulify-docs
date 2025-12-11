@@ -1,0 +1,18 @@
+---json
+{
+    "page_id": "nhpmrr4nyput85q7vmb8q"
+}
+---
+====== Output ======
+
+
+===== About =====
+''outputs'' are [[message|message data resources]] that a [[:docs:flow:step|step]] passes to the next/downstream [[:docs:flow:intermediate|intermediate step]] in a [[:docs:flow:pipeline|pipeline]]
+
+
+===== Type =====
+
+They are generally 3 types of output:
+  * ''inputs'': the [[:docs:flow:input|input]]
+  * ''targets'': the [[:docs:flow:target|target]]
+  * ''results'': the result report

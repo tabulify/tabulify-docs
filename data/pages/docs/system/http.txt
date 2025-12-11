@@ -1,15 +1,27 @@
-====== HTTP System ======
+---json
+{
+    "page_id": "5lpa9ufvc9hy4re20g9d2"
+}
+---
+====== HTTP System (The Web) ======
 
 
 ===== About =====
-''http'' is a system of URL. 
+''http'' is a system of URL.
 
-A URL when requested returns always a [[docs:resource:content|content resource]]  (document) with a [[docs:resource:type|media type]].
+A URL when requested returns a [[docs:resource:request|response resource]]  (document) with a [[docs:resource:media-type|media type]].
 
 
 ===== Characteristic =====
 
 As a [[file|file system]]:
-  * a document can be seen as a file with its URL as path. 
-  * ''http'' does not have the notion of directory and therefore cannot be traversed as a file tree system, therefore the [[howto:tabli:glob|glob selections]] are not available. 
+  * a document can be seen as a file with its URL as path.
+  * ''http'' does not have the notion of directory and therefore cannot be traversed as a file tree system, therefore the [[howto:tabul:glob|glob selections]] are not available.
   * A URL has a hierarchical structure where we can give a parent to a document.
+
+
+===== Configuration =====
+
+==== User-Agent ====
+
+Due to a lot of website blocking normal user agent, Tabulify uses know `curl/8.13.0` as default

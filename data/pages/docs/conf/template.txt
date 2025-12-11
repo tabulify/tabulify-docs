@@ -1,28 +1,33 @@
+---json
+{
+    "page_id": "s0t5qrb69co0p9pb4j6t9"
+}
+---
 ====== Template Variables ======
 
 
 ===== About =====
-[[docs:conf:attribute|Attributes]] can be used at several place as template variable.
+[[docs:conf:attribute|Attributes]] can be used at several place as ''template variable''.
 
 
 For instance, in:
-  * [[docs:conf:vault|a connection vault]]
+  * [[docs:conf:tabul.yml|a configuration vault]]
   * [[:docs:flow:pipeline|pipeline file]]
-  * [[:docs:resource:logicalname|logical name]] definition
-  * [[:docs:resource:target_uri|target uri]] definition
+  * [[docs:resource:logical_name|logical name]] definition
+  * [[docs:flow:template_string|target template]] definition
 
 
 You can see the attributes that you can use:
-  * for a connection with the [[:docs:tabli:connection:info|connection info command]] 
-  * for a resource with the [[docs:tabli:data:info|data info command]]
-  * globally with the [[docs:tabli:attribute:list|attribute list command]]
+  * for a connection with the [[:docs:tabul:connection:info|connection info command]]
+  * for a resource with the [[docs:tabul:data:info|data info command]]
+  * globally with the [[docs:tabul:env:list|attribute list command]]
 
 
 ===== Example =====
 
-If you want a file to take as [[:docs:resource:logicalname|logical name]] a part of its name, you can use [[:docs:common:globbing|back-reference globbing variables]] when you [[:docs:op:select|select]] them.
+If you want a file to take as [[docs:resource:logical_name|logical name]] a part of its name, you can use [[:docs:common:globbing|back-reference globbing variables]] when you [[:docs:op:select|select]] them.
 
-  * If you have an export file with an obscur identifier such as:
+  * If you have an export file with an obscure identifier such as:
 <file>
 cleaned_members_export_d874afd3b7.csv
 </file>

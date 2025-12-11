@@ -1,0 +1,77 @@
+---json
+{
+    "page_id": "dhj93q8edymvdd3xvctao"
+}
+---
+====== Character data type ======
+
+
+
+===== About =====
+This page is about the ''character'' [[data_type#ansi|ANSI data type]].
+
+
+===== List =====
+
+Tabulify supports all standard ANSI SQL character data type:
+
+^ SQL Standard Name ^ Alias ^ Default n ^ Description ^
+| ''character varying(n)'' | ''varchar(n)'' | max | variable-length with limit |
+| ''national character varying(n)'' | ''nvarchar(n)''  | max | variable-length with limit encoded with the [[kb>data/type/text/unicode|Unicode character set]] |
+| ''character(n)'' | ''char(n)'' | 1 | fixed-length, blank-padded |
+| ''national character(n)'' | ''nchar(n)'' | 1 | fixed-length, blank-padded encoded with the [[kb>data/type/text/unicode|Unicode character set]] |
+| ''long character varying'' | ''long varchar'' | - | ''varchar'' without length qualifier |
+| ''long national character varying'' | ''long nvarchar'' | - | ''nvarchar'' without length qualifier |
+| ''clob'' | | - | variable unlimited length \\ (generally stored outside the database block in a text file) |
+
+Note:
+  * ''(n)'' means they can store strings up to ''n'' characters (not bytes) in length.
+    * with multibyte character encodings the number of characters and bytes can be quite different.
+  * In most situations ''clob'' or ''character varying'' should be used instead of ''character''. Why? Because ''character'' is the slowest because of its additional storage costs (ie blank padded)
+
+
+===== Default Precision =====
+
+By default, when creating a data resource, if no [[precision|precision]] ''n'' (ie data type length) is given, we:
+  * don't specify it if the precision is optional (for instance, [[:docs:system:sqlserver:sqlserver|SQL Server]])
+  * otherwise if the precision is mandatory (for instance, [[:docs:system:mysql:mysql|MySQL]]), we use:
+    * if set, the default tabulify connection value (see below)
+    * if not set, the maximum allowed by the database for the type
+
+
+You can set the default tabulify value with the following [[:docs:connection:attribute|connection attribute]]:
+
+^ Attribute ^ Default Value ^
+| [[#varchar_default_precision|VARCHAR_DEFAULT_PRECISION]] | max database |
+| [[#nvarchar_default_precision|NVARCHAR_DEFAULT_PRECISION]] | max database |
+| [[#char_default_precision|CHAR_DEFAULT_PRECISION]] | 1 |
+| [[#nchar_default_precision|NCHAR_DEFAULT_PRECISION]] | 1 |
+
+==== VARCHAR_DEFAULT_PRECISION ====
+
+
+
+With this attribute you can set the default `varchar` precision.
+
+Note:
+  * The default varchar precision is the maximum value supported by the database with the exception of [[:docs:system:mysql:text#varchar_default_precision_of_2000|MySQL]] that makes it difficult to use this rule.
+  * You may want to set it for [[:docs:system:sqlserver:data_type#default_precision_for_varchar_and_nvarchar|SQLServer so that the max specifier is not used]]
+
+
+
+
+==== NVARCHAR_DEFAULT_PRECISION ====
+
+
+
+This attribute sets the default precision (ie [[docs:data_type:data_type|data type length]]) of ''nvarchar'' when not specified
+
+==== CHAR_DEFAULT_PRECISION ====
+
+This attribute sets the default precision (ie [[docs:data_type:data_type|data type length]]) of ''char'' when not specified
+
+
+
+==== NCHAR_DEFAULT_PRECISION ====
+
+This attribute sets the default precision (ie [[docs:data_type:data_type|data type length]]) of ''nchar'' when not specified

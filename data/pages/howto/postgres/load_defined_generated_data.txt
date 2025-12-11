@@ -1,0 +1,143 @@
+---json
+{
+    "description": "This how-to will show you how to define the generation of data via a data definition file and load it into a table via the tabul data fill operation.",
+    "low_quality_page": "false",
+    "name": "Defined Data Generation",
+    "page_id": "ez3z31b5oz5o3v3uxsujz"
+}
+---
+====== Tabul - How to fill a table with a data generation file ======
+
+===== About =====
+This [[..:howto|how-to]] will show you how to:
+  * define the <icon name="mdi:cog"/> [[docs:generator:generator|generation of data]] via a [[docs:resource:data-definition|data definition file]]
+  * and [[docs:op:fill|load it]] into a <icon name="mdi:table-large" /> [[docs:resource:sql_table|table]] via the [[docs:tabul:data:fill|tabul data fill operation]].
+
+===== Steps =====
+==== Start Postgres ====
+
+
+The next steps will be using the [[howto:postgres:howto_connection_service|postgres howto connection]].
+
+  * You need to [[howto:postgres:howto_connection_service#docker|start the postgres docker image]].
+<unit>
+<code bash>
+tabul service start postgres
+</code>
+<console>
+1 service was started
+Name       Type
+--------   ------
+postgres   docker
+</console>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] your connection to check that the database is up.
+
+<unit>
+<code bash>
+tabul connection ping postgres
+</code>
+<console>
+The connection (postgres) has been pinged successfully
+</console>
+</unit>
+==== Create the Data Generation file ====
+The below file is a [[docs:resource:data-definition|data definition file]] that defines the structure of the data and the data generators
+<unit>
+<file yaml date_dim--generator.yml>
+kind: generator
+spec:
+  Comment: An example of date dimension generator based on the `date_dim` table of TPCDS
+  primary-columns: [ "d_date_sk" ]
+  Columns:
+    - name: d_date_sk
+      comment: A surrogate key
+      Type: integer
+      data-supplier:
+        type: sequence
+    - name: d_date
+      comment: A business key in date format
+      Type: date
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 2025-05-13
+    - name: d_date_id
+      comment: A business key in string
+      Type: varchar
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.toISOString().substring(0,10)"
+    - name: d_month_seq
+      comment: An ascendant sequence for the month
+      Type: integer
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "function pad(number) {if (number < 10) { return '0' + number; } return number; }; d_date.getFullYear()+''+(pad(d_date.getMonth()+1))"
+    - name: d_day_name
+      comment: The name of the day
+      Type: varchar
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; days[d_date.getDay()]"
+    - name: d_moy
+      comment: the month number in year
+      Type: Integer
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.getMonth()+1"
+    - name: d_year
+      comment: The year number
+      Type: Integer
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.getFullYear()"
+
+</file>
+</unit>
+==== Fill the table ====
+The [[docs:tabul:data:fill|tabul data fill]] command takes the data definition as input and can load it into a table.
+<unit>
+<code bash>
+tabul data fill --generator-selector date_dim--generator.yml@howto date_dim@postgres
+</code>
+<console>
+Transfer results
+input             target              latency   record_count   error_code   error_message
+---------------   -----------------   -------   ------------   ----------   -------------
+date_dim@memgen   date_dim@postgres   0.840s             100
+</console>
+</unit>
+==== Verify ====
+
+The table ''date_dim'' was filled with generated data
+<unit>
+<code bash>
+tabul data head date_dim@postgres
+</code>
+<console>
+The first 10 rows of the data resource (date_dim@postgres):
+d_date_sk   d_date_id          d_date       d_month_seq   d_week_seq   d_quarter_seq   d_year   d_dow   d_moy   d_dom   d_qoy   d_fy_year   d_fy_quarter_seq   d_fy_week_seq   d_day_name   d_quarter_name   d_holiday   d_weekend   d_following_holiday   d_first_dom   d_last_dom   d_same_day_ly   d_same_day_lq   d_current_day   d_current_week   d_current_month   d_current_quarter   d_current_year
+---------   ----------------   ----------   -----------   ----------   -------------   ------   -----   -----   -----   -----   ---------   ----------------   -------------   ----------   --------------   ---------   ---------   -------------------   -----------   ----------   -------------   -------------   -------------   --------------   ---------------   -----------------   --------------
+        1   2025-05-12         2025-05-12        202505            1               5     2025       4       5       3       0           1                  2               7   Monday       u                a           b           b                               2            5               7               3   i               u                s                 v                   w
+        2   2025-05-11         2025-05-11        202505            4              10     2025      10       5       0       0           4                  6               4   Sunday       l                f           d           d                              10           10               2              10   m               n                u                 i                   x
+        3   2025-05-10         2025-05-10        202505            7               6     2025      10       5       9       4           1                  0               2   Saturday     o                j           k           f                               3            9               4               6   o               j                a                 o                   l
+        4   2025-05-09         2025-05-09        202505           10               2     2025       3       5       3       9           0                  4               6   Friday       e                m           a           g                               9            4               3               8   k               r                y                 q                   s
+        5   2025-05-08         2025-05-08        202505            5               4     2025       0       5       9      10          10                  6               7   Thursday     m                u           e           m                               3            0               2               0   r               q                r                 h                   z
+        6   2025-05-07         2025-05-07        202505            7               9     2025      10       5       7       4           8                  9               9   Wednesday    x                b           b           b                               8            2               7               5   r               p                p                 k                   b
+        7   2025-05-06         2025-05-06        202505            8               8     2025       2       5       6       6          10                  6               8   Tuesday      w                z           s           o                               8           10               0               3   m               m                a                 x                   w
+        8   2025-05-05         2025-05-05        202505            2               2     2025       9       5       7       0           0                  9               8   Monday       y                c           p           w                               7            6               1               9   q               m                s                 n                   l
+        9   2025-05-04         2025-05-04        202505            2               2     2025       7       5       8       3           7                  9              10   Sunday       x                x           b           w                               0            6               6               3   g               u                n                 l                   u
+       10   2025-05-03         2025-05-03        202505           10               2     2025       4       5      10       6           8                  3               2   Saturday     b                q           r           m                               1            6               2               0   g               u                r                 j                   h
+</console>
+</unit>

@@ -1,0 +1,89 @@
+---json
+{
+    "page_id": "hp54ju95qgjjgbao2rza8"
+}
+---
+====== Query Metadata Detection ======
+
+
+===== About =====
+
+
+Because a [[:howto:sql_query:select_query|select statement]] is an [[docs:resource:runtime|runtime resource]], if the columns are not defined in a [[:docs:resource:data-definition|data definition]], Tabulify would need to execute it to get and parse the response.
+
+That's not optimal for performance reason.
+
+So, we have implemented the below cheap detection methods to get the [[:docs:resource:column|columns]] before execution.
+
+
+
+
+
+===== List =====
+
+^ Method ^ Description ^ Culprit ^
+| ''describe'' | The data is retrieved via the ''DESCRIBE'' statement  | Not supported by all database |
+| ''false-equality'' | The original query gets a false condition such as ''1=0''  | Slow if not detected by the database |
+| [[#temporary view]] | A temporary view is created | Not always possible |
+| ''parsing'' | Reading and parsing of the select statement | No data type, only the column names are present \\ Does not work with the star `select * from` \\ Deprecated |
+| [[#runtime|runtime]] | Delay metadata detection until the statement is executed | The Sql Statement needs to return |
+
+
+
+
+
+==== Temporary View  ====
+
+In  this metadata detection, Tabulify will try to create a view in order to retrieve the [[:docs:resource:column|metadata columns]].
+
+Note that not all ''select'' can be created as view:
+   * [[:docs:system:sqlserver:sqlserver|Sql Server]] for instance does not allow any ''order by'' clause
+   * [[docs:resource:sql_view|view]] does not allow 2 columns with the same name
+   * [[docs:system:database:sql_parameterized_statement|Sql Prepared Statement]] will not work due to the parameters
+
+This kind of view would fail:
+<code sql>
+select
+    round(sun_sales1/sun_sales2,2)
+   ,round(mon_sales1/mon_sales2,2)
+</code>
+because they would get the same column name: ''round''
+
+==== Runtime  ====
+
+''Runtime'' metadata detection means that the select statement is executed against the database to retrieve the [[:docs:resource:column|metadata columns]].
+
+It happens only ''lazily'' meaning that we delay the query execution until we really need a result set.
+
+
+===== FAQ =====
+
+==== What happens if the query has multiple columns with the same name ====
+If the ''select statement'' has multiple column with the same name or alias, we add the column position so that they are unique.
+
+For example, the below SQL
+<code sql>
+select d_week_seq1
+       ,round(sun_sales1/sun_sales2,2)
+       ,round(mon_sales1/mon_sales2,2)
+ ...
+</code>
+would return the following column names after execution:
+  * ''d_week_seq1'',
+  * ''round'',
+  * ''round''
+Tabulify does not allow 2 columns with the same and transform them like that:
+  * ''d_week_seq1'',
+  * ''round'',
+  * ''round3''
+
+==== How do I change it ====
+
+You can change the list of metadata detections methods via the [[:docs:resource:sql_select#attribute|select-metadata-detection attribute]].
+Setting it to a list with only ''runtime'', disable it.
+
+==== How do I disable it ====
+
+To disable ''query metadata detection'', you need to set the [[:docs:resource:sql_select#attribute|select-metadata-detection attribute]] 
+with only the ''runtime'' method.
+

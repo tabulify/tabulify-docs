@@ -1,0 +1,22 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:flag" }
+    ],
+    "page_id": "7oghh46s08c0ayb1icfqy"
+}
+---
+====== Tabul - Flag ======
+
+
+===== About =====
+A ''flag'' is an [[docs:tabul:option|option]] that set a variable to ''true'' if set.
+
+
+===== Example =====
+
+
+You can set one ''flag option''
+<code bash>
+db module action -f
+</code>

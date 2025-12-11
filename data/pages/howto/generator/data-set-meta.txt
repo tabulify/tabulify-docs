@@ -1,0 +1,90 @@
+---json
+{
+    "page_id": "k6rc1cn2xhcl5jsnopfh0"
+}
+---
+====== How to retrieve a third column from a data set generator ? ======
+
+
+===== About =====
+This howto will show you how to use the [[:docs:generator:data-set-meta|data set meta generator]] to retrieve a meta column (ie third column) from a data set defined in a data set generator (ie [[:docs:generator:data-set|data set]] or [[:docs:generator:entity|entity]] generator)
+
+
+===== Example =====
+
+
+==== Data Set ====
+
+In this example, the data set is the [[:docs:generator:entity|region entity]]
+
+We want to generate the data
+  * for the `region` column
+  * but also returns the `code` column
+
+The content of the data set is:
+<unit>
+<code bash>
+tabul data head region/region.csv@entity
+</code>
+<console>
+The first 10 rows of the data resource (region/region.csv@entity):
+region     code
+--------   ----
+Africa     2
+Americas   19
+Asia       142
+Europe     150
+Oceania    9
+</console>
+</unit>
+
+==== Generator ====
+
+Using this dataset, we can generate generates 10 `regions` with this [[:docs:resource:generator|generator file]].
+<unit>
+<file yaml generator/dataset-meta-type--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 10
+  Columns:
+    - name: region
+      Type: varchar
+      data-supplier:
+        type: entity
+        arguments:
+          name: region
+    - name: code
+      Type: varchar
+      data-supplier:
+        type: data-set-meta # the type
+        arguments:
+          column-data-set: region # refer to the first column that contains an entity generator
+          column: code # the column in the region entity data set to return
+
+</file>
+</unit>
+
+==== Printing the data ====
+
+You can see/generate the output with [[:docs:tabul:data:print|tabul print]]
+
+<unit>
+<code bash>
+tabul data print generator/dataset-meta-type--generator.yml@howto
+</code>
+<console>
+region     code
+--------   ----
+Oceania    9
+Asia       142
+Africa     2
+Africa     2
+Europe     150
+Americas   19
+Africa     2
+Americas   19
+Americas   19
+Asia       142
+</console>
+</unit>
+

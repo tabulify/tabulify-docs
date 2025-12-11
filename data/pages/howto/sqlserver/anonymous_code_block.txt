@@ -1,0 +1,136 @@
+---json
+{
+    "page_id": "9w46ysyq5ewa03tfsn5zc"
+}
+---
+====== SQL Server - Anonymous Code Block ======
+
+
+===== About =====
+In [[:docs:system:sqlserver:sqlserver|]], an [[docs:resource:sql_anonymous_block|anonymous code block]] can be created with the [[https://learn.microsoft.com/en-us/sql/t-sql/language-elements/begin-end-transact-sql|BEGIN/END block]].
+
+
+===== Steps =====
+
+==== Start SQL Server ====
+
+
+The next steps will be using the [[:howto:sqlserver:howto_connection|howto connection]].
+
+  * You need to [[:howto:sqlserver:howto_connection#docker|start the sql server docker image]].
+<unit>
+<code bash>
+tabul service start sqlserver
+</code>
+<console>
+1 service was started
+Name        Type
+---------   ------
+sqlserver   docker
+</console>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] your connection to check that the database is up.
+<unit>
+<code bash>
+tabul connection ping sqlserver
+</code>
+<console>
+The connection (sqlserver) has been pinged successfully
+</console>
+</unit>
+
+==== The Anonymous Block ====
+
+
+
+This anonymous block is idempotent, it will create the role ''webuser'' if it does not exist
+
+
+The anonymous code block is located at ''sqlserver/anonymous_block.sql'' in the [[:docs:connection:howto|howto connection]]
+
+With the [[:docs:tabul:data:print|data print command]], we can see the content.
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode sqlserver/anonymous_block.sql@howto
+# --type text disable sql statement parsing
+# --pipe-mode disallow the headers
+</code>
+<console sql>
+BEGIN
+  -- Check if the role already exists before creating it
+  IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'webuser' AND type = 'R')
+    BEGIN
+      CREATE ROLE webuser;
+      PRINT 'Role webuser created successfully.';
+    END
+  ELSE
+    BEGIN
+      PRINT 'Role webuser already exists.';
+    END
+END
+</console>
+</unit>
+
+Note:
+The [[:docs:system:sqlserver:sqlserver#print|print]] statements are send to the standard error stream.
+
+
+==== Execution ====
+
+<unit>
+<code bash>
+tabul data execute '(sqlserver/anonymous_block.sql@howto)@sqlserver'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie subshell)
+</code>
+<console>
+List of runtime executed
+runtime_data_uri                                  exit_code   count   latency   data_uri                                                                   error_message
+-----------------------------------------------   ---------   -----   -------   ------------------------------------------------------------------------   -------------
+(sqlserver/anonymous_block.sql@howto)@sqlserver           0       1   0.38s     execute/20251110-204934-688-pipe-tabul-data-exec/anonymous_block.log@tmp
+</console>
+</unit>
+
+
+==== Validation ====
+
+
+Anonymous block result returns only an execution status. To verify the execution result, you need:
+  * to check visually with a [[:docs:resource:sql_select|SQL Select]]
+
+<unit>
+<file sql sqlserver/anonymous_block_actual_roles.sql>
+SELECT name
+FROM sys.database_principals
+WHERE name = 'webuser'
+  AND type = 'R';
+
+</file>
+<code bash>
+tabul data print '(sqlserver/anonymous_block_actual_roles.sql@howto)@sqlserver'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+(sqlserver/anonymous_block_actual_roles.sql@howto)@sqlserver
+name
+-------
+webuser
+</console>
+</unit>
+  * or to perform a [[:docs:op:diff|diff]].
+
+
+<unit>
+<code bash>
+tabul data diff \
+  sqlserver/anonymous_block_expected_roles.csv@howto \
+  '(sqlserver/anonymous_block_actual_roles.sql@howto)@sqlserver'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+Diff Summary Report
+The data resources are equals.
+from                                                 to                                                             equals   record_count   change_count
+--------------------------------------------------   ------------------------------------------------------------   ------   ------------   ------------
+sqlserver/anonymous_block_expected_roles.csv@howto   (sqlserver/anonymous_block_actual_roles.sql@howto)@sqlserver   ✓                   1              0
+</console>
+</unit>

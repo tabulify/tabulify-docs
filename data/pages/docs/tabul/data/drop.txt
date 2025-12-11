@@ -1,0 +1,117 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:drop" }
+    ],
+    "page_id": "g64f5r2haziv50arwsa1t"
+}
+---
+====== Tabul - Data Drop command ======
+
+
+===== About =====
+The ''data drop'' [[docs:tabul:command|action]] of the [[start|data module]] permits to [[docs:op:drop|drop]] one or more [[docs:resource:resource|data resources]].
+
+===== How-to's =====
+<related pattern="howto:*" />
+
+===== Syntax =====
+
+
+<unit>
+<code bash>
+tabul data drop --help
+</code>
+<console>
+Tabul data drop
+===============
+
+Drop data resource(s)
+
+
+
+Examples
+--------
+
+ 1 - To drop the tables D_TIME and F_SALES in the Oracle connection:
+
+
+    tabul data drop D_TIME@oracle F_SALES@oracle
+
+
+ 2 - To drop only the table D_TIME with force (ie deleting the foreign keys constraint):
+
+
+    tabul data drop --force D_TIME@sqlite
+
+
+ 3 - To drop all dimension tables that begins with (D_):
+
+
+    tabul data drop D_*@sql-server
+
+
+ 4 - To drop all tables from the current schema:
+
+
+    tabul data drop *@database
+
+
+
+
+Syntax
+------
+
+
+    tabul data drop [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                      One or more data or script selectors
+
+
+  Options:
+
+    --cascade                                               if set, the dependent resources will be dropped recursively
+
+    --force                                                 if set, the foreign keys referencing the tables to drop will be dropped
+
+
+  Selection Options:
+
+    --no-strict-selection                                   If set an empty selection will not return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                 if set, the foreign table referencing the tables will be dropped
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

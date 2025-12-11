@@ -1,0 +1,16 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:sqlserver:schema" }
+    ],
+    "page_id": "77sv7lz4x6r7x01f7zad3"
+}
+---
+====== SQL Server - Schema Drop ======
+
+
+
+===== About =====
+''SQL Server'' does not support to drop a [[:docs:resource:sql_schema|Schema]] with the ''cascade'' option in its [[https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-schema-transact-sql|DROP schema statement]].
+
+Tabulify supports it, you can drop a schema with the cascade option in the [[:docs:op:drop|drop operation]]

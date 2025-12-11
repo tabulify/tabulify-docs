@@ -1,0 +1,58 @@
+---json
+{
+    "name": "Sql DDL",
+    "page_id": "qu5u64zpffjr2qyj3tjng"
+}
+---
+====== SQL - Data Definition Language (DDL) ======
+
+
+===== About =====
+''DDL'' is a [[:docs:system:database:sql_statement#subset|sql subset]] that manages the [[:docs:resource:metadata|database metadata]].
+
+
+
+You can execute ''DDL'' statements with a [[docs:resource:sql_request|SQL Request]].
+
+===== Example/HowTo =====
+
+
+  * [[howto/sql_query/dml_query]]
+  * [[howto/postgres/create_table_script]]
+===== List =====
+
+  * ''CREATE'',
+  * ''ALTER'',
+  * ''DROP''
+
+===== DDL vs the CREATE operation =====
+
+
+With a ''DDL'', you create a SQL Object with the ''CREATE'' statement with the [[:docs:op:create|create]] operation, you can
+  * ''create table'' by copy
+  * ''create view'' from a list of files containing ''Select'' statements.
+===== Execution =====
+
+If you execute a [[docs:resource:sql_request|SQL fetch]] that contains ''DDL'' statements, you will get the following results.
+
+
+<file>
+id          count   statement                                              error_code   error_message
+--   ------------   ----------------------------------------------------   ----------   -------------
+ 1              0   create table ddl_table_test\n(\n    column_name inte            0
+ 2              0   alter table ddl_table_test\n    owner to postgres;\n            0
+</file>
+
+A ''DDL'' script is an [[docs:resource:runtime#execution|runtime]] and therefore is executed:
+  * at access/runtime
+  * or via the [[:docs:op:execute|execute operation]]
+
+Example of execution at runtime
+  * with the [[:docs:op:print|print command]]. If you print it 2 times, they will execute 2 times.
+<code bash>
+tabul data print (create_ddl.sql@cd)@sqlite
+</code>
+===== Note =====
+==== Auto-commit ====
+
+''DDL'' statements auto-commit, so they can't be rolled back

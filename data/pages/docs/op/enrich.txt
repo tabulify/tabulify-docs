@@ -1,33 +1,22 @@
+---json
+{
+    "page_id": "yn40m8sh7u0u8asz37i6g"
+}
+---
 ====== Data Operation - Enrich ======
 
 
 ===== A propos =====
-''enrich'' is a [[op|data operation]] that adds one or several [[docs:resource:virtual_column|virtual columns]] to a [[docs:resource:resource|data resource]].
+''enrich'' is a [[:docs:flow:intermediate|intermediate data operations]] that adds one or several [[docs:resource:virtual_column|virtual columns]] to a [[docs:resource:resource|data resource]].
 
 
 ===== Example =====
 
 
-A [[:docs:flow:pipeline|pipeline]] with an enrich operation
-<code yaml>
-pipeline:
-  - name: 'Select'
-    operation: select
-    args:
-      data-selector: 'data/metadata/*.yml@cd'
-      attributes:
-        outputFormat: json
-  - name: 'Enrich'
-    operation: enrich
-    args:
-      virtual-column:
-        id: logical_name
-  - name: 'Transfer'
-    operation: transfer
-    args:
-      target-uri: 'yaml_$1@sqlite'
-      transfer-operation: insert
-      target-operation: replace
-</code>
+  * [[howto:pipeline:enrich]]
 
+===== Argument =====
+
+^ Name ^ Description ^
+| ''data-def'' | The [[:docs:resource:data-definition|data definition]] with only the added columns and their [[:docs:generator:data-supplier|data supplier attributes]] |
 

@@ -1,0 +1,75 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:target_uri" }
+    ],
+    "page_id": "q5tdh6mcs3n8oxtv9vth3"
+}
+---
+====== Data Resource - Template Data URI ======
+
+===== About =====
+A ''template data uri'' is a [[:docs:resource:data_uri|data uri]] that defines one or more resources via [[docs:flow:template_string|template]].
+
+
+
+
+===== Example =====
+==== Reusing the name of the source in the target ====
+
+The below target data uri
+<code>
+new_$name@sqlite
+</code>
+will define the ''target resource''
+  * located in the sqlite connection
+  * and a name that is composed of
+    * the prefix ''new_''
+    * and the [[docs:resource:name|name of the data source]] (''%%$name%%'')
+
+Example: if the source table name is ''time'', the target table name would be ''new_time''
+
+==== Using a part of source name in the target ====
+
+With a [[docs:common:globbing|glob pattern]], you can reference parts of the source.
+
+Example with the below [[data_selector|data selector]]
+<code>
+D?*@sqlite
+</code>
+and the below target data uri
+<code bash>
+# 2 for the second glob pattern (ie for the *), 1 being for the first ?
+$2@sqlite
+</code>
+  * if the source table name were ''D_TIME'', ''D_CUSTOMERS'',
+  * the target table names would be ''TIME'', ''CUSTOMERS''
+
+==== File system ====
+
+In a [[docs:common:shell|shell]] such as powershell, the ''$'' character should be quoted.
+
+<code powershell>
+tabul data copy '*/bootstrap.min.css@cd' '/boot/bootstrap.$1.min.css@cd'
+</code>
+
+
+===== Syntax =====
+
+
+<code bash>
+template[@connection]
+</code>
+where:
+  * ''connection'' is the [[docs:connection:name|name of a connection]]
+  * ''template'' is an [[template_string|target template]] (a template expression that define the name of the target).
+
+
+===== Note on Cross transfer to the file system =====
+
+Note that if:
+  * the source is not [[:docs:system:file|file system data resource]] - ie [[docs:system:database:database|database]] or [[:docs:connection:memory|memory (ie pipeline transformation)]],
+  * and the target is a [[:docs:system:file|file system]]
+the target name is calculated by a concatenation of:
+  * the [[:docs:resource:logical_name|logical name]]
+  * and the [[:docs:resource:media-type|media type]] of the ''TABULAR_FILE_TYPE'' [[:docs:system:file#parameters|file system parameter]]

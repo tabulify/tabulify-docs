@@ -1,20 +1,19 @@
 <bar class="p-3" background-color="gradient-light">
-
 <grid>
 <box>
 **HowTo's** \\
 [[howto:getting_started:getting_started|Getting Started]] \\
-[[howto:database:database|Database]] \\
+[[howto:sql_table:sql_table|Database]] \\
 [[howto:generator:generator|Generator]] \\
-[[howto:tabli:tabli|Tabli]]
+[[howto:tabul:tabul|Tabul]]
 </box>
 <box>
 **Products** \\
-[[docs:tabli:start|Tabli]] \\
+[[docs:tabul:start|Tabul]] \\
 [[docs:generator:generator|Data Generator]] \\
-[[docs:flow:flow|Flow]] \\
+[[docs:flow:start|Flow]] \\
 [[docs:templating:templating|Templating]] \\
-[[docs:project:project|Project]] \\
+[[docs:app:app|Project]] \\
 [[docs:benchmark|Benchmark]] \\
 </box>
 <box>

@@ -1,92 +1,46 @@
+---json
+{
+    "page_id": "kcuerl92exisiakgspypp",
+    "template": "holy"
+}
+---
 ====== PostgreSQL ======
 
 
 ===== About =====
-''Tabulify'' supports the [[..:relational|relational database]] [[https://www.postgresql.org/|Postgresql]]
+''Tabulify'' supports the <icon name="logos:postgresql"/> [[https://www.postgresql.org/|Postgresql]] [[..:database:database|relational database]]
 
 
 <note>
-If you don't have any knowledge of ''Tabulify'', you can start with the [[howto:getting_started:getting_started|Learning Guide]],
-otherwise you can also browser the [[howto:database:database|relational database Howto's]]
+If you don't have any knowledge of ''Tabulify'', you can start with the [[howto:getting_started:getting_started|Learning Guide]].
 </note>
-
 
 ===== Connection =====
 
-To create a ''Postgres'' connection, you have the following possibilities
-<tabs skin="tabs">
-<tab panel="connectionVault" >Connection Vault</tab>
-<tab panel="tabli" selected="true">Tabli</tab>
-</tabs>
-<tabpanels>
-<tabpanel id="connectionVault" spacing="m-3">
-In a [[docs:conf:file|Connection Vault]], to define a Oracle [[docs:connection:connection|connection]] with the name ''myPostgres'', you would write:
-\\
+See:
+  * [[connection]]
+  * [[:howto:postgres:howto_connection_service|]]
 
-<code properties>
-[myPostgres]
-[postgres]
-url = jdbc\:postgresql\://host\:[port]/[databse]
-user = postgres
-password = xxx
-driver = org.postgresql.Driver
-</code>
-<note>
-The [[docs:connection:password|password]] will be [[docs:common:vault|encrypted]] the next time that you start a Tabulify product such as [[docs:tabli:tabli|Tabli]]
-</note>
-</tabpanel>
-<tabpanel id="tabli" spacing="m-3">
+===== Resource Size =====
 
-With the [[docs:tabli:connection:add|tabli add command of the connection module]], adding a Postgres connection with the name ''postgresConnectionName'':
+See [[table_size]]
+===== Version =====
+ 
+==== Driver ====
 
+We use the driver 42.2.16 that supports PostgreSQL 8.2 or newer
 
-  * With the Windows CMD console
+==== Version ====
 
-<code dos>
-tabli connection add "postgresConnectionName" "jdbc:postgresql://[host]:[port]/[database]" ^
-    --user login ^
-    --password password
-</code>
-  * With Linux Bash
-<code bash>
-tabli connection add "postgresConnectionName" "jdbc:postgresql://[host]:[port]/[database]" \
-    --user login \
-    --password password
-</code>
+We support the version supported of the [[https://www.postgresql.org/support/versioning/|postgres versioning scheme]].
 
-</tabpanel>
-</tabpanels>
-
-===== Connection Attribute =====
-When creating a new [[docs:connection:connection|connection]], you may give the following properties.
-==== URL ====
-
-The [[docs:connection:uri|URL]] can take one of this form
-<code>
-jdbc:postgresql:database
-jdbc:postgresql:/
-jdbc:postgresql://host/database
-jdbc:postgresql://host/
-jdbc:postgresql://host:port/database
-jdbc:postgresql://host:port/
-</code>
-where:
-  * ''host'' is the host name of the server. Defaults to localhost
-  * ''port'' is the port number the server is listening on. Defaults to ''5432''
-  * ''database'' is the database name. Defaults to the same name as the user name.
-
-
-==== Attributes ====
-All possible [[docs:connection:attribute|attributes]] can be found in the [[https://jdbc.postgresql.org/documentation/head/connect.html|Postgres connection documentation]].
-===== Technical =====
-
-==== Version Supported ====
-  * Driver 42.2.16 that supports PostgreSQL 8.2 or newer
-  * Database: 9.5 or above
-
+For version no more supported, [[:contact|contact us]]
 
 <code sql>
 SELECT version();
 </code>
+===== Technical =====
+
+
 ==== DataType ====
-  * [[clob]]
+  * [[data_type]]

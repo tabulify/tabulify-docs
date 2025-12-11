@@ -1,0 +1,19 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:postgres:size" }
+    ],
+    "page_id": "vcpngtxy884c6zg4kiaw3"
+}
+---
+====== Postgres - Table Size ======
+
+
+===== About =====
+
+
+The [[:docs:resource:size|resource size]] returned is:
+  * the total disk space used by the specified table, 
+  * including all indexes and TOAST data. 
+
+Specifically, we returns the result of the [[https://www.postgresql.org/docs/current/functions-admin.html|pg_total_relation_size]] .

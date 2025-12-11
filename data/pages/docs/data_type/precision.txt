@@ -1,0 +1,100 @@
+---json
+{
+    "page_id": "gkj5uxkdjjbp2no6ejq2c"
+}
+---
+====== Data Type Precision ======
+
+===== About =====
+In Tabulify, ''precision'' refers to:
+  * a numeric or date time precision 
+  * but also to the character length
+
+This article explains why in details.
+
+
+===== Database Precision and Length Specifier =====
+
+
+In the database world, when specifying a data type, you may give
+  * the ''p'' specifier (''precision'')
+  * or ''n'' specifier (''length'')
+
+For instance:
+<code sql>
+numeric(p)
+varchar(n)
+timestamp(p)
+</code>
+
+^ Name ^ Symbol ^ Description ^
+| numeric precision | ''p'' | The number of digits |
+| character length | ''n'' | The number of character |
+| datetime precision | ''p'' | The number of fractional digits retained in the seconds field |
+
+===== Tabulify definition =====
+
+In tabulify, we use the term ''precision'' to refer to all of them
+  * a number has a precision
+  * a character has also a precision (ie a length)
+  * a datetime has a precision
+
+===== Implicit Precision =====
+
+Note that the precision may be implicit because it's embedded in the name of the type. For instance:
+  * ''tinyint''  is a signed one-byte integer (''-127/128'')
+  * ''smallint'' is a signed two-byte integer (''-32,768/32,767'')
+In this case, the precision reported is the maximum length of the value.
+  * ''3'' for a ''tinyint'' (ie there is 3 digits in ''128'')
+  * ''5'' for a ''smallint'' (ie there is 5 digits in ''32,767'')
+  * ''10'' for a ''date'' (ie there is 10 characters in ''YYYY-MM-DD'')
+
+===== Summary =====
+
+Below is a summary table of what the precision represents by data type:
+
+^ Type ^ Definition ^ Description ^
+| Numeric | ''numeric precision'' \\ or ''maximum length'' | For type without a precision specifier, the precision reports the number of digits \\ For instance, for an integer, it will be ''10'' (ie ''4,294,967,295'') |
+| Character | ''maximum length'' | The number of characters |
+| Time | ''timestamp/datetime precision'' \\ or ''maximum length'' | For type without a precision specifier, the precision reports the character length \\ For instance, for a date, it will be 10 (ie ''YYYY-MM-DD'') |
+
+===== List =====
+
+You can list the precision by data type with the [[:docs:tabul:connection:type|connection type command]].
+
+For instance, for the [[:howto:sqlite:howto_connection|sqlite howto connection]]
+<unit>
+<code bash>
+tabul connection type sqlite 
+</code>
+<console height="150px" scroll="toggle">
+Known Types for the connection (sqlite)
+name                         aliases                                 ansi_type                    max_precision   supported   description
+--------------------------   -------------------------------------   --------------------------   -------------   ---------   ------------------------------------------------
+bigint                       int8                                    bigint                       19              ✓           Eight-byte integer
+blob                                                                 blob                                                     Large binary objects
+boolean                      bool                                    boolean                                      ✓           Logical Boolean (true/false)
+character                    char                                    character                    2147483647      ✓           Fixed-length blank padded character string
+character varying            varchar, varying character              character varying            2147483647      ✓           Variable-length character string
+date                                                                 date                                         ✓           Calendar date (year, month, day)
+decimal                      dec                                     decimal                      100             ✓           Exact numeric of selectable precision
+double precision             double, float8                          double precision                             ✓           Double precision floating-point number (8 bytes)
+float                                                                float                                        ✓           Flexible Precision floating-point number
+integer                      int, int4                               integer                      10              ✓           Four-byte integer
+json                                                                 json                                         ✓           Textual JSON data
+mediumint                    int3                                    mediumint                    9               ✓           Three-byte integer
+national character           nchar                                   national character           2147483647      ✓           Fixed-length text in Unicode character set
+national character varying   nvarchar                                national character varying   2147483647      ✓           Variable-length text in a Unicode character set
+null                                                                 null                                                     Null
+numeric                      num                                     numeric                      100             ✓           Exact numeric of selectable precision
+real                                                                 double precision                             ✓           Double precision floating-point number (8 bytes)
+smallint                     int2                                    smallint                     5               ✓           Two-byte integer
+text                                                                 long character varying                       ✓           Very long variable-length character string
+time                                                                 time                                         ✓           Time of day without time zone
+time with time zone          timetz                                  time with time zone                          ✓           Time of day, including time zone
+timestamp                    datetime, timestamp without time zone   timestamp                    7               ✓           Date and time without time zone
+timestamp with time zone     timestamptz                             timestamp with time zone                     ✓           Date and time, including time zone
+tinyint                      int1                                    tinyint                      4               ✓           One-byte integer (0-255)
+xml                                                                  xml                                          ✓           XML data
+</console>
+</unit>

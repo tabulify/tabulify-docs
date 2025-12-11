@@ -1,10 +1,38 @@
+---json
+{
+    "page_id": "47qa79tgtxpaguupyw2td"
+}
+---
 ====== Data Resource - Record (Row)======
 
 
-===== Record =====
-A ''record'' (or ''row'') is the element unit of a [[docs:resource:tabular|tabular data resource]] (ie a [[docs:resource:tabular|tabular data resource]] is composed of one or more records).
+===== About =====
+A ''record'' is the logical unit of a [[docs:resource:tabular|tabular data resource]] (ie a [[docs:resource:tabular|tabular data resource]] is composed of one or more records).
 
 
-<note>
+===== Example =====
+
+^ Name ^ Definition ^
+| [[docs:resource:sql_table|table]] | the records are ''rows'' |
+| [[docs:resource:directory|directory]] | the records are contained [[file|files]] and/or [[directory|directories]] |
+| [[:docs:resource:csv|csv]] | the records are lines |
+
+Each data resource has its own logical definition of what a [[record|record]] is.
+===== Note =====
+
+==== Count Attribute ====
+
+
 If the data resource is a [[docs:resource:content|content resource]], the [[count|count attribute]] gives back the number of record that a data resource contains.
-</note>
+
+
+
+
+==== Pipeline: Change the granularity ====
+
+In a pipeline, you can change the [[:docs:flow:granularity|granularity]] from ''resource'' to ''record'' with the [[:docs:op:split|split operation]]
+
+==== Why Record and not Row? ====
+
+We use the term ''record'' and not ''row'' because it is more generic and refer to data structures in various contexts (files, documents, etc.). 
+A ''row'' is the ''record'' of a [[docs:resource:sql_table|table]].

@@ -1,0 +1,85 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:sqlserver" }
+    ],
+    "name": "SQL Server",
+    "page_id": "rchn9ucsx70qzhaefw9e3",
+    "template": "holy"
+}
+---
+====== SQL Server ======
+
+
+===== About =====
+
+
+Tabulify supports <icon name="logos:microsoft-icon" width=16 /> [[https://learn.microsoft.com/en-us/sql/|SQL Server]] as [[[[:docs:flow:source|source]] and [[:docs:flow:target|target]].
+
+It inherits the attributes of the [[docs:system:database:database|database system]].
+
+
+===== How to  =====
+
+  * [[:howto:sqlserver:create_connection|]]
+  * [[howto:sqlserver:howto_connection|]]
+
+
+===== Table Size =====
+
+See [[table_size]]
+
+===== Support  =====
+
+==== Data Type ====
+
+See [[data_type|]]
+
+==== Upsert ====
+
+Over the [[:docs:op:upsert|upsert operation]], SqlServer does not use the SQL standard ''insert on conflict'' statement but a  [[https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql|merge statement]].
+
+This merge statement requires a ''ON'' condition.
+
+Tabulify sets it:
+  * to the first unique key constraint
+  * and if none is found, a standard insert statement is used.
+
+
+
+
+==== Unable to truncate a table with a foreign key ====
+
+Sql Server does not allow to [[docs:op:truncate|truncate]] a table that has a foreign key even if the foreign table is empty.
+
+You would get this kind of error:
+```
+Cannot truncate table 'master.dbo.d_date' because it is being referenced by a FOREIGN KEY constraint.
+```
+If you want to truncate, you need to use the ''force'' option to delete the foreign keys beforehands.
+
+```bash
+tabul data truncate --force mytable
+```
+
+
+==== Views ====
+
+Views have so much constraint in SqlServer that we have created a dedicated page. [[view]]
+
+==== Only one result set by SQL statement ====
+
+The Sql Server driver does not support SQL statement that returns multiple result set.
+
+[[https://docs.oracle.com/javase/7/docs/api/java/sql/Statement.html#getMoreResults()|getMoreResults]] returns the following error:
+<code>
+Caused by: com.microsoft.sqlserver.jdbc.SQLServerException: This operation is not supported.
+	at com.microsoft.sqlserver.jdbc.SQLServerException.makeFromDriverError(SQLServerException.java:248)
+	at com.microsoft.sqlserver.jdbc.SQLServerException.throwNotSupportedException(SQLServerException.java:442)
+	at com.microsoft.sqlserver.jdbc.SQLServerStatement.getMoreResults(SQLServerStatement.java:2398)
+</code>
+
+==== Print Statement ====
+
+
+When a [[docs:system:database:sql_procedure|SQL Procedure]] is executed, the [[https://learn.microsoft.com/en-us/sql/t-sql/language-elements/print-transact-sql|Print statement]] is printed as a [[docs:resource:sql_request#execution warnings|execution warnings]]

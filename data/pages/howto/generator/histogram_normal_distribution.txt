@@ -2,8 +2,7 @@
 {
     "description": "This how-to shows you how to generate data that follows a normal distribution with the column histogram generator",
     "low_quality_page": "false",
-    "page_id": "wllpdo8jabagb71rrlmkp",
-    "title": "How to generate a normal distribution with an histogram generator"
+    "page_id": "wllpdo8jabagb71rrlmkp"
 }
 ---
 ====== Tabulify - How to generate a normal distribution with an histogram generator ======
@@ -43,8 +42,8 @@ models the below normal distribution:
 To generate data, you need to create a [[docs:resource:generator|generator file]] that will describe the data to be generated.
 
 The below [[docs:resource:generator|data resource generator]]:
-  * has the [[docs:resource:name|name]] ''histogram_normal_distribution--datagen.yml''
-  * has the [[docs:resource:logicalname|logical name]] ''histogram_normal_distribution''
+  * has the [[docs:resource:name|name]] ''histogram_normal_distribution--generator.yml''
+  * has the [[docs:resource:logical_name|logical name]] ''histogram_normal_distribution''
   * will generate ''30'' values (''MaxRecordCount'' count)
   * has a column named ''id'' that has [[docs:generator:sequence|sequence data generator]] that:
       * starts by default at the value ''1''
@@ -56,36 +55,39 @@ The below [[docs:resource:generator|data resource generator]]:
           * this is the equivalent of the probability value of the distribution.
 
 <unit>
-<file yaml histogram_normal_distribution--datagen.yml>
-MaxRecordCount: 30
-Columns:
-  - name: id
-    type: integer
-    comment: A id column to see easily the number of values generated
-    DataGenerator:
-      type: sequence
-  - name: bucket_map
-    type: time
-    comment: A column with a histogram generator that generates an uniform distribution of time
-    DataGenerator:
-      type: histogram
-      Buckets:
-        "8:45": 0.05
-        "8:50": 0.5
-        "8:55": 0.22
-        "9:00": 0.4
-        "9:05": 0.22
-        "9:10": 0.5
-        "9:15": 0.05
+<file yaml histogram_normal_distribution--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 30
+  Columns:
+    - name: id
+      type: integer
+      comment: A id column to see easily the number of values generated
+      data-supplier:
+        type: sequence
+    - name: bucket_map
+      type: time
+      comment: A column with a histogram generator that generates an uniform distribution of time
+      data-supplier:
+        type: histogram
+        arguments:
+          Buckets:
+            "8:45": 0.05
+            "8:50": 0.5
+            "8:55": 0.22
+            "9:00": 0.4
+            "9:05": 0.22
+            "9:10": 0.5
+            "9:15": 0.05
 
 </file>
 </unit>
 ==== Printing the data ====
 
-With the [[docs:tabli:data:print|data print command]], we can print the ''30 values'' generated.
+With the [[docs:tabul:data:print|data print command]], we can print the ''30 values'' generated.
 <unit>
-<code dos>
-tabli data print histogram_normal_distribution--datagen.yml@howto
+<code bash>
+tabul data print histogram_normal_distribution--generator.yml@howto
 </code>
 <note tip>
 [[docs:connection:howto|howto]] is the connection that contains the files used in the [[..:howto|HowTo's]].
@@ -93,36 +95,36 @@ tabli data print histogram_normal_distribution--datagen.yml@howto
 <console>
 id   bucket_map
 --   ----------
- 1   08:45:00
+ 1   08:55:00
  2   09:15:00
- 3   09:05:00
+ 3   09:15:00
  4   09:05:00
- 5   08:50:00
- 6   09:00:00
- 7   08:50:00
- 8   09:05:00
- 9   09:05:00
-10   08:45:00
-11   08:50:00
+ 5   09:15:00
+ 6   08:45:00
+ 7   08:45:00
+ 8   09:15:00
+ 9   08:55:00
+10   09:05:00
+11   08:45:00
 12   08:55:00
-13   09:15:00
-14   08:50:00
-15   08:55:00
-16   09:15:00
+13   09:10:00
+14   09:00:00
+15   08:45:00
+16   09:00:00
 17   08:50:00
-18   08:50:00
+18   09:00:00
 19   09:05:00
-20   09:00:00
-21   09:10:00
-22   08:50:00
-23   08:50:00
-24   09:10:00
-25   09:05:00
-26   09:10:00
-27   09:00:00
+20   08:45:00
+21   09:00:00
+22   08:55:00
+23   09:15:00
+24   09:05:00
+25   09:10:00
+26   08:55:00
+27   09:05:00
 28   09:15:00
-29   09:05:00
-30   09:05:00
+29   08:55:00
+30   08:50:00
 </console>
 </unit>
 ===== Next =====

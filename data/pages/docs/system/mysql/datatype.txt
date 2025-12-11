@@ -1,9 +1,0 @@
-====== MySql - Data Type ======
-
-
-
-
-===== String =====
-MySql encodes all string (([[https://dev.mysql.com/doc/refman/5.7/en/string-type-syntax.html|MySql String]])) in unicode, therefore there is no national data type and we translate them:
-  * ''NVARCHAR'' as ''VARCHAR''
-  * ''NCHAR'' as ''CHAR''

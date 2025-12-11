@@ -1,0 +1,105 @@
+---json
+{
+    "page_id": "870ct5p9pv00ig38c0zp0"
+}
+---
+====== How to send to a mailing list ======
+
+
+===== About =====
+This howto shows you how to send multiple email <icon name="email" /> with the [[:docs:op:sendmail|sendmail]] operation.
+
+
+===== Steps =====
+
+==== Start the howto smtp server ====
+
+Start the [[howto:email:howto_connection_service|howto smtp server]]
+
+<unit>
+<code bash>
+tabul service start smtp
+</code>
+<console>
+1 service was started
+Name   Type
+----   ------
+smtp   docker
+</console>
+</unit>
+
+Check that you can ping it
+<unit>
+<code bash>
+tabul connection ping smtp
+</code>
+<console>
+The connection (smtp) has been pinged successfully
+</console>
+</unit>
+==== Pipeline ====
+
+In this pipeline, we [[:docs:op:define|define a inline data resource]] but you can use any data resources (a [[docs:resource:sql_select|select query]], a [[docs:resource:csv|csv]], ...) where each column corresponds to a [[:docs:op:sendmail#record run|sendmail attributes]].
+
+
+<unit>
+<file yaml pipeline/email_list.yml>
+kind: pipeline
+spec:
+  steps:
+    - name: "Define"
+      comment: "This operation defines a data path with the expected columns of a mailing list"
+      operation: "define"
+      args:
+        data-resource:
+          data-def:
+            columns: [ "to","from","subject","txt","html" ]
+          data-records:
+            - [ "foo@tabulify.com", "support@tabulify.com", "Email for foo", "A textual email body", "<html><body><h1>A html email body</h1></body></html>" ]
+            - [ "bar@tabulify.com", "support@tabulify.com", "Email for bar", "A textual email body", "<html><body><h1>A html email body</h1></body></html>" ]
+    - name: "Send"
+      comment: "Send the email"
+      operation: "sendmail"
+      args:
+        target-uri: "@smtp" # smtp is the default smtp connection and is therefore optional
+        granularity: "record"
+
+</file>
+</unit>
+
+==== Execution ====
+
+<unit>
+If you [[docs:tabul:flow:execute|execute this pipeline]]
+<code bash>
+tabul flow execute pipeline/email_list.yml@howto
+</code>
+Output:
+<console>
+Execution Metrics of the pipeline (email_list)
+metrics                  value
+----------------------   -----------------------------------------------------
+pipeline-path            /opt/tabulify/resources/howto/pipeline/email_list.yml
+processing-type          batch
+start-time               2025-11-10T20:01:55.194989764Z
+end-time                 2025-11-10T20:01:55.322621467Z
+total-elapsed-time       0.128s
+execution-elapsed-time   0.128s
+
+
+
+Step execution results for the pipeline (email_list)
+step_id   step_name   operation_name   operation_type   processing_type   input_counter   output_counter   execution_counter   error_counter   parking_counter
+-------   ---------   --------------   --------------   ---------------   -------------   --------------   -----------------   -------------   ---------------
+      1   Define      define           Supplier         batch                         0                1                   0               0                 0
+      2   Send        sendmail         Map              stream                        1                1                   1               0                 0
+</console>
+</unit>
+
+==== Check the Inbox ====
+
+
+In the [[http://localhost:8025|mailpit inbox]], you can then see the 2 emails.
+
+{{:docs:op:email_list_illustration.png?600|}}
+

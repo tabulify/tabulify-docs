@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "3wopg8imq9r36izpok2mz"
+}
+---
 ====== Generator - MaxRecordCount attribute ======
 
 
@@ -12,10 +17,12 @@ This is a maximum because other columns can generate less data. In this case, th
 Ie if a column cannot generate the ''MaxRecordCount'' due to constraints, this property is discarded.
 </note>
 
-===== Howto =====
-<related pattern="howto:*" />
+===== HowTo =====
+
+
+[[:howto:getting_started:9_data_generation|]]
 
 ===== Set =====
 ''maxRecordCount'' can be set:
-  * in a [[docs:resource:generator|generator data resource]] 
-  * or at the command line at the [[docs:tabli:data:fill|data fill command]] with the ''--max-record-count'' [[docs:tabli:option|option]].
+  * in a [[docs:resource:generator|generator data resource]]
+  * or at the command line at the [[docs:tabul:data:fill|data fill command]] with the ''--max-record-count'' [[docs:tabul:option|option]].

@@ -1,10 +1,18 @@
+---json
+{
+    "page_id": "esxw107w6d8lbmaarsimg"
+}
+---
 ====== Data Operation - Insert ======
 
 
 ===== About =====
 A ''insert'' operation will insert [[docs:resource:content|data into a content resource]].
 
+It is an alias command of the [[transfer|data transfer command]] where the ''transfer-operation'' has been set to ''insert''.
 
-The [[docs:tabli:data:insert|data insert operation]] supports the ''insert'' operation.
+===== Tabul Cli =====
+
+The [[docs:tabul:data:insert|data insert operation]] supports the ''insert'' operation.
 
 

@@ -1,0 +1,29 @@
+---json
+{
+    "page_id": "7kfe8u1txs24hmk0kuj2m"
+}
+---
+====== Collation Support ======
+
+
+===== About =====
+
+The ''collation'' determines how the database engine compares, sorts, and matches text data of a column.
+
+''collation'' is not yet a managed metadata. Tabulify don't know the column collation.
+
+===== Impact =====
+
+This has an impact on the [[:docs:generator:sequence|sequence generator]] for character data. 
+
+By default, the generated data does not include uppercase letter to have true unique value for case-insensitive collation.
+
+Why?
+
+With a case-insensitive collation (The default of [[:docs:system:sqlserver:sqlserver|SQL Server]], ie `SQL_Latin1_General_CP1_CS_AS`):
+  * ''A'' would be equals to ''a''
+  * ''Hello'' would be equals to ''HELLO''
+
+And the generated would not be truly unique in the sequence.
+
+

@@ -1,0 +1,118 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:module" }
+    ],
+    "page_id": "grpf43zk7fb1fduzj016h"
+}
+---
+====== Tabul - Module ======
+
+===== About =====
+A ''module'' is a [[tabul|tabul]] command that contains:
+  * an other ''module''
+  * or [[command|command]]
+
+
+===== Syntax =====
+A module is called by adding its name after the [[docs:tabul:tabul|tabul]] word.
+
+<code bash>
+tabul module1 module2 ...
+</code>
+
+===== List =====
+  * [[docs:tabul:env:start|Env]]
+  * [[docs:tabul:connection:start|Connection]]
+  * [[docs:tabul:data:start|Data]]
+  * [[docs:tabul:flow:start|Flow]]
+  * [[docs:tabul:vault:start|Vault]]
+  * [[docs:tabul:service:start|Service]]
+
+
+
+===== Help =====
+To get [[docs:tabul:help|help]] on the console for a module, just add the ''%%--help%%'' [[docs:tabul:flag|flag]] after the module word.
+
+
+Example:
+<unit>
+<code bash table_help.cmd>
+tabul data --help
+</code>
+<console>
+Tabul data
+==========
+
+Data operations against data resources (table, file, ...).
+
+
+
+Syntax
+------
+
+
+    tabul data <command> [-h,--help]
+
+
+where:
+
+
+  Commands:
+
+    concat        Concatenate data resources
+
+    copy          Copy a data resource
+
+    create        Create a data resource
+
+    delete        Delete data from a data resource
+
+    dependency    Show the data dependencies
+
+    describe      Show the data structure of data resources
+
+    diff          Perform a diff operation against two data resources
+
+    drop          Drop data resources
+
+    execute       Execute one or more executable in a single, batch or performance fashion
+
+    fill          Fill a data resource with generated data
+
+    head          Print the first content of data resources
+
+    info          Show the attributes of a data resource in a form fashion
+
+    insert        Insert data into a data resource
+
+    list          List data resources
+
+    move          Move a data resource
+
+    print         Print the content of data resources
+
+    replace       Replace a data resource
+
+    summarize     Count the number of data resources
+
+    tail          Print the last content of data resources
+
+    template      Create data resources from a template and a data source
+
+    transfer      Transfer a data resource (insert, update, delete, upsert, merge, copy)
+
+    truncate      Truncate data resources
+
+    unzip         Unzip archive data resources
+
+    update        Update data from a data resource
+
+    upsert        Merge data into a data resource
+
+
+  Option:
+
+    -h,--help     Print this help
+</console>
+</unit>

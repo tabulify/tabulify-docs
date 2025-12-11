@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "j7ql3u2f193uxv1y9fiug"
+}
+---
 ====== Data Operation - Update ======
 
 
@@ -5,5 +10,5 @@
 ''update'' is a [[transfer|transfer]] [[op|data operation]] that will update one or more record of a [[docs:resource:content|content data resource]].
 
 
-The [[docs:tabli:data:update|data update operation]] supports the ''update'' operation.
+The [[docs:tabul:data:update|data update operation]] supports the ''update'' operation.
 

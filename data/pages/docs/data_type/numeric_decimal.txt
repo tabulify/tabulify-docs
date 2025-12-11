@@ -1,0 +1,48 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:data_type:fixed_point" }
+    ],
+    "name": "Numeric\/Decimal",
+    "page_id": "ot88tr6kkt39nk8ge89vp"
+}
+---
+====== Fixed point number ======
+
+
+===== About =====
+This page details the support of ''numeric/decimal'' [[data_type#ansi|ansi data type]].
+
+They are collectively known as fixed point number and are an exact numeric type.
+
+^ Name ^ Alias ^ 
+| ''decimal'' | ''dec'' | 
+| ''numeric'' | ''num'' |
+
+Note that ''numeric'' and ''decimal'' are 2 names for the same type.
+
+===== Example =====
+
+With a ''DECIMAL(5,2)'':
+  * the number has:
+      * a [[precision|precision]] of 5 
+      * and a ''scale'' of 2
+  * you would be able to store any value with:
+      * 5 ''digits''
+      * and 2 ''fractional decimals''
+  * values can be stored in the range from ''-999.99'' to ''999.99''.
+
+The number ''00123456.780'' has:
+  * a precision of 8  (ie ''12345678'')
+  * and a scale of 2 (ie ''78'')
+
+===== Syntax =====
+
+<code sql>
+numeric(p,s)
+decimal(p,s)
+</code>
+where:
+  * ''p'' is known as the [[precision|precision]] and represents the total maximum of digits allowed
+  * ''s'' is the scale and represent the maximum of fractional digits allowed
+

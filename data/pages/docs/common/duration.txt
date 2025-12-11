@@ -1,0 +1,103 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:common:interval" }
+    ],
+    "page_id": "cimgdcrdfgajzuddhkpd7"
+}
+---
+====== Duration ======
+
+
+===== About =====
+An [[:docs:conf:attribute|attribute value]] may hold a ''duration''
+
+A ''duration'' is:
+  * a period of time,
+  * a directed distance between two points on the time-line.
+
+This article shows you how to write a duration value.
+
+
+
+===== Formats =====
+
+
+
+
+==== Simplified ISO ====
+
+We support a [[#iso-8601_standard|simplified iso format]] that is less verbose.
+
+The below table shows some examples:
+
+^ Value ^ Results ^
+| ''0.500s'' | 500 milliseconds |
+| ''20.345s'' | 20.345 seconds |
+| ''15m''     | 15 minutes |
+| ''10h''     | 10 hours |
+| ''2d''      | 2 days |
+
+
+The format is:
+<code>
+(n)d(n)h(n)m(n)s
+</code>
+where:
+  * ''(n)'' is a decimal (mandatory)
+  * ''(n)d'' is the number of days
+  * ''(n)h'' is the number of hour
+  * ''(n)m'' is the number of minutes
+  * ''(n)s'' is the number of second
+  * ''(0.nnn)s'' is the number of milliseconds
+
+
+
+==== ISO-8601 standard ====
+
+We support the full [[https://docs.digi.com/resources/documentation/digidocs/90001488-13/reference/r_iso_8601_duration_format.htm|iso format]]
+
+Example:
+
+^ Value ^ Results ^
+| ''P2DT3H4M'' | ''2 days, 3 hours and 4 minutes'' |
+| ''P-6H3M'' | ''-6 hours and +3 minutes'' |
+| ''-P6H3M'' | ''-6 hours and -3 minutes'' |
+| ''-P-6H+3M'' | ''+6 hours and -3 minutes'' |
+
+
+The ISO 8601 Durations are expressed using the following format:
+<code>
+P(n)DT(n)H(n)M(n)S
+</code>
+where:
+  * (n) is a decimal (ex: for milliseconds, ''0.500S'')
+  * P is the duration designator (referred to as ''period''), always present
+    * D is the day
+  * T is the time
+    * H is the hour
+    * M is the minute
+    * S is the second
+
+
+
+
+
+
+
+===== Limitations =====
+
+We support only Fixed time units:
+  * days,
+  * hours,
+  * minutes,
+  * seconds,
+  * nanoseconds
+
+We don't support:
+  * Month (may be 28 or 31 days)
+  * Week
+  * Year
+
+
+

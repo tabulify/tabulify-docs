@@ -1,0 +1,120 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:print" }
+    ],
+    "page_id": "d1jtx984td3t4mrt511q0"
+}
+---
+====== Tabul - Data Print command ======
+
+===== About =====
+''data print'' is a [[docs:tabul:command|command]] that [[docs:op:print|prints]] the whole content of a [[docs:resource:resource|resource]].
+
+
+
+<note tip>
+This command is useful to print content of [[docs:resource:resource|data resource]] that have a small [[docs:resource:size|size]]. If your data resource is to big to be printed, you can use:
+  * the [[head|head]] command to print the first content of a data resource
+  * the [[tail|tail command]] to print the last content of a data resource
+</note>
+
+
+
+
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul data print -h
+</code>
+<console>
+Tabul data print
+================
+
+Print the content of data resources.
+
+This command will print all data.
+To print in a limited fashion, you can use the following commands:
+ * `head` :  print the head (the first pieces of content)
+ * `tail` :  print the tail (the last pieces of content)
+
+
+
+Examples
+--------
+
+ 1 - Show all the records of the table `sales` from the data store `sqlite`:
+
+    tabul data print sales@sqlite
+
+
+ 2 - Show the content of the file `request.log`:
+
+    tabul data print request.log
+
+
+
+
+Syntax
+------
+
+
+    tabul data print [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                         One or more data or script selectors
+
+
+  Data Definition Options:
+
+    -a,--attribute <attributeName=value>                       Set specific data resource attributes
+
+
+  Selection Options:
+
+    --strict-selection                                         If set the selection will return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                    If set, the dependencies will be also selected
+
+
+  Options:
+
+    -t,--type <mediaType|mimeType|extensionFile>               The type of the resource
+
+    -vc,--virtual-column <columnName=resourceAttributeName>    Add a virtual column with the value of a data resource attribute
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                      The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                          The path to a configuration file
+
+    -ee,--exec-env <name>                                      The execution environment (prod or dev)
+
+    -h,--help                                                  Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>               Set the log level
+
+    -ns,--not-strict                                           A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                     defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                     defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>       defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                              A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                                Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                               Print version information
+</console>
+</unit>

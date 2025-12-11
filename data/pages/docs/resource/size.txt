@@ -1,21 +1,39 @@
+---json
+{
+    "page_id": "v5c8p1hbe87gtk1u8i4qn"
+}
+---
 ====== Data Resource - Size ======
 
 
 ===== About =====
-''size'' is a [[attribute|data resource attribute]] that shows the size of a [[resource|data resource]] in byte on disk (may be blank if not yet supported)
+''size'' is a [[attribute|data resource attribute]] that shows the size of a [[resource|data resource]] in ''byte'' on disk.
+
+The value is ''-1'' if the size is not yet implemented by the system.
 
 
 ===== Example =====
 
-With the [[docs:connection:howto|howto file]] ''characters.csv'' and the [[docs:tabli:data:list|data list command]]
+With the [[docs:connection:howto|howto file]] ''characters.csv'' and the [[docs:tabul:data:list|data list command]]
 <unit>
-<code dos>
-tabli data list --attribute size characters.csv@howto
+<code bash>
+tabul data list --attribute size characters.csv@howto
 </code>
 <console>
-size
-----
- 346
+path             media_type   size
+--------------   ----------   ----
+characters.csv   text/csv      432
 </console>
 </unit>
+
+
+
+===== Size type by system =====
+
+  * for a [[file|file]], the ''size'' reported is the [[https://docs.oracle.com/javase/8/docs/api/java/nio/file/attribute/BasicFileAttributes.html#size--|Size file attribute]] reported by the [[:docs:system:file|file system]]
+  * for a [[:docs:resource:sql_table|table]], it's its data and index size. You should consult the below Tabulify database documentation to see where the value exactly comes from.
+    * [[docs:system:postgres:table_size|]]
+    * [[:docs:system:sqlserver:table_size|]]
+
+
 

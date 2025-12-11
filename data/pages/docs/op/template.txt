@@ -1,58 +1,161 @@
+---json
+{
+    "page_id": "qsdvsb6883roojw8ulnkc"
+}
+---
 ====== Step Operation - Template ======
 
 
 ===== Template =====
 ''template'' is an [[docs:flow:intermediate|intermediate step]] that creates a [[docs:resource:resource|data resource]] from a [[docs:templating:template|template]].
 
-The ''template'':
-  * accepts one or several [[docs:resource:record|record]] of a [[docs:resource:content|content data resource]] as [[docs:flow:source|source]]
-  * and creates a [[docs:resource:resource|data resource]] as [[docs:flow:target|output]].
+
+===== How it works =====
+
+A [[#engine|template engine]]
+  * receives as arguments:
+    * a [[:docs:templating:template|template]]
+    * a map of data (known as the ''data model'' or ''context'')
+  * and outputs a result (known as the [[:docs:flow:target|target]])
 
 
+
+The number, the type of output and the data model depends on the [[#execution mode]].
+
+===== Cli =====
+
+The template operation is also available as [[:docs:tabul:data:template|cli command]].
+===== Execution Mode =====
+
+The ''execution mode'' define how the template operation proceeds.
+
+There are 3 ''execution modes'' that depends on:
+  * the [[:docs:flow:granularity|granularity]]:
+    * ''record'': 1 record, 1 target output
+    * ''resource'': 1 resource, 1 target output
+  * the processing type:
+    * ''cumulative'': N data model, 1 output (Each record is passed to build and get a json tree structure)
+    * ''map'': 1 data model, 1 output
+
+
+
+^ Execution Mode ^ Granularity  ^ Processing \\ Cardinality ^ Template \\ Media Type \\ Supported ^ Engine \\ Supported ^
+| Record Mode | Record | ''1-to-1'' | All | All |
+| Resource Mode | Resource | ''1-to-1'' | All | All |
+| Resource Cumulative Mode | Resource | ''n-to-1'' | Json | Native |
+
+==== Record Mode ====
+
+If the [[:docs:flow:granularity|granularity]] of execution is ''record'', each record of an ''input'' will produce 1 result (1 target)
+
+The data model passed to the template is build with:
+  * the [[:docs:resource:column|columns name]] and their scalar value
+  * and optionally extra variables with a list of map data via the ''template-model-variables''
+
+Example:
+<code yaml>
+column1: value1
+column2: value2
+extra-variable-name:
+  # row 1
+  - column1: value1
+    column2: value2
+    ...
+  # row 2
+  - column1: value1
+    column2: value2
+    ...
+</code>
+
+==== Resource Mode ====
+
+
+If the [[:docs:flow:granularity|granularity]] of execution is ''resource'', each ''input'' resource will produce 1 result (1 target)
+
+The data model is build with each record of the input.
+
+Example:
+<file yaml>
+# record 1
+- column1: value1
+  column2: value2
+# record 2
+- column1: value1
+  column2: value2
+</file>
+
+==== Resource Cumulative Mode ====
+
+In a resource cumulative mode, each record of a resource is used to build a tree structure.
+
+
+The engine gets the records one by one and outputs at the end 1 result.
+
+Example of data model:
+<file yaml>
+# record N
+column1: value1
+column2: value2
+</file>
+
+
+As of today, only json template with the native engine supports this mode. [[:howto:json:create_json_from_tabular_data|]]
 ===== Arguments =====
 The ''template'' operations accept the following arguments.
 
-  * ''template-selectors'' - a list of [[docs:resource:data_selector|data selectors]] that selects ''templates'' data resources.
-  * ''template-inline'' - a inline template with the following properties:
-      * ''logical-name'': the [[docs:resource:logicalname|logicalName]] (used to match the template to a [[docs:flow:source|source data resource]])
-      * ''type'':  the [[docs:resource:type|mediaType type]] of the template
-      * ''content'': the template text
-  * ''template-email'': define if an html template is an email template. It defaults to false, if true, the css rules will be in-lined for html template. If you use bootstrap, the [[https://bootstrapemail.com/docs/introduction|bootstrap email css]] stylesheet is used instead.
-  * ''engine'' - the [[#engine|templating engine]] (default to ''native'')
-  * ''step-granularity'': defines the [[docs:flow:granularity|granularity of the execution]]
-      * [[docs:resource:record|record]]: the template will be processed for each record (default)
-      * [[docs:resource:resource|resource]]: the template will be processed on all records (only available for a json template)
-  * ''table-variables'': template variables that defines tabular data. A map of:
-      * ''name'': a variable name
-      * ''selectors'': a [[docs:resource:data_selector|data selector]]
-      * ''parameters'': a map of SQL parameters applied to the selected [[docs:resource:query|data query resources]]
-          * ''name'': the parameter name
-          * ''value'': the parameter value (you can reference value of the input data using the ''$'' sign)
-  * ''output-logical-name'': a pattern that defines the logical name of:
-      * the resources (for a template output)
-      * or of the columns (for a extended-records)
-  * ''output'':
-      * ''templates'': the templates output
-      * ''extended-records'': the source records with extra columns that stores the templates output
+^ Name ^ Default ^ Description ^
+| ''template-selector'' | | a [[docs:flow:data_selector|data selector]] that selects ''templates'' data resources |
+| ''template-selectors'' | | a list of [[docs:flow:data_selector|data selectors]] that selects ''templates'' data resources |
+| ''template-inline'' | | a inline template with the following properties: \\ * ''media-type'': the [[docs:resource:media-type|media-type]] of the template \\ * ''content'': the template text \\ * ''logical-name'': optional [[docs:resource:logical_name|logical-name]] for [[#template match|template matching]]. Default to ''anonymous'' |
+| ''template-email'' | false | if true, the html template is an email template. The css rules will be in-lined for html template. If you use bootstrap, the [[https://bootstrapemail.com/docs/introduction|bootstrap email css]] stylesheet is used instead. |
+| ''processing-type'' | ''map'' \\ ''cumulative'' (JSON) | How the data models are applied to the template engine \\ ''cumulative'': N data model, 1 output  \\ ''map'': 1 data model, 1 output |
+| ''engine'' | ''native'' | the [[#engine|templating engine]] |
+| ''granularity'' | ''record'' | defines the [[docs:flow:granularity|granularity of the execution]] \\ * [[docs:resource:record|record]]: the template will be processed for each record (default) \\ * [[docs:resource:resource|resource]]: the template will be processed on all records (only available for a json template) |
+| ''model-variables'' | | A list of [[#model-variables|map variables]] added to the model. See [[#model-variables]] for the definition |
+| ''target-column-name'' | ''%%${template_media_subtype}%%'' | The column name that stores the template output in a [[docs:flow:template_string|template string format]] |
+| ''target-data-uri'' | see [[#target-data-uri]] | A [[:docs:flow:template_data_uri|template data uri]] that defines the [[:docs:resource:data_uri|data uri]] of the templating results |
+| ''target-media-type'' | | Default to the template [[:docs:resource:media-type|media type]] |
+| ''target-data-def'' | | An optional [[:docs:resource:data-definition|data definition]] |
+| ''target-kind'' | ''template-outputs'' | Define the kind of target \\ ''template-outputs'': the output of the template engine, \\ ''enriched-inputs'': the output of the template engine are stored in a column of the input \\ ''data-model'': the data model in JSON format |
+| ''output-type'' | ''targets'' | the [[:docs:flow:output|output]] may be \\ * ''targets'' \\ * ''inputs'' |
 
-==== Engine ====
-The ''engine'' is the process that is responsible to transform a template in a document.
+
+
+==== model-variables ====
+
+''model-variables'' is a list of variable definition. Each element contains the following attributes:
+
+^ Name ^ Mandatory ^ Definition ^
+| ''name'' | true | the variable name |
+| ''data-uri'' | true | a [[:docs:resource:data_uri|data uri]] or [[docs:resource:runtime|runtime data uri]] |
+
+==== engine ====
+The ''engine'' is the process that is responsible to transform a [[:docs:templating:template|template]] in a document.
 
 ''Tabulify'' supports the following value as ''engine'':
   * ''native'' (default) - the [[docs:templating:native|built-in tabulify engine]]
   * ''thymeleaf'' - the [[docs:templating:thymeleaf|the thymeleaf engine]] (natural template)
   * ''pebble'' - the [[docs:templating:pebble|pebble engine]] (ninja syntax)
 
-==== Type ====
-''type'' is the [[docs:templating:template#type|media type of the template]]. The type default to the type of the template.
+
+==== template-data-uri ====
 
 
+The default  [[:docs:flow:template_data_uri|template data uri]] is:
+<code>
+${input_logical_name}_${template_name}@memory
+</code>
+which means that the output will:
+  * get as name
+    * the [[:docs:resource:logical_name|logical name]] of its [[:docs:flow:input|input]]
+    * and the [[:docs:resource:name|name]] of its template
+  * be stored in [[:docs:connection:memory|memory]]
 
-==== Template Match ====
+===== Template Match =====
 
-If the operation has:
-  * only one template defined, the template will be applied to all [[docs:flow:source|source data resource]].
-  * several templates defined, the template will be the template that has the same [[docs:resource:logicalname|logicalName]] than the [[docs:flow:source|source data resource]]
+If the operation has defined:
+  * only one template, the template will be applied to all [[docs:flow:input|input data resource]].
+  * multiple templates, the template will be the template that has the same [[docs:resource:logical_name|logicalName]] than the [[docs:flow:input|input data resource]]
 
 
 ===== Syntax =====
@@ -60,9 +163,8 @@ This operation is a [[docs:flow:intermediate|intermediate pipeline operation]]
 
   * Template Selectors
 <code yaml>
--   name: "Json"
-    op: "template"
-    args:
+-   operation: "template"
+    arguments:
         template-selectors:
             - pattern@connection
             - pattern2@connection2
@@ -70,11 +172,10 @@ This operation is a [[docs:flow:intermediate|intermediate pipeline operation]]
 
   * **Inline Json Template**
 <code yaml>
--   name: "Json"
-    op: "template"
-    args:
+-   operation: "template"
+    arguments:
         template-inline:
-            type: json
+            media-type: json
             content: |
                 {
                     "${group}": {

@@ -1,66 +1,45 @@
+---json
+{
+    "page_id": "88rp4963wpmmp4biqwmps",
+    "template": "holy"
+}
+---
 ====== Oracle Database ======
 
 
 
 ===== About =====
-''Tabulify'' supports the [[https://www.oracle.com/database/|Oracle]] [[docs:system:relational|relational database]] as a [[docs:system:system|system]]
+''Tabulify'' supports the <icon name="logos:oracle"/> [[https://www.oracle.com/database/|Oracle]] [[docs:system:database:database|relational database]] as a [[docs:system:system|system]]
 
 <note>
-If you don't have any knowledge of ''Tabulify'', you can start with the [[howto:getting_started:getting_started|Learning Guide]],
-otherwise you can also browser the [[howto:database:database|relational database Howto's]]
+If you don't have any knowledge of ''Tabulify'', you can start with the [[howto:getting_started:getting_started|Learning Guide]].
 </note>
 
 
 ===== Connection =====
 
-To create a ''Oracle'' connection, you have the following possibilities
-<tabs skin="tabs">
-<tab panel="connectionVault" >Connection Vault</tab>
-<tab panel="tabli" selected="true">Tabli</tab>
-</tabs>
-<tabpanels>
-<tabpanel id="connectionVault" spacing="m-3">
-In a [[docs:conf:vault|Connection Vault]], to define a Oracle [[docs:connection:connection|connection]] with the name ''myOracle'', you would write:
-\\
-
-<code properties>
-[myOracle]
-url = jdbc\:oracle\:thin\:@[host]\:[port]/[servicename]
-driver = oracle.jdbc.OracleDriver
-user = loginUser
-password = loginPassword
-</code>
-<note>
-The [[docs:connection:password|password]] will be [[docs:common:vault|encrypted]] the next time that you start a Tabulify product such as [[docs:tabli:tabli|Tabli]]
-</note>
-</tabpanel>
-<tabpanel id="tabli" spacing="m-3">
-
-With the [[docs:tabli:connection:add|tabli add command of the connection module]], adding a Oracle connection with the name ''oracleConnectionName'':
-
-<unit display="none">
-<code cmd>
-tabli connection delete --not-strict "oracleConnectionName"
-</code>
-</unit>
-
-
-  * With the Windows CMD console
-<code dos>
-tabli connection add "oracleConnectionName" "jdbc:oracle:thin:@[host]:[port]/[servicename]" ^
-    --user login ^
-    --password password
-</code>
-  * With Linux Bash
-<code bash>
-tabli connection add "oracleConnectionName" "jdbc:oracle:thin:@[host]:[port]/[servicename]" \
-    --user login \
-    --password password
-</code>
-
-</tabpanel>
-</tabpanels>
-
+[[howto:oracle:create_connection|]]
 ===== Version =====
 
 The [[https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html|driver version]] used is the ''23.7.0.25.01''
+
+
+===== Parameters =====
+
+==== Quoted identifier is disabled by default ====
+
+We disable quoted identifier by setting by default the [[docs:system:database:connection_attributes#NAME QUOTING ENABLED|NAME_QUOTING_ENABLED]] parameter to false for Oracle.
+
+Why ? 
+  * Because it requires you to put always the quotation mark even in a `SQL SELECT` which is crazy. 
+  * You can't write `select cat_id`, you need to write `select "cat_id"`
+  * Why it requires it? The quotes are part of the `name` and are not an escape feature, meaning that when you get the table name, you don't get `cat_id`, you get `"cat_id"`
+
+<blockquote>
+If you name a schema object using a quoted identifier, then you must use the double quotation marks whenever you refer to that object.
+<cite>[[https://docs.oracle.com/en/database/oracle/oracle-database/18/sqlrf/Database-Object-Names-and-Qualifiers.html|Oracle Ref]]</cite>
+</blockquote>
+
+===== Type =====
+
+See [[data_type]]

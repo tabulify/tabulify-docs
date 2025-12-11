@@ -1,8 +1,16 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:project:environment" }
+    ],
+    "page_id": "1t3exq6kn08inms2cg5yk"
+}
+---
 ====== Execution environment ======
 
 
 ===== About =====
-''env'' is a [[docs:conf:attribute|attribute]] that sets the execution environment (ie in production or not).
+''exec-env'' is a [[docs:conf:attribute|attribute]] that sets the execution environment (ie in production or not).
 
 ===== Built-in =====
 
@@ -24,15 +32,15 @@ to the ''to'' address of the smtp connection.
 ===== How to set the environment ? =====
 
 You can set the environment :
-  * at the command line with the ''--env'' option of tabli.
+  * at the command line with the ''--env'' option of tabul.
 <code bash>
-tabli --env dev
+tabul --exec-env prod
 </code>
-  * via a [[docs:conf:os|tabli os environment variable]]
+  * via a [[docs:conf:os|tabul os environment variable]]
 <code bash>
-export TABLI_ENV=dev
+export TABUL_EXEC_ENV=prod
 </code>
-  * In the [[docs:conf:vault|configuration vault]]
+
 
 
 ===== How to see the environment =====
@@ -40,6 +48,14 @@ export TABLI_ENV=dev
 With the ''env'' variable.
 
 Example:
+<unit>
 <code bash>
-tabli variable list env
+tabul env list EXEC_ENV
 </code>
+<console>
+attribute   value   origin           description
+---------   -----   --------------   -------------------------
+EXEC_ENV    dev     Os environment   The execution environment
+</console>
+</unit>
+

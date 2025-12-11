@@ -1,0 +1,27 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:database:resources" }
+    ],
+    "page_id": "byqa4nnh47w1jn36r99ah"
+}
+---
+====== Database Resources / SQL Objects ======
+
+===== About =====
+Tabulify support the following SQL resource:
+
+
+^ Media Type ^ Default ^ Link ^
+| ''sql/schema'' \\ ''sql/catalog'' | | [[docs:resource:sql_schema|schema/catalog]] |
+| ''sql/table'' | Yes | [[docs:resource:sql_table|table]] |
+| ''sql/view'' | | [[docs:resource:sql_view|view]] |
+| ''sql/request'' | | [[docs:resource:sql_request|sql request]] |
+| ''sql/system-view'' | | System View |
+| ''sql/system-table'' | | System Table |
+| ''sql/alias'' | | Alias |
+| ''sql/synonym'' | | Synonym |
+
+===== Default =====
+
+If a [[docs:resource:media-type|media type]] is not specified, the default type associated is ''table''.

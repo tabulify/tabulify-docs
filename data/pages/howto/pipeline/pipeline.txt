@@ -1,0 +1,13 @@
+---json
+{
+    "page_id": "nyomjifketzldeicfpxh0"
+}
+---
+====== HowTo Pipeline ======
+
+
+
+===== About =====
+This section contains examples/howto of [[:docs:op:op|pipeline operations]]
+
+

@@ -1,0 +1,92 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:flow:error" }
+    ],
+    "page_id": "otu7hrvvcmy0clk1jg4ik"
+}
+---
+====== Error Handling ======
+
+
+
+===== About =====
+
+
+This articles talks about error handling in a [[:docs:flow:pipeline|pipeline]] (ie what happens when an error occurs).
+
+===== Traffic Analogy =====
+
+We are using the car traffic analogy. We use the following concepts:
+  * ''traffic'': the data resources that flows in a [[docs:flow:pipeline|pipeline]]
+  * ''accident'': an error
+  * ''parking'': the location where the data resources implicated in an ''accident'' are parked. You can then create additional error handling ''pipeline'' that uses this parking as source.
+===== Handling Process =====
+
+When a error happens:
+  * the step ''error counter'' is incremented
+  * an action is taken according to the ''on-error-action'' argument.
+
+==== Stop ====
+''stop'' is the default action and will stop the pipeline.
+
+==== Discard ====
+''discard'' will do nothing. 
+
+==== Park ====
+
+''park'' will gather the data resources implicated in the accident and move them to the [[#parking]]
+
+Note that in case of [[:docs:flow:processing-type|batch intermediate step]], it's not possible to determine which data resource of the batch caused the error. We take the current batch and park them all.
+
+
+
+===== Pipeline Arguments =====
+
+^ Name ^ Default ^ Description ^
+| ''on-error-action'' | ''stop'' | The action to take if an error occurs: \\ * ''stop'': stop the pipeline \\ * ''park'': move the data resources in the ''parking'' \\ * ''discard'': discard the error |
+| ''parking-data-uri'' | See [[#parking]] | A [[docs:flow:template_data_uri|target uri]] that defines the location where to move data resources \\ implicated in an accident (ie error). \\ By default, the ''parking'' directory is located in the [[:docs:connection:data-home|data-home directory]] |
+| ''is-strict'' | true | Strict mode - Fail conditions that are ambiguous |
+
+
+===== Parking =====
+
+  * The ''parking'' is a container (schema, directory)
+  * The ''parking name'' is the name of the resource created in the parking
+
+==== Parking Data Uri ====
+
+The ''parking data uri'' is a [[docs:flow:template_data_uri|target data uri]] that defines a [[:docs:resource:container|container data resource]] (ie a directory or schema) where data resources implicated in the accident will be placed.
+
+
+By default, the value is:
+<code>
+parking/${pipeline_name}/${pipeline_start_time}@data-home
+</code>
+where: 
+  * ''data-home'' is the [[:docs:connection:data-home|data-home connection]] 
+
+
+In the [[docs:flow:template_string|target template]], you can use the following variables names
+  * all pipeline [[pipeline#derived attributes|derived attributes]]/[[pipeline#arguments|arguments]] with the prefix ''pipeline_''
+  * all [[:docs:resource:attribute|data resource attribute]] with the prefix ''resource_''
+
+==== Parking Name ====
+
+
+The parking data resource depends on the system type of the [[:docs:flow:input|input]] and of the parking
+
+^ Input \\ Data Resource \\ System Type ^ Parking \\ System Type ^ Parking Target Name ^ Example ^
+| [[:docs:system:file|file]] | [[:docs:system:file|file]] | [[:docs:resource:name|input name]]  | File ''foo.csv'' -> ''foo.csv'' |
+| [[:docs:system:database:database|database]] | [[:docs:system:file|file]] | [[:docs:resource:logical_name|logical name]] and the extension \\ defined in the [[:docs:system:file|tabular file type]] parameter \\ (by default, [[:docs:resource:csv|csv]])  | Table or record ''foo'' -> ''foo.csv'' |
+| [[:docs:system:file|file]] | [[:docs:system:database:database|database]] | [[:docs:resource:logical_name|logical name]] | File ''foo.csv'' -> Table ''foo'' |
+
+
+
+==== Parking Operation ====
+
+
+A ''parking'' will move the data resource:
+  * [[:docs:tabul:data:drop|drop]] the resource path
+  * and [[:docs:op:insert|insert]]  it in the parking resource
+

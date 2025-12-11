@@ -1,0 +1,139 @@
+---json
+{
+    "page_id": "wqnj56zrjbss92tcx2tm7"
+}
+---
+====== Postgres - Anonymous Code Block ======
+
+
+===== About =====
+In [[:docs:system:postgres:postgres|Postgres]], an [[docs:resource:sql_anonymous_block|anonymous code block]] is executed via the non-standard [[https://www.postgresql.org/docs/current/sql-do.html|SQL DO statement]].
+
+
+===== Steps =====
+
+==== Start Postgres ====
+
+
+The next steps will be using the [[howto:postgres:howto_connection_service|postgres howto connection]].
+
+  * You need to [[howto:postgres:howto_connection_service#docker|start the postgres docker image]].
+<unit>
+<code bash>
+tabul service start postgres
+</code>
+<console>
+1 service was started
+Name       Type
+--------   ------
+postgres   docker
+</console>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] your connection to check that the database is up.
+
+<unit>
+<code bash>
+tabul connection ping postgres
+</code>
+<console>
+The connection (postgres) has been pinged successfully
+</console>
+</unit>
+
+==== The Anonymous Block ====
+
+This code example is extracted of the [[https://www.postgresql.org/docs/current/sql-do.html#examples|SQL DO statement documentation]].
+
+
+This anonymous block is idempotent:
+  * it will create the role ''webuser'' if it does not exist
+  * and grant it access to all view in the public schema
+
+The anonymous code block is located at ''postgres/do_anonymous_block.sql'' in the [[:docs:connection:howto|howto connection]]
+
+With the [[:docs:tabul:data:print|data print command]], we can see the content.
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode postgres/do_anonymous_block.sql@howto
+# --type text disable sql statement parsing
+# --pipe-mode disallow the headers
+</code>
+<console sql>
+-- https://www.postgresql.org/docs/current/sql-do.html
+DO
+$$DECLARE r record;
+BEGIN
+    IF
+NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'webuser') THEN
+CREATE ROLE webuser;
+END IF;
+FOR r IN
+SELECT table_schema, table_name
+FROM information_schema.tables
+WHERE table_type = 'VIEW'
+  AND table_schema = 'public' LOOP
+        EXECUTE 'GRANT ALL ON ' || quote_ident(r.table_schema) || '.' || quote_ident(r.table_name) || ' TO webuser';
+END LOOP;
+END$$;
+</console>
+</unit>
+
+
+==== Execution ====
+
+<unit>
+<code bash>
+tabul data execute '(postgres/do_anonymous_block.sql@howto)@postgres'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+List of runtime executed
+runtime_data_uri                                   exit_code   count   latency   data_uri                                                                      error_message
+------------------------------------------------   ---------   -----   -------   ---------------------------------------------------------------------------   -------------
+(postgres/do_anonymous_block.sql@howto)@postgres           0       1   0.43s     execute/20251110-204157-936-pipe-tabul-data-exec/do_anonymous_block.log@tmp
+</console>
+</unit>
+
+
+==== Validation ====
+
+
+Anonymous block result returns only an execution status. To verify the execution result, you need:
+  * to check visually with a [[:docs:resource:sql_select|SQL Select]]
+
+<unit>
+<file sql postgres/do_anonymous_block_actual_roles.sql>
+SELECT rolname
+FROM pg_catalog.pg_roles
+where rolname = 'webuser'
+
+</file>
+<code bash>
+tabul data print '(postgres/do_anonymous_block_actual_roles.sql@howto)@postgres'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+(postgres/do_anonymous_block_actual_roles.sql@howto)@postgres
+rolname
+-------
+webuser
+</console>
+</unit>
+  * or to perform a [[:docs:op:diff|diff]].
+
+
+<unit>
+<code bash>
+tabul data diff \
+  postgres/do_anonymous_block_expected_roles.csv@howto \
+  '(postgres/do_anonymous_block_actual_roles.sql@howto)@postgres'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+Diff Summary Report
+The data resources are equals.
+from                                                   to                                                              equals   record_count   change_count
+----------------------------------------------------   -------------------------------------------------------------   ------   ------------   ------------
+postgres/do_anonymous_block_expected_roles.csv@howto   (postgres/do_anonymous_block_actual_roles.sql@howto)@postgres   ✓                   1              0
+</console>
+</unit>

@@ -1,0 +1,88 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:html:html" }
+    ],
+    "name": "Read HTML table",
+    "page_id": "kqfeqkvbinq9gk5kipi1e"
+}
+---
+====== How to read an HTML table? ======
+
+
+===== About =====
+
+This Howto shows you how to read a [[:docs:resource:html|HTML table]] from a html page.
+
+
+
+===== Steps =====
+
+==== By Default, the first table ====
+
+By default, an [[:docs:resource:html|HTML resource]] will return the first HTML table found.
+
+
+Example: the first table of the [[https://en.wikipedia.org/wiki/List_of_countries_in_the_Eurovision_Song_Contest|Eurovision country]] with the data [[docs:tabul:data:head|data head command]]
+<unit>
+<code bash>
+tabul data head https://en.wikipedia.org/wiki/List_of_countries_in_the_Eurovision_Song_Contest
+</code>
+<console>
+The first 10 rows of the data resource (List_of_countries_in_the_Eurovision_Song_Contest@https-en.wikipedia.org\wiki):
+1   2
+-   ---------------------------------------------------------------------------------------------------------------------------------------------
+†   Inactive – countries which participated in the past but did not appear in the most recent contest, or will not appear in the upcoming contest
+◇   Ineligible – countries whose broadcasters are no longer part of the EBU and are therefore ineligible to participate
+‡   Former – countries which previously participated but no longer exist
+</console>
+</unit>
+
+==== How to specify a table with the CSS selector ====
+
+The [[:docs:resource:html|HTML resource]] allows you to specify the CSS selectors used via [[:docs:resource:html#attributes|attributes]]
+  * for the table: ''table-selector''
+  * for the headers inside the table
+  * etc ...
+
+Example with the first countries in the [[https://en.wikipedia.org/wiki/List_of_countries_in_the_Eurovision_Song_Contest|Eurovision Song Contest]].
+were we specify the ''table-selector''
+
+With this ''css'' selector, we get the second table:
+<unit>
+<code bash>
+tabul data head \
+   -a 'table-selector=table:nth-of-type(2)' \
+   https://en.wikipedia.org/wiki/List_of_countries_in_the_Eurovision_Song_Contest
+</code>
+<console>
+The first 10 rows of the data resource (List_of_countries_in_the_Eurovision_Song_Contest@https-en.wikipedia.org\wiki):
+Country                    Broadcaster(s)[14]   Debut year   Latest entry   Entries   Finals   Qualifying[b]   Latest final   Best placement   Wins
+------------------------   ------------------   ----------   ------------   -------   ------   -------------   ------------   --------------   ---------
+                                                                                                                                               
+Albania                    RTSH                 2004         2025           21        12       11/20           55%            2025             5th
+Andorra †                  RTVA                 2004         2009           6         0        0/6             0%             N/A              12th (SF)
+Armenia                    AMPTV                2006         2025           17        14       13/16           81%            2025             4th
+Australia                  SBS                  2015         2025           10        7        6/9             67%            2023             2nd
+Austria                    ORF                  1957         2025           57        50       8/15            53%            2025             1st
+Azerbaijan                 İTV                  2008         2025           17        13       12/16           75%            2022             1st
+Belarus ◇                  BTRC                 2004         2019           16        6        6/16            38%            2019             6th
+Belgium[d]                 RTBF[f] / VRT[g]     1956         2025           66        54       8/20            40%            2023             1st
+Bosnia and Herzegovina †   BHRT[h]              1993         2016           19        18       7/8             88%            2012             3rd
+</console>
+</unit>
+
+==== How to get a Table CSS selector? ====
+
+The easiest way to get a CSS selector is to use the [[https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Tools_and_setup/What_are_browser_developer_tools|Browser Dev Tool]]
+
+  * Click on the ''F12'' key, the Browser Dev Tool should open
+  * Click on the ''Elements'' tab
+  * Click on the ''Select an element'' tool (normally an arrow in the top left corner)
+  * Select the top left element of your table on your HTML page
+  * Right Click on the table element in the ''Elements'' tab of DevTool
+  * And select ''copy selector''
+
+{{:howto:html:devtool_copy_css_selector.jpg?600|}}
+
+Note that this derived CSS selector is pretty sensible to any HTML structure change.

@@ -1,0 +1,121 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:info" }
+    ],
+    "page_id": "e2pyee8j6n2hwbqfyhv8u"
+}
+---
+====== Tabul - Data Info Command ======
+
+===== About =====
+''data info'' is a [[docs:tabul:command|command]] of the [[docs:tabul:data:start|data module]] that lists the [[docs:resource:attribute|attributes]] of a [[docs:resource:resource|resources]] in a form fashion.
+
+<note tip>
+To get the [[docs:resource:attribute|attributes]] in a tabular format, you can use the [[list|tabul data list]] command
+</note>
+
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul data info --help
+</code>
+<console>
+Tabul data info
+===============
+
+Print the attributes of one or more data resources (files, tables, ...) in a form fashion
+
+Tip: To get the attributes in a list fashion, check the `list` command
+
+
+
+Examples
+--------
+
+ 1 - Show the information on all files in the current directory
+
+
+    tabul data info *
+
+
+ 2 - Show the information on the `date` table of the `oracle` connection
+
+
+    tabul data info date@oracle
+
+
+ 3 - Shows information on the tables that begins with `D` of the `sqlite` connection
+
+
+    tabul data info D*@sqlite
+
+
+
+
+Syntax
+------
+
+
+    tabul data info [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                      One or more name data resource selectors (ie pattern[@connection])
+
+
+  Data Definition Options:
+
+    -a,--attribute <value>                                  Set or add a data resource attribute
+
+
+  Options:
+
+    -ea,--excluded-attribute <value>                        Attribute name to be excluded (Mostly computational attributes such as digest, md5, count, size, ...)
+
+    -t,--type <mediaType|mimeType|extensionFile>            The type of the resource
+
+
+  Selection Options:
+
+    --strict-selection                                      If set the selection will return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                 If set, the dependencies will be also selected
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>
+where:
+  * ''DataUriSelector'' is a [[docs:flow:data_selector|data selector]]
+
+

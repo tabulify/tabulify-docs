@@ -1,0 +1,109 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:sqlite:tabul_create_table" }
+    ],
+    "canonical": ":howto:database:create_table_from_another",
+    "description": "This Howto will show you how to copy the data definition of a SQL table from another SQL table",
+    "low_quality_page": "false",
+    "name": "Create a table from a table or view",
+    "page_id": "2t3hp19xnajogs73xf0lp"
+}
+---
+
+====== Tabul - How to create a table from the definition of another table ======
+
+
+===== About =====
+This [[..:howto|Howto]] will show you how to copy the [[docs:resource:structure|data definition]] of a <icon name="carbon:SQL"/> [[docs:resource:sql_table|SQL table]] from another [[docs:resource:sql_table|SQL table]] by using the [[docs:tabul:data:create|Tabul table create command]].
+
+<note important>
+This command does not copy the data. It just [[docs:op:create|create]] the structure (ie it performs a SQL ''CREATE'' statement). If you want to copy the data, use the [[docs:tabul:data:transfer|tabul data transfer command]] instead.
+</note>
+===== Steps =====
+==== Prerequisites ====
+You should have ''Tabulify'' installed on your computer.
+
+<btn>
+[[howto:getting_started:1_install]]
+</btn>
+
+==== Create a table from another table  ====
+
+<unit>
+Let's start with a clean state and delete all tables
+<code bash>
+tabul data drop --no-strict-selection *@sqlite
+</code>
+</unit>
+
+The below command will create:
+  * the table ''tpcds_sales'' into the [[docs:connection:default|Sqlite Howto connection]]
+  * from the data definition of the [[docs:system:tpcds|tpcds]] ''store_sales'' table
+  * with the [[docs:tabul:data:create|tabul data create]] command.
+<unit>
+<code bash>
+tabul data create store_sales@tpcds tpcds_sales@sqlite
+</code>
+<note tip>
+where:
+  * ''store_sales@tpcds'' is a [[docs:flow:data_selector|data selector]]
+  * and ''tpcds_sales@sqlite'' is a [[docs:flow:template_data_uri|target data URI]]
+</note>
+<console>
+Results of the create operation
+input               target
+-----------------   ------------------
+store_sales@tpcds   tpcds_sales@sqlite
+</console>
+</unit>
+
+==== Check the metadata ====
+
+Check the metadata with the [[docs:tabul:data:describe|tabul data meta]] command
+<unit>
+<code bash>
+tabul data describe tpcds_sales@sqlite
+</code>
+<console>
+Structure of the resource tpcds_sales@sqlite
+position   name                    type      precision   scale   primary_key   nullable   autoincrement   comment
+--------   ---------------------   -------   ---------   -----   -----------   --------   -------------   -------
+1          ss_sold_date_sk         integer   0           0                     x                          
+2          ss_sold_time_sk         integer   0           0                     x                          
+3          ss_item_sk              integer   0           0       x                                        
+4          ss_customer_sk          integer   0           0                     x                          
+5          ss_cdemo_sk             integer   0           0                     x                          
+6          ss_hdemo_sk             integer   0           0                     x                          
+7          ss_addr_sk              integer   0           0                     x                          
+8          ss_store_sk             integer   0           0                     x                          
+9          ss_promo_sk             integer   0           0                     x                          
+10         ss_ticket_number        integer   0           0       x                                        
+11         ss_quantity             integer   0           0                     x                          
+12         ss_wholesale_cost       decimal   7           2                     x                          
+13         ss_list_price           decimal   7           2                     x                          
+14         ss_sales_price          decimal   7           2                     x                          
+15         ss_ext_discount_amt     decimal   7           2                     x                          
+16         ss_ext_sales_price      decimal   7           2                     x                          
+17         ss_ext_wholesale_cost   decimal   7           2                     x                          
+18         ss_ext_list_price       decimal   7           2                     x                          
+19         ss_ext_tax              decimal   7           2                     x                          
+20         ss_coupon_amt           decimal   7           2                     x                          
+21         ss_net_paid             decimal   7           2                     x                          
+22         ss_net_paid_inc_tax     decimal   7           2                     x                          
+23         ss_net_profit           decimal   7           2                     x
+</console>
+</unit>
+
+
+
+==== Next ====
+
+<note tip width="50%">
+You can also create a table and its dependencies (foreign tables) at once with the [[docs:tabul:data:create|tabul data create command]].
+\\
+\\
+<btn>
+[[..:sql_schema:create_table_with_dependencies|How to copy a star/snowflake schema ?]]
+</btn>
+</note>

@@ -1,9 +1,14 @@
+---json
+{
+    "page_id": "ny1fd40u1zww18ksr3tzv"
+}
+---
 ====== Data Operation Option - with-dependencies ======
 
 
 ===== About =====
 ''with-dependencies'' is a [[op|data operation option]] that when used:
-  * will add the [[docs:resource:dependency|data dependency]] to the [[docs:resource:data_selector|data resource selection]]
+  * will add the [[docs:resource:dependency|data dependency]] to the [[docs:flow:data_selector|data resource selection]]
   * will create the [[docs:resource:fkey|foreign keys]] when the [[docs:flow:target|target data resource]] must be created.
 
 

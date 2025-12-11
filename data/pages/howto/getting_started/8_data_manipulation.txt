@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "wt5zet0z99msmhqniljgi"
+}
+---
 ====== Learning Tabulify - Step 8 - How to modify the content of a table ======
 
 <note important>
@@ -25,24 +30,25 @@ This is to be able to re-run the page.
 We put the warehouse table to the same state than before:
   * We delete the row added
   * We update the first row to the original
-<code dos>
-tabli data delete warehouse_delete.csv@howto warehouse@sqlite
+<code bash>
+tabul data delete warehouse_delete.csv@howto warehouse@sqlite
 </code>
 </unit>
 <unit display="none">
-<code dos>
-tabli data update warehouse_original.csv@howto warehouse@sqlite
+<code bash>
+tabul data update warehouse_original.csv@howto warehouse@sqlite
 </code>
 </unit>
 
-The ''warehouse'' table will be our [[docs:flow:target|target data resource]] for this page.
+The [[:docs:system:tpcds|tpc-ds]] ''warehouse'' table will be our [[docs:flow:target|target data resource]] for this page.
 
-The ''warehouse'' [[docs:resource:table|table]] has one row that we can see with the [[docs:tabli:data:print|data print command]]
+The ''warehouse'' [[docs:resource:sql_table|table]] has one row that we can see with the [[docs:tabul:data:print|data print command]]
 <unit>
-<code dos>
-tabli data print warehouse@sqlite
+<code bash>
+tabul data print warehouse@sqlite
 </code>
 <console>
+warehouse@sqlite
 w_warehouse_sk   w_warehouse_id     w_warehouse_name      w_warehouse_sq_ft   w_street_number   w_street_name   w_street_type   w_suite_number   w_city   w_county            w_state   w_zip   w_country       w_gmt_offset
 --------------   ----------------   -------------------   -----------------   ---------------   -------------   -------------   --------------   ------   -----------------   -------   -----   -------------   ------------
              1   AAAAAAAABAAAAAAA   Conventional childr              977787   651               6th             Parkway         Suite 470        Midway   Williamson County   TN        31904   United States             -5
@@ -52,7 +58,7 @@ w_warehouse_sk   w_warehouse_id     w_warehouse_name      w_warehouse_sq_ft   w_
 
 
 ===== Warehouse Upsert with a CSV file as Source =====
-The [[docs:op:upsert|upsert data operation]] is supported by the [[docs:tabli:data:upsert|data upsert command]].
+The [[docs:op:upsert|upsert data operation]] is supported by the [[docs:tabul:data:upsert|data upsert command]].
 
 This upsert operation:
   * will try to insert data
@@ -66,12 +72,13 @@ We will:
 
 The data to upsert is defined in the ''warehouse_upsert.csv'' [[docs:resource:csv|Csv data resource]] in the [[docs:connection:howto|howto connection]].
 
-We take a look at its content with the [[docs:tabli:data:print|data print command]]:
+We take a look at its content with the [[docs:tabul:data:print|data print command]]:
 <unit>
-<code dos>
-tabli data print warehouse_upsert.csv@howto
+<code bash>
+tabul data print warehouse_upsert.csv@howto
 </code>
 <console>
+warehouse_upsert.csv@howto
 w_warehouse_sk   w_warehouse_id     w_warehouse_name          w_warehouse_sq_ft   w_street_number   w_street_name   w_street_type   w_suite_number   w_city      w_county            w_state   w_zip      w_country       w_gmt_offset
 --------------   ----------------   -----------------------   -----------------   ---------------   -------------   -------------   --------------   ---------   -----------------   -------   --------   -------------   ------------
 1                AAAAAAAABAAAAAAA   Modified Warehouse Name   977787              651               6th             Parkway         Suite 470        Midway      Williamson County   TN        31904      United States   -5
@@ -80,28 +87,30 @@ w_warehouse_sk   w_warehouse_id     w_warehouse_name          w_warehouse_sq_ft 
 </unit>
 ==== The upsert command ====
 
-  * The [[docs:tabli:data:upsert|upsert command]] is a [[docs:tabli:data:transfer|transfer command]] and takes as argument:
+  * The [[docs:tabul:data:upsert|upsert command]] is a [[docs:tabul:data:transfer|transfer command]] and takes as argument:
       * a [[docs:flow:source|source]] - the [[docs:resource:csv|csv file]] in the [[docs:connection:howto|howto connection]]
-      * a [[docs:flow:target|target]] - the [[docs:resource:table|sql table]] in the [[docs:connection:howtos|sqlite connection]]
+      * a [[docs:flow:target|target]] - the [[docs:resource:sql_table|sql table]] in the [[docs:connection:howtos|sqlite connection]]
 <unit>
-<code dos>
-tabli data upsert warehouse_upsert.csv@howto warehouse@sqlite
+<code bash>
+tabul data upsert warehouse_upsert.csv@howto warehouse@sqlite
 </code>
   * Run it and  you get the below output:
 <console>
-Source                       Target             Latency (ms)   Row Count   Error   Message
---------------------------   ----------------   ------------   ---------   -----   -------
-warehouse_upsert.csv@howto   warehouse@sqlite   24             2
+Transfer results
+input                        target             latency   record_count   error_code   error_message
+--------------------------   ----------------   -------   ------------   ----------   -------------
+warehouse_upsert.csv@howto   warehouse@sqlite   0.52s                2
 </console>
 </unit>
-  * You can verify that the [[docs:flow:target|target data resource]] has been changed with the [[docs:tabli:data:print|data print command]] and check that:
+  * You can verify that the [[docs:flow:target|target data resource]] has been changed with the [[docs:tabul:data:print|data print command]] and check that:
       * there is a second new record
       * the new name of the first warehouse is now ''Modified Warehouse Name''
 <unit>
-<code dos>
-tabli data print warehouse@sqlite
+<code bash>
+tabul data print warehouse@sqlite
 </code>
 <console>
+warehouse@sqlite
 w_warehouse_sk   w_warehouse_id     w_warehouse_name          w_warehouse_sq_ft   w_street_number   w_street_name   w_street_type   w_suite_number   w_city      w_county            w_state   w_zip      w_country       w_gmt_offset
 --------------   ----------------   -----------------------   -----------------   ---------------   -------------   -------------   --------------   ---------   -----------------   -------   --------   -------------   ------------
              1   AAAAAAAABAAAAAAA   Modified Warehouse Name              977787   651               6th             Parkway         Suite 470        Midway      Williamson County   TN        31904      United States             -5
@@ -111,22 +120,23 @@ w_warehouse_sk   w_warehouse_id     w_warehouse_name          w_warehouse_sq_ft 
 
 
 
-===== Warehouse Update with a SQL query as Source ======
+===== Warehouse Update with a SQL query as Source =====
 
 ==== The source query for the update ====
 
 Let's say for the sake of simplicity that we want to increase the  square footage column ''w_warehouse_sq_ft'' of the warehouse by ''10'' square meter.
 
-The [[docs:flow:source|source]] [[docs:resource:select|query]] needs to include:
+The [[docs:flow:source|source]] [[docs:resource:sql_select|query]] needs to include:
   * the primary key ''w_warehouse_sk''
   * the target column with the new value ''w_warehouse_sq_ft''
 
 Example with the ''warehouse_update.sql'' [[docs:resource:file|file]] in the [[docs:connection:howto|howto]] connection
 <unit>
 <code bash>
-tabli data print warehouse_update.sql@howto
+tabul data print --type text warehouse_update.sql@howto
 </code>
-<console>
+<console sql>
+
 select
   w_warehouse_sk,
   w_warehouse_sq_ft+10 as w_warehouse_sq_ft, -- the name of the column match the name of the target column
@@ -134,39 +144,54 @@ select
 from
   warehouse w2
 ;
+
 </console>
 </unit>
-  * The result of the [[docs:resource:select|select query]] can be seen with the [[docs:tabli:data:print|print command]]
+  * The result of the [[docs:resource:sql_select|select query]] can be seen with the [[docs:tabul:data:print|print command]]
 <unit>
-<code dos>
-tabli data print (warehouse_update.sql@howto)@sqlite
+<code bash>
+tabul data print '(warehouse_update.sql@howto)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
 </code>
 <console>
+(warehouse_update.sql@howto)@sqlite
 w_warehouse_sk   w_warehouse_sq_ft   w_warehouse_sq_ft_old_value
 --------------   -----------------   ---------------------------
-             1   977797                                   977787
-             2   100010                                   100000
+             1              977797                        977787
+             2              100010                        100000
 </console>
 </unit>
 
 ==== The update command ====
-  * Calling the [[docs:tabli:data:update|data update command]] with the [[docs:resource:select|query]] as [[docs:flow:source|source]] will update the ''warehouse'' table ''w_warehouse_sq_ft'' columns by ''10'' square meters.
+
+Calling the [[docs:tabul:data:update|data update command]] with the [[docs:resource:sql_select|query]] as [[docs:flow:source|source]] will update the ''warehouse'' table ''w_warehouse_sq_ft'' columns by ''10'' square meters.
+
+
 <unit>
-<code dos>
-tabli data update (warehouse_update.sql@howto)@sqlite warehouse@sqlite
+<code bash>
+tabul data update \
+    --transfer-mapping-strict false \
+    '(warehouse_update.sql@howto)@sqlite' warehouse@sqlite
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
 </code>
 <console>
-Source                                Target             Latency (ms)   Row Count   Error   Message
------------------------------------   ----------------   ------------   ---------   -----   -------
-(warehouse_update.sql@howto)@sqlite   warehouse@sqlite   15             2
+Transfer results
+input                                 target             latency   record_count   error_code   error_message
+-----------------------------------   ----------------   -------   ------------   ----------   -------------
+(warehouse_update.sql@howto)@sqlite   warehouse@sqlite   0.40s                2
 </console>
 </unit>
-  * We can verify it by [[docs:tabli:data:print|printing]] the ''warehouse'' table
+where:
+  * `--transfer-mapping-strict` is set to `false` because the source column `w_warehouse_sq_ft_old_value` is not a target column.
+
+
+We can verify it by [[docs:tabul:data:print|printing]] the ''warehouse'' table
 <unit>
-<code dos>
-tabli data print warehouse@sqlite
+<code bash>
+tabul data print warehouse@sqlite
 </code>
 <console>
+warehouse@sqlite
 w_warehouse_sk   w_warehouse_id     w_warehouse_name          w_warehouse_sq_ft   w_street_number   w_street_name   w_street_type   w_suite_number   w_city      w_county            w_state   w_zip      w_country       w_gmt_offset
 --------------   ----------------   -----------------------   -----------------   ---------------   -------------   -------------   --------------   ---------   -----------------   -------   --------   -------------   ------------
              1   AAAAAAAABAAAAAAA   Modified Warehouse Name              977797   651               6th             Parkway         Suite 470        Midway      Williamson County   TN        31904      United States             -5
@@ -176,16 +201,17 @@ w_warehouse_sk   w_warehouse_id     w_warehouse_name          w_warehouse_sq_ft 
 
 ===== Warehouse Delete =====
 
-==== The source CSV file for the delete ====
-The [[docs:tabli:data:delete|delete command]] takes as input a [[docs:flow:source|source data resource]] that contains the primary or unique key of a [[docs:flow:target|target table]].
+==== The source CSV file for the DELETE ====
+The [[docs:tabul:data:delete|delete command]] takes as input a [[docs:flow:source|source data resource]] that contains the primary or unique key of a [[docs:flow:target|target table]].
 
 We want to delete the second record, the CSV file contains then the primary key with the value ''2''
 <unit>
-<code dos>
-tabli data print warehouse_delete.csv@howto
+<code bash>
+tabul data print warehouse_delete.csv@howto
 </code>
   * Run it. You get the below output:
 <console>
+warehouse_delete.csv@howto
 w_warehouse_sk
 --------------
 2
@@ -194,41 +220,55 @@ w_warehouse_sk
 
 ==== Warehouse Delete ====
 
-  * You give the ''CSV'' [[docs:flow:source|source]] and the [[docs:flow:target|target]] as argument to the [[docs:tabli:data:delete|data delete command]] to delete the second row
+  * You give the ''CSV'' [[docs:flow:source|source]] and the [[docs:flow:target|target]] as argument to the [[docs:tabul:data:delete|data delete command]] to delete the second row
 <unit>
-<code dos>
-tabli data delete warehouse_delete.csv@howto warehouse@sqlite
+<code bash>
+tabul data delete warehouse_delete.csv@howto warehouse@sqlite
 </code>
 <console>
-Source                       Target             Latency (ms)   Row Count   Error   Message
---------------------------   ----------------   ------------   ---------   -----   -------
-warehouse_delete.csv@howto   warehouse@sqlite   14             1
+Transfer results
+input                        target             latency   record_count   error_code   error_message
+--------------------------   ----------------   -------   ------------   ----------   -------------
+warehouse_delete.csv@howto   warehouse@sqlite   0.45s                1
 </console>
 </unit>
   * How [[docs:resource:count|many rows]] do we have ?
 <unit>
-<code dos>
-tabli data list -a name -a count warehouse@sqlite
+<code bash>
+tabul data list -a name -a count warehouse@sqlite
 </code>
 <console>
-name        count
----------   -----
-warehouse       1
+path        media_type   name        count
+---------   ----------   ---------   -----
+warehouse   table        warehouse       1
 </console>
 </unit>
   * Do we still see the first row ?
 <unit>
-<code dos>
-tabli data print warehouse@sqlite
+<code bash>
+tabul data print warehouse@sqlite
 </code>
 <console>
+warehouse@sqlite
 w_warehouse_sk   w_warehouse_id     w_warehouse_name          w_warehouse_sq_ft   w_street_number   w_street_name   w_street_type   w_suite_number   w_city   w_county            w_state   w_zip   w_country       w_gmt_offset
 --------------   ----------------   -----------------------   -----------------   ---------------   -------------   -------------   --------------   ------   -----------------   -------   -----   -------------   ------------
              1   AAAAAAAABAAAAAAA   Modified Warehouse Name              977797   651               6th             Parkway         Suite 470        Midway   Williamson County   TN        31904   United States             -5
 </console>
 </unit>
 
-==== Next ====
+
+===== Applying in-place SQL Data Manipulation =====
+
+
+Until now, all data manipulation were out-of-place, meaning that there was a source and a target.
+
+You can also apply in-place Data Manipulation with [[:docs:resource:sql_dml|SQL Data Manipulation Language request]] (''UPDATE/INSERT/UPDATE/MERGE'')
+
+For a full example, applying DDL and DML request, see this [[howto:sql_query:dml_query|howto]]
+
+
+
+===== Next =====
 
 With the laws on data privacy, it's now mandatory to develop data application with generated data. ''Tabulify'' has built-in a data generator that we will explore in the next page.
 

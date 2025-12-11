@@ -1,25 +1,35 @@
+---json
+{
+    "page_id": "qilie1142ned4buz0bjmd"
+}
+---
 ====== Parameter ======
 
 
 ===== About =====
 
-Parameters are [[docs:conf:attribute|attributes]] that you can set to change the behavior of Tabulify
+''Parameters'' or ''arguments'' are [[docs:conf:attribute|attributes]] that you can set to change the behavior of Tabulify
+
+There difference is:
+  * a ''parameter'' is a [[:docs:resource:attribute|resource attribute]]
+  * a ''argument'' is a [[:docs:op:op|operation attribute]] 
 
 ===== Parameters Order of Precedence =====
 The same parameter can be found in multiple place, we are taking the configuration with the higher priority.
 
 Configuration Priority In Descendent Order:
-  * [[:docs:tabli:option|Command line options]] (if available)
+  * [[:docs:tabul:option|Command line options]] (if available)
   * File:
-    * [[vault|Configuration Vault]] for:
-      * [[docs:conf:global|global parameters]]
+    * [[tabul.yml|Configuration Vault]] for:
+      * [[docs:conf:global_env|global parameters]]
       * [[docs:connection:attribute|connection parameter]]
-    * [[:docs:resource:data-definition|data definition]] for data resource parameters
-  * [[docs:conf:os|Operating System Environment variables]] 
-    * with the ''TABLI_'' prefix for [[:docs:conf:global|global attributes]]
-    * with the ''TABLI_CONNECTION_NAME'' prefix for [[docs:connection:attribute|a connection attribute]]
+    * [[:docs:resource:data-definition|data definition]] for data resource parameters or [[:docs:resource:generator|data generation file]]
+    * [[:docs:flow:pipeline|pipeline file]]
+  * [[docs:conf:os|Operating System Environment variables]]
+    * with the ''TABUL_'' prefix for [[docs:conf:global_env|global attributes]]
+    * with the ''TABUL_CONNECTION_NAME'' prefix for [[docs:connection:attribute|a connection attribute]]
 
 ===== Secret =====
-A parameter supports any [[docs:conf:secret|ciphered secret]] as value.
+A parameter or argument supports any [[docs:conf:secret|ciphered secret]] as value.
 
 

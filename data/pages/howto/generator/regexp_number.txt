@@ -1,0 +1,94 @@
+---json
+{
+    "page_id": "42eqvev2e75kbs58gegga"
+}
+---
+====== How to generate a number with the Regular Expression Generator? ======
+
+
+===== About =====
+This howto will show you how to generate a number with the [[:docs:generator:regexp|Regular Expression Generator]].
+
+===== Steps =====
+
+==== The regular expression ====
+
+
+The following [[:docs:generator:regexp#expression|expression]] will generate a double:
+```
+[0-9]{3}\.[0-9]{3}
+```
+where:
+  * `[0-9]{3}` asks for 3 digits
+  * `\.` print a point
+    * Note: `\` is the escape character that tells the generator to take the dot character and not the [[kb>lang:regexp:dot|regular expression dot matcher]].
+  * `[0-9]{3}` asks for 3 digits
+
+
+==== Create a generator ====
+
+
+The [[:docs:resource:generator|generator]] would be then:
+<unit>
+<file yml generator/regexp--generator.yml>
+kind: generator
+spec:
+  maxRecordCount: 30
+  columns:
+    - name: regexp_double
+      type: Double
+      precision: 6
+      scale: 3
+      data-supplier:
+        type: regexp
+        arguments:
+          expression: '[0-9]{3}\.[0-9]{3}'
+          # optional seed
+          seed: 12345L
+
+</file>
+</unit>
+
+==== Print the result ====
+
+This generator would yield the following data:
+<unit>
+<code bash>
+tabul data print generator/regexp--generator.yml@howto
+</code>
+</unit>
+<console height="300px" scroll="toggle">
+regexp_double
+-------------
+      453.377
+      203.849
+      813.079
+      865.495
+      390.441
+      709.933
+      255.284
+       19.755
+      261.175
+      264.911
+      133.327
+      394.021
+      614.462
+      573.909
+       86.925
+      753.268
+      457.839
+      176.918
+      393.803
+      833.487
+       582.82
+       551.98
+      810.125
+      802.251
+      783.176
+      940.763
+      817.757
+       17.065
+       320.67
+      709.529
+</console>
+

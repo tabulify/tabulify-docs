@@ -1,0 +1,46 @@
+---json
+{
+    "page_id": "x36zaixhd91cwpgmvursz"
+}
+---
+====== Sql Server - What to do if a connection hangt ======
+
+
+
+===== Check for blocking sessions =====
+
+<code sql>
+SELECT
+    blocking_session_id,
+    session_id,
+    wait_type,
+    wait_time,
+    last_wait_type,
+    text
+FROM sys.dm_exec_requests r
+         CROSS APPLY sys.dm_exec_sql_text(sql_handle)
+WHERE blocking_session_id != 0;
+</code>
+
+^ blocking_session_id ^ session_id ^ wait_type ^ wait_time ^ last_wait_type ^ text ^
+| 58 | 57 | LCK\_M\_X | 189541 | LCK\_M\_X | drop table  if exists "master"."dbo"."d\_date" |
+
+What it means:
+  * Session 57 (tabulify): Waiting for an exclusive lock (LCK_M_X) to drop the table
+  * Session 58: Currently holding a lock that prevents the drop operation
+  * Wait time: 189,541 milliseconds (~3 minutes) and counting
+
+<code sql>
+KILL 58;
+</code>
+
+===== Set a Timeout =====
+
+Set a Timeout on your connection
+<code>
+jdbc:sqlserver://server:port;databaseName=db;loginTimeout=30;socketTimeout=30000;queryTimeout=30
+</code>
+  * loginTimeout: Connection timeout
+  * socketTimeout: Socket read timeout in ms
+  * queryTimeout: Query timeout
+

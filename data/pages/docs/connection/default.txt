@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "o916d7xv5zvm5x5xpgohq"
+}
+---
 ====== Default Connection ======
 
 
@@ -6,5 +11,5 @@ The ''default connection'' is the [[connection|connection]] used when no ''conne
 
 ===== Determination =====
 
-  * If the run is inside a [[docs:project:project|project]], the default connection is the [[docs:connection:project|project]] home,
-  * Otherwise this is the [[cd|current directory connection(cd)]]
+  * If the run is inside a [[docs:app:app|app]], the default connection is the [[docs:connection:app|app home]],
+  * Otherwise this is the [[cd|current directory connection (cd)]]

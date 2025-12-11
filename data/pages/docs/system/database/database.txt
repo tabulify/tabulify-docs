@@ -1,0 +1,83 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:database" },
+        { "path": ":docs:system:sql:database" }
+    ],
+    "featured-icon": ":combostrap:icons:mdi:database.svg",
+    "page_id": "haeqwzs1dokmhdg882m03",
+    "template": "holy"
+}
+---
+====== Database System ======
+
+
+===== About =====
+A <icon name=":mdi:database"/> database is a type of [[..:system|system]] that stores its data in a [[docs:resource:sql_table|table fashion]] and understands [[docs:system:database:sql_statement|SQL statements]].
+
+
+You can:
+  * [[docs:tabul:connection:start|add/create/update database connections parameters]]
+  * [[docs:tabul:data:execute|perform perf operation on a SQL query]]
+  * [[docs:tabul:data:start|perform operation on a table]]
+  * [[howto:sql_schema:create_table_with_dependencies|perform operation on a schema]]
+  * [[docs:resource:dependency|manage foreign keys (ie relation between tables)]]
+
+
+<note tip>
+[[docs:system:sample_schema|Sample relational schema]] are also available to showcase or test rapidly a development environment.
+</note>
+
+
+
+===== Supported Relational Databases =====
+
+For the supported database, ''Tabulify'' introduces a layer that:
+  * corrects the driver mistakes
+  * and/or implements the database SQL dialect
+
+<grid spacing="m-3 mb-5" max-line="3" align="y-center-children">
+  <box align="center-children"><box width="100px" align="text-center"><icon name="logos:sqlite" width="60" /> \\ \\ [[docs:system:sqlite:sqlite]]</box></box>
+  <box align="center-children"><box width="100px" align="text-center"><icon name="logos:postgresql" width="60"/> \\ \\ [[docs:system:postgres:postgres]]</box></box>
+  <box align="center-children"><box width="100px" align="text-center"><icon name="logos:oracle" width="80"/> \\ \\ [[docs:system:oracle:oracle]]</box></box>
+  <box align="center-children"><box width="100px" align="text-center"><icon name="logos:mysql" width="60"/> \\ \\ [[docs:system:mysql:mysql]]</box></box>
+  <box align="center-children"><box width="100px" align="text-center"><icon name="logos:microsoft-icon" width="30"/> \\ \\
+ [[docs:system:sqlserver:sqlserver|]]</box></box>
+</grid>
+===== Other databases =====
+
+We support all relational databases that:
+    * provides a JDBC driver,
+    * supports [[wp>SQL#Interoperability_and_standardization|ANSI SQL]]
+
+
+The most controversial parts being:
+  * the data type provided by the database driver may be outdated
+  * the [[:docs:op:upsert|upsert sql statement]]:
+```sql
+insert into "howto"."d_category" ("cat_id", "cat_desc", "load_timestamp")
+values (?, ?, ?)
+on duplicate key update "load_timestamp" = values ("load_timestamp")
+```
+If you want a relational database that does not support this syntax, you can always:
+  * add the driver in the ''jars'' directory
+  * and use the other standard operations (ie [[:docs:resource:sql_select|sql query]], [[:docs:tabul:data:insert|insert]], or [[:docs:op:update|update]])
+
+
+If you still want the ''upsert'' operation and or support for a third SQL database, [[:contact|contact us]].
+
+
+
+
+
+
+
+===== Type =====
+
+Database may be categorized in 2 types
+
+^ Type ^ Description ^
+| ''relational'' | with joins (ie [[:docs:resource:fkey|foreign key]] supports) |
+| ''nosql''  | without joins (ie without foreign key supports) |
+
+

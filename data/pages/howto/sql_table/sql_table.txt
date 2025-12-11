@@ -1,0 +1,30 @@
+---json
+{
+    "page_id": "sce482ykbtezfuptz2eeq"
+}
+---
+====== Sql Table ======
+
+
+
+
+This [[..:howto|How-to]] section is specific to the [[docs:resource:sql_table|SQL Table]]
+
+
+
+
+<iterator>
+    <data>select where is_home = 0  and path glob ':howto:sql_table*' order by path asc </data>
+<grid spacing="me-5">
+    <fragment>
+        <box>
+            <card clickable>
+            <page-image ratio="16:9" color="#336699"/>
+            === $title ===
+
+            $description [[$path| ]]
+            </card>
+        </box>
+    </fragment>
+</grid>
+</iterator>

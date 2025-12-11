@@ -1,10 +1,9 @@
 ---json
 {
-    "canonical":"howtos",
-    "low_quality_page":"false",
-    "title":"All Howtos to simply move, create or process data with Tabulify",
-    "description":"This section regroups all HowTo that show you how to do step by step"
-    
+    "canonical": ":howtos",
+    "description": "This section regroups all HowTo that show you how to do step by step",
+    "low_quality_page": "false",
+    "page_id": "xatowk8x3n0kp68pyfja5"
 }
 ---
 

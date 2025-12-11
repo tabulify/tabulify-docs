@@ -1,0 +1,202 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:tabli:glob" }
+    ],
+    "description": "With this howto, you will learn what a  glob pattern is and how to use it to select data resources.",
+    "low_quality_page": "false",
+    "page_id": "s4oqxbqrrgnxp1jvy2kfu"
+}
+---
+====== Tabulify - How to select data resources with a Glob Pattern  ======
+
+===== About =====
+With this page, you will learn what a <icon name="carbon:character-patterns"/> [[docs:common:globbing|glob pattern]] is and how to use it to select [[docs:resource:resource|data resources]].
+
+
+A ''glob pattern'' or ''glob expression'' is a string that can be matched or not against another string. If the ''glob pattern'' matches, a [[docs:resource:resource|data resource]] name, the [[docs:resource:resource|data resource]] is selected otherwise it's not.
+
+To express the pattern, special characters called ''wildcard'' are used that have special meaning. The following paragraphs go through each of this ''wildcard'' and shows you how to use them.
+
+<note>
+For the hackers, this is like a regular expression but simplified
+</note>
+
+
+
+
+===== Steps =====
+==== Prerequisites ====
+You should have ''Tabulify'' installed on your computer.
+
+<btn>
+[[howto:getting_started:1_install]]
+</btn>
+
+
+==== Star (Any character) ====
+The star character ''*'' also known as ''asterix'' matches any number of characters.
+
+If we want to select all [[docs:resource:resource|data resources]] that ends with the term ''sales'', we will use the following ''glob pattern''
+<code>
+*sales
+</code>
+where:
+  * ''*'' matches all characters before ''sales''
+  * ''sales'' matches itself.
+
+Example:
+<unit>
+<code bash>
+tabul data list *sales@tpcds
+</code>
+<console>
+path            media_type
+-------------   ------------
+catalog_sales   sql/relation
+store_sales     sql/relation
+web_sales       sql/relation
+</console>
+</unit>
+
+==== Question mark (One Character) ====
+A question mark, ''?'', matches exactly one character.
+
+Example:
+  * ''????'' - Matches all data resources with exactly four letters or digits
+<unit>
+<code bash>
+tabul data list ????@tpcds
+</code>
+<console>
+path   media_type
+----   ------------
+item   sql/relation
+</console>
+</unit>
+  * ''w?*sales'' - Matches any string beginning with ''w'', followed by at least one letter or digit, and ending with ''sales''
+<unit>
+<code bash>
+tabul data list w?*sales@tpcds
+</code>
+<console>
+path        media_type
+---------   ------------
+web_sales   sql/relation
+</console>
+</unit>
+
+==== Braces (ie OR) ====
+
+''Braces {}'' specify a collection of subpatterns.
+
+For example:
+
+  * ''{item,store}'' matches ''item'' or ''store''
+<unit>
+<code bash>
+tabul data list {item,store}@tpcds
+</code>
+<console>
+path    media_type
+-----   ------------
+item    sql/relation
+store   sql/relation
+</console>
+</unit>
+  * ''{web*,store*}'' matches all [[docs:resource:resource|data resource]] names that begins with ''web'' or ''store''.
+<unit>
+<code bash>
+tabul data list {web*,store*}@tpcds
+</code>
+<console>
+path            media_type
+-------------   ------------
+store           sql/relation
+store_returns   sql/relation
+store_sales     sql/relation
+web_page        sql/relation
+web_returns     sql/relation
+web_sales       sql/relation
+web_site        sql/relation
+</console>
+</unit>
+
+==== Square brackets (Set of characters)====
+
+''Square brackets []'' convey:
+  * a set of single characters
+  * or a range of characters when the hyphen character (-) is used
+that matches a single character.
+Within the square brackets, the wildcard ''*'', ''?'', and ''\'' match themselves.
+
+Example:
+  * ''[aeiou]'' matches any lowercase vowel.
+  * ''[0-9]'' matches any digit.
+  * ''[A-Z]'' matches any uppercase letter.
+  * ''[a-z,A-Z]'' matches any uppercase or lowercase letter.
+  * ''[!abc]'' exclusion does not match the set of characters ''abc''
+  * ''*[0-9]*'' ? Matches all strings containing a numeric value
+
+Example:
+  * all data resource that  does not have a ''wy'' in their name
+<unit>
+<code bash>
+tabul data list *[wy]*@tpcds
+</code>
+<console>
+path                   media_type
+--------------------   ------------
+inventory              sql/relation
+s_inventory            sql/relation
+s_warehouse            sql/relation
+s_web_order            sql/relation
+s_web_order_lineitem   sql/relation
+s_web_page             sql/relation
+s_web_returns          sql/relation
+s_web_site             sql/relation
+warehouse              sql/relation
+web_page               sql/relation
+web_returns            sql/relation
+web_sales              sql/relation
+web_site               sql/relation
+</console>
+</unit>
+
+==== Double Star (Recursive Search) ====
+
+You can also search [[docs:resource:container|container]] such as [[docs:resource:directory|directory]] or [[docs:resource:sql_schema|schema]] recursively by adding to your glob pattern the double start (or asterix).
+
+For instance, the below patter will search the file that starts with ''RE'' in the current directory and all sub-directories of the [[docs:connection:howto|howto connection directory]]
+<unit>
+<code bash>
+tabul data list **/RE*@howto
+</code>
+  * And there is two ''README.md'' files found that match the pattern
+<console>
+path                                     media_type
+--------------------------------------   ----------
+dataset/world/README.md                  text/plain
+email/README.md                          text/plain
+mysql/coffee-break-sample-db/README.md   text/plain
+README.md                                text/plain
+recursive/README.md                      text/plain
+</console>
+</unit>
+
+==== Escape ====
+The escape character is the backslash  ''\'' and turns a ''wildcard'' into a simple characters.
+
+Syntax
+<code>
+\wildcard
+</code>
+
+For example:
+  * ''\\'' will match a single backslash ''\''
+  * ''\?'' matches the question mark ''?''
+  * ''\*'' matches the star ''*''
+
+<note>
+This is almost always not needed because most of the wildcard are already not allowed when naming resource such as [[docs:resource:file|file]] or [[docs:resource:sql_table|table]].
+</note>

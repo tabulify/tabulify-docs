@@ -1,0 +1,24 @@
+---json
+{
+    "page_id": "twkwuslncu9czyg9drffq"
+}
+---
+====== SQL Server - Table Size ======
+
+
+===== About =====
+
+
+The [[:docs:resource:size|size]] attribute is the `sys.allocation_units.total_pages` as shown in the [[https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-allocation-units-transact-sql?view=sql-server-ver17#determine-space-used-by-object-and-type-of-an-allocation-unit|SQL documentation]]
+
+===== SQL =====
+
+<code sql>
+SELECT u.total_pages
+FROM sys.allocation_units AS u
+         JOIN sys.partitions AS p ON u.container_id = p.hobt_id
+         JOIN sys.tables AS t ON p.object_id = t.object_id
+WHERE t.name = 'xxx'
+</code>
+
+

@@ -1,0 +1,30 @@
+---json
+{
+    "aliases": [
+        { "path": ":common:strictness" }
+    ],
+    "page_id": "rxw7wej4n2rgxlpbzoqs3"
+}
+---
+====== Strictness ======
+
+
+
+===== About =====
+In tabulify, ''strictness'' attributes permit to resolve ambiguous situation.
+
+
+===== Type =====
+
+There is generally 2 kind of strictness:
+  * ''execution'':
+    * if true, even if a recoverable execution error appears, tabulify will stop
+    * if false, tabulify will continue
+  * ''selection'', when resources are selected, a strict [[:docs:op:select|selection]] will throw an error if the selection is an empty.
+
+===== Execution Strictness Scope =====
+
+Execution Strictness can be set via the ''strict-execution'' attribute:
+  * [[:docs:conf:global_env|globally]]
+  * on [[:docs:flow:pipeline|pipeline]]
+  * on [[docs:resource:runtime|runtime resources]]

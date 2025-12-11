@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "5x9oyy9zt6nhg2ct2jj2u"
+}
+---
 ====== Sqlite - Boolean ======
 
 
@@ -8,6 +13,6 @@ It recommends to save it as an integer ''0'' (false) and ''1'' (true).
 See [[https://sqlite.org/datatype3.html#boolean_datatype|Sqlite boolean documentation]]
 
 <note>
-''Tabulify'' supports it and extends the boolean system. It recognize also natively a list of string and number as ''BOOLEAN'' (case indépendant: ''Y'' or ''y'' means ''y''). More [[docs:common:boolean]]
+''Tabulify'' supports it and extends the boolean system. It recognize also natively a list of string and number as ''BOOLEAN'' (case indépendant: ''Y'' or ''y'' means ''y''). More [[docs:data_type:boolean]]
 </note>
 

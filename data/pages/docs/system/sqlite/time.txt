@@ -1,17 +1,43 @@
+---json
+{
+    "page_id": "2lhej3j5s99ze207zuiw4"
+}
+---
 ====== Sqlite - Time ======
 
 
-===== Time =====
-Sqlite does not support natively the storage of a ''time'' data type. It lets you choose between text and number (see [[https://sqlite.org/datatype3.html#date_and_time_datatype|date and time datatype in Sqlite]]. ie
+===== About =====
+Sqlite does not support natively the storage of a [[docs:data_type:date_time|''date/time'' data type]]. 
+
+===== SQLite and Time =====
+
+
+
+
+==== Type affinity ====
+
+By default, the type affinity for a time is a numeric.
+
+In the [[https://www.sqlite.org/datatype3.html#affinity_name_examples|Date Time affinity example]], you can see that a ''date'' or ''datetime'' becomes a ''numeric''
+
+==== SQLite Time recommendation ====
+
+SQLite lets you choose between text and number (see [[https://sqlite.org/datatype3.html#date_and_time_datatype|date and time datatype in Sqlite]]. ie
   * ''2020-10-14 21:06:46.507'' (Iso string)
   * ''1602702406'' (Epoch Seconds called ''unixepoch'' in the date time function of Sqlite)
 
+===== Tabulify Default =====
 
-By default, ''tabulify'' has chosen to save the date in the ''text'' (ie ''SqlLiteral'') format because:
+By default, ''tabulify'' has chosen to save the date in the ''text'' format (ie ''SqlLiteral'') because:
   * they are more readable 
   * they are the default argument type of the [[https://sqlite.org/lang_datefunc.html|date and time function]]
 
-You can control this behavior by setting the [[docs:common:time#configuration|time configuration built-in attributes]]
+You can control this behavior by setting the [[docs:data_type:date_time#configuration|time configuration built-in attributes]]
+
+
+There is one caveat:
+  * the type name should be a known time name (ie ''date'', ''time'', ''timestamp'', ...) so that Tabulify can see them as time data type.
+  * unfortunately, it means that you can't create a [[:docs:resource:sql_table|table]] with the ''create table as'' statement. Why? because SQLite translates them to the ''numeric'' affinity. See the [[#create_table_as_caveat_on_the_text_time_system|support section]].
 
 ===== Example =====
 
@@ -34,3 +60,51 @@ SELECT time('22:10:23','+1 seconds')
 -- or 
 SELECT time(timeColumn,'+1 seconds')  from table;
 </code>
+
+
+
+===== Support =====
+
+==== Time Zone Support ====
+
+The Time zone data type (time and timestamp) got the default affinity of SQLite, ie ''numeric''. 
+We don't manipulate them at all, ie we don't store them as text.
+
+==== Create Table As Caveat on the text time system ====
+
+Unfortunately, when using a ''create table as'' statement, SQLite will automatically convert the data type to its affinity.
+
+For instance, in this demo, we show you how a timestamp becomes a numeric
+<unit>
+  * The demo [[:docs:resource:sql_file|sql file]] is shown with the [[:docs:tabul:data:concat|cat]] command
+<code bash>
+tabul data cat sqlite/timestamp_to_num_demo.sql@howto
+</code>
+<console sql>
+drop table if exists foo;
+drop table if exists bar;
+create table foo(update_time timestamp);
+create table bar as
+select *
+from foo;
+PRAGMA table_info('bar');
+</console>
+</unit>
+  * The [[:docs:resource:sql_request|sql request execution]] against [[:howto:sqlite:howto_connection|the sqlite howto connection]]
+<unit>
+<code bash>
+tabul data print '(sqlite/timestamp_to_num_demo.sql@howto)'@sqlite
+</code>
+  * The result, where you can see ''NUM'' in the ''type'' column and not the original ''timestamp'' name.
+<console>
+(sqlite/timestamp_to_num_demo.sql@howto)@sqlite
+cid          name   type   notnull   dflt_value   pk
+---   -----------   ----   -------   ----------   --
+  0   update_time    NUM         0                 0
+</console>
+</unit>
+
+
+
+
+

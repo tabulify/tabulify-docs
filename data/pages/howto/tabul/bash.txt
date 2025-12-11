@@ -1,0 +1,40 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:tabli:bash" }
+    ],
+    "page_id": "l3ljgebd0s3840jp41upp"
+}
+---
+====== How to install and configure Bash On Windows ? ======
+
+
+
+===== About =====
+This section helps you to get a ''bash'' based terminal up and running on your Windows computer.  On linux system, there is no installation needed because bash is the default shell (located at ''/bin/bash/'')
+
+<note>
+Tabulify recommends the use of bash as shell because it will not interpret an [[docs:connection:uri|URL]]
+
+If you want to no more about it, see this page: [[docs:common:bash]]
+</note>
+
+===== Steps =====
+==== Installation ====
+On Windows, luckily, if you have [[https://gitforwindows.org/|Git For Windows]], you have already ''Git Bash'' (ie [[http://mingw-w64.org/|MingWin]]). Otherwise, we invite you to [[https://gitforwindows.org/|download and install it]].
+
+{{docs:common:git_bash_terminal.png|}}
+
+==== Terminal Width Size ====
+
+Set the width size of you terminal to a big enough number. We recommend 9000.
+
+When [[docs:tabul:env:list|listing some configuration]], you may get a lengthy output (such as a list of a path) and the output will then not render nicely.
+
+To avoid this inconvenient, our advice is to increase the width size of your terminal.
+
+Example with ''Git Bash'':
+  * Top-Left corner > Options > Window
+
+{{howto:getting_started:git_bash_option_window.png|}}
+

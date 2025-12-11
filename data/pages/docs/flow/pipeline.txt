@@ -1,7 +1,12 @@
-====== Tabulify - Pipeline Flow ======
+---json
+{
+    "page_id": "rrcn06sg7yyg51w2bw49v"
+}
+---
+====== Tabulify - Pipeline ======
 
 ===== Pipeline =====
-A ''pipeline'' is a [[docs:common:yaml|yaml]] file that defines a serie of [[docs:flow:step|step]] where:
+A ''pipeline'' defines a serie of [[docs:flow:step|step]] where:
   * the first step called the [[docs:flow:supplier|supplier step]]:
       * selects [[docs:resource:resource|data resources]]
       * and send them to the next step
@@ -11,18 +16,121 @@ A ''pipeline'' is a [[docs:common:yaml|yaml]] file that defines a serie of [[doc
 
 
 ===== Syntax =====
-The syntax of a pipeline script is the following
+A pipeline is a [[docs:common:manifest|manifest file]] that follows the following syntax:
 
 
 <code yaml  pipeline.yml>
-pipeline:
-    - name: supplierStep1 # first operation of a pipeline is a supplier step
-      .....
-    - name: intermediateStep2 # next operation are called intermediate and works on the resource returned from the supplier
-      .....
+kind: pipeline
+spec:
+  # A comment
+  comment: "A comment"
+  # Pipeline Arguments
+  arguments:
+    # strictness
+    strict-execution: true
+    xxx: xxx
+  # Pipeline steps
+  steps:
+      # first operation of a pipeline is a supplier step
+      - name: supplierStep1
+        operation: xxx
+        arguments:
+          xxx: xxx
+          .....
+      # next operation are called intermediate
+      # They works on the resources returned from the upstream (a supplier or intermediate step)
+      - name: intermediateStep2
+        operation: xxx
+        arguments:
+          xxx: xxx
+          .....
 </code>
-where each name is the name of a [[step|step]]
+
+
+
+==== Arguments ====
+
+''Arguments'' are tabulify pipeline [[:docs:conf:parameter|Parameters]] [[#attributes|attribute]]
+
+
+=== Duration Control ===
+
+Duration Control Parameters control the duration of a pipeline.
+
+^ Name ^ Default ^ Description ^
+| ''max-cycle-count'' | Illimited | The maximum number of cycle (ie the count of data path send in the pipeline). |
+| ''timeout'' | Illimited | A timeout [[:docs:common:duration|duration]] |
+| ''timeout-type'' | ''Error'' | A timeout type (''duration'' or ''error'') \\ The ''duration'' value will not throw an error while ''error'' will. |
+
+
+
+=== Stream ===
+
+See [[:docs:flow:stream_pipeline#arguments|Stream pipeline Arguments]]
+
+=== Error Control ===
+
+
+See [[docs:flow:error_handling|]]
+
+
+=== Strictness ===
+
+''strict-execution'' permits to set the [[:docs:common:strictness|execution strictness]]
+==== Derived Attributes ====
+
+[[:docs:conf:attribute|attributes]] retrieved or computed.
+
+^ Name ^ Description ^
+| ''logical-name'' | The name of the pipeline (ie the file without extension) |
+| ''processing-type'' | The [[:docs:flow:processing-type|processing type]] as determined by the [[docs:flow:supplier#type|type of the supplier]] (ie ''batch'' or ''stream'') |
+| ''start-time'' | The start time of the pipeline execution |
+
+
+==== Steps ====
+
+The steps are a series of [[step|step]] (ie operation and arguments)
+
+
+
+
+
+
+
+
 
 ===== Execution =====
-You can execute a pipeline with the [[docs:tabli:flow:execute|flow execute command]]
+You can execute a pipeline with the [[docs:tabul:flow:execute|flow execute command]]
 
+===== Attributes =====
+
+Pipeline supports 2 kind of [[:docs:conf:attribute|attributes]]:
+  * [[#arguments]]
+  * [[#derived attributes]]
+
+===== Metrics =====
+
+==== Pipeline Metrics ====
+
+Pipelines shows the following metrics:
+
+^ Name ^ Description ^
+| Total Elapsed Time | The total elapsed time of the pipeline execution and completion |
+| Execution Elapsed Time | The elapsed time of the pipeline execution to the timeout without the completion (ie last cycle) |
+^ For [[docs:flow:stream_pipeline|Stream Pipeline]] ^
+| Total Poll Wait Time | The total time that the pipeline was waiting to poll due to ''poll-interval'' |
+| Total Push Wait Time | The total time that the pipeline was waiting to push due to ''push-interval'' |
+
+Note on:
+  * ''Total Elapsed time'' and ''Timeout'': The ''timeout'' is the maximum duration of the main execution. Because the pipeline needs to close and complete the pending intermediate steps operation, the total elapsed time is always a little bit greater than the timeout.
+  * ''Total Poll Wait Time'' and ''Timeout'': the ''Total Poll Wait Time'' is always greater than the ''Timeout'' because the pipeline may wait in the completion (ie last cycle)
+
+==== Pipeline Step Metrics ====
+
+  * ''Input Counter'': the number of data resource received
+  * ''Output Counter'' : the number of data resource supplied
+  * ''Execution Counter'': the number of step execution. In a [[docs:flow:stream_pipeline|stream pipeline]], the execution is:
+    * for the [[docs:flow:supplier|supplier]], the number of time, the [[docs:flow:stream_pipeline#poll|poll]] function was called
+    * for a [[docs:flow:processing-type|batch]] [[docs:flow:intermediate|intermediate step]], the number of time, the ''window interval'' was exhausted and the step was executed
+    * for a [[docs:flow:processing-type|stream]] [[docs:flow:intermediate|intermediate step]], the step execution (ie one data resource, one execution)
+  * ''Error Counter'': the number of errors

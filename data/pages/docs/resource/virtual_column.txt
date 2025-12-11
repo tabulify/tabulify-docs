@@ -1,25 +1,45 @@
+---json
+{
+    "page_id": "iu6rjwh16qbkkrmun10f0"
+}
+---
 ====== Data Resource - Virtual Columns ======
 
 
-===== Virtual =====
-''virtual columns'' are [[column|columns]] where their values are computed.
-
-===== Howto =====
-<related pattern="howto:*" />
-===== Syntax =====
-
-''Tabulify'' permits to add virtual columns that contains [[attribute|data resource attribute]] such as the [[name|name]] of a file with:
-  * the [[docs:op:enrich|enrich operation]]
-  * or the ''virtual-column'' [[docs:tabli:option|tabli option]].
+===== About =====
+''virtual columns'' are [[column|columns]] that contains generated data by [[:docs:generator:data-supplier|data supplier]].
 
 
-==== tabli ====
-The [[docs:tabli:option|tabli option]] syntax is the following:
+===== Usage =====
+
+They are most used to:
+  * add [[:docs:resource:attribute|data attributes]] from the [[:docs:resource:resource|data resource]] such as its [[docs:resource:name|name]], its [[docs:resource:size|size]] or its [[docs:resource:count|count]] (via with the [[:docs:generator:meta|meta supplier]])
+  * or to compute ''expression'' with the [[:docs:generator:expression|expression data supplier]]
+
+
+===== How to add virtual columns? =====
+
+
+''Tabulify'' permits to add virtual columns with:
+  * the [[#enrich operation]]
+  * the ''virtual-column'' [[docs:tabul:option|tabul option]].
+
+
+==== Enrich Operation ====
+
+[[docs:op:enrich|Enrich]] is a intermediate pipeline operation that accepts all [[:docs:generator:data-supplier|data suppliers]] as value source.
+
+
+
+==== virtual-column tabul option ====
+The ''virtual-column'' [[docs:tabul:option|tabul option]] is a short cut to add a virtual column based only on the [[:docs:generator:meta|meta supplier]]
+
+The syntax is the following:
 <code>
---virtual-column "virtualColumnName=resourceAttributeName "
+--virtual-column "virtualColumnName=dataResourceAttributeName"
 </code>
 where:
   * ''virtualColumnName'' is the name of the column added
-  * ''resourceAttributeName'' is the name of [[docs:resource:attribute|resource attribute]].
+  * ''dataResourceAttributeName'' is the name of [[docs:resource:attribute|data resource attribute]].
 
 

@@ -1,0 +1,195 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:database:benchmark" }
+    ],
+    "canonical": ":howto:database:benchmark",
+    "description": "This howto will show you how to load a relational database schema in order to create a benchmark with the data query command",
+    "name": "TPCDS benchmark",
+    "page_id": "pwp5v8ztbr31zv6afaw05"
+}
+---
+
+====== Database HowTo - How to load your database with the TPCDS benchmark ======
+
+===== Query command =====
+This [[howto:howto|howto]] will show you how to load a <icon name="database"/> [[docs:system:database:database|relational database]] in order to create a [[docs:benchmark|benchmark]] with the [[docs:tabul:data:execute|data perf command]].
+
+[[docs:system:tpcds|tpcds]] is a [[docs:benchmark|benchmark]] and offers 100 [[:docs:resource:sql_select|queries]] that we will execute.
+
+<note info>All 100 queries are not present because ''Sqlite'' does not implement all standard ANSI clause but as since version [[https://www.sqlite.org/draft/releaselog/3_25_0.html|3.25]] support window functions, most of the analytics query are working.
+</note>
+
+===== Steps =====
+
+==== Drop all tables ====
+For the purpose of this howto, we will use the [[docs:connection:howtos|Sqlite howto connection]]
+
+To be sure to start in a clean schema, the below [[docs:tabul:data:drop|data drop command]] will [[docs:op:drop|drop]] all [[docs:resource:sql_table|tables]] in the [[docs:connection:howtos|Sqlite howto connection]]
+<unit>
+<code bash>
+tabul data drop *@sqlite
+</code>
+</unit>
+
+
+==== Load the TPCDS data into the target system ====
+
+With the [[docs:tabul:data:copy|data copy command]], we will [[docs:op:copy|copy]] the [[docs:system:tpcds#store_sales|TPCDS store schema]] into the [[docs:connection:howtos|Sqlite howto connection]].
+<unit>
+<code bash>
+tabul data copy --with-dependencies store*@tpcds @sqlite
+</code>
+<console>
+Transfer results
+input                          target                          latency   record_count   error_code   error_message
+----------------------------   -----------------------------   -------   ------------   ----------   -------------
+customer@tpcds                 customer@sqlite                 0.59s             1000                
+customer_address@tpcds         customer_address@sqlite         0.112s            1000                
+customer_demographics@tpcds    customer_demographics@sqlite    17.648s        1920800                
+date_dim@tpcds                 date_dim@sqlite                 3.450s           73049                
+household_demographics@tpcds   household_demographics@sqlite   0.65s             7200                
+income_band@tpcds              income_band@sqlite              0.23s               20                
+item@tpcds                     item@sqlite                     0.189s            2000                
+promotion@tpcds                promotion@sqlite                0.17s                3                
+reason@tpcds                   reason@sqlite                   0.18s                1                
+store@tpcds                    store@sqlite                    0.55s                2                
+store_returns@tpcds            store_returns@sqlite            0.529s           11925                
+store_sales@tpcds              store_sales@sqlite              5.395s          120527                
+time_dim@tpcds                 time_dim@sqlite                 0.955s           86400
+</console>
+</unit>
+
+<note>
+We copy only the store star schema to make it quicker but you can try to load all the ''TPC-DS'' data
+<code bash>
+tabul data copy --with-dependencies *@tpcds @sqlite
+</code>
+</note>
+
+==== Execute the queries ====
+
+
+The below [[docs:tabul:data:execute|data exec command]] will select all ''Tpcds'' queries located in the [[docs:connection:tpcds_query|tpcds-query connection]] below the ''sqlite'' directory and execute them.
+<unit>
+<code bash>
+tabul data exec \
+   --no-stop-early \
+   --no-fail-on-error \
+   --processing-type batch \
+   --execution-mode load \
+   '(sqlite/query_*.sql@tpcds_query)@sqlite'
+</code>
+where:
+  * `--no-stop-early` will continue the execution even if an error is seen
+  * `--no-fail-on-error` will not return a bad exit code if an error is seen
+  * `--processing-type` will set the [[:docs:op:execute|execute operation]] [[:docs:flow:processing-type|processing-type]] to ''batch'' so that we get a clean table output (In stream processing, the result table headers are printed every time the layout changes)
+  * the ''execution-mode'' gets a value of ''load'' so that the original [[:docs:resource:sql_select|sql select query]] executed is wrapped in a count statement.
+<code sql>
+select count(*) from ( query .... )
+</code>
+
+The output gives you latency data that you can then analyse.
+<note>
+If you want to get the latency data in another data resource such as a csv or table, you can make use of the [[docs:tabul:output|tabul output]] options.
+</note>
+<console>
+List of runtime executed
+runtime_data_uri                             exit_code   count   latency   error_message
+------------------------------------------   ---------   -----   -------   ----------------------------------------------------------------------------------------------------
+(sqlite/query_1.sql@tpcds_query)@sqlite              0     100   0.52s     
+(sqlite/query_2.sql@tpcds_query)@sqlite              1       0   0.16s     A sql request execution ... See execute/20251020-173349-917-pipe-tabul-data-exec/query_2-err.log@tmp
+(sqlite/query_3.sql@tpcds_query)@sqlite              0       2   0.16s     
+(sqlite/query_4.sql@tpcds_query)@sqlite              1       0   0.4s      A sql request execution ... See execute/20251020-173349-917-pipe-tabul-data-exec/query_4-err.log@tmp
+(sqlite/query_5.sql@tpcds_query)@sqlite              1       0   0.3s      A sql request execution ... See execute/20251020-173349-917-pipe-tabul-data-exec/query_5-err.log@tmp
+(sqlite/query_6.sql@tpcds_query)@sqlite              0       3   0.180s    
+(sqlite/query_7.sql@tpcds_query)@sqlite              0     100   0.27s     
+(sqlite/query_8.sql@tpcds_query)@sqlite              0       0   0.3s      
+(sqlite/query_9.sql@tpcds_query)@sqlite              0       1   0.2s      
+(sqlite/query_10.sql@tpcds_query)@sqlite             1       0   0.3s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_10-err.log@tmp
+(sqlite/query_11.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_11-err.log@tmp
+(sqlite/query_12.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_12-err.log@tmp
+(sqlite/query_13.sql@tpcds_query)@sqlite             0       1   0.18s     
+(sqlite/query_14.sql@tpcds_query)@sqlite             1       0   0.3s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_14-err.log@tmp
+(sqlite/query_15.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_15-err.log@tmp
+(sqlite/query_18.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_18-err.log@tmp
+(sqlite/query_19.sql@tpcds_query)@sqlite             0      17   0.15s     
+(sqlite/query_20.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_20-err.log@tmp
+(sqlite/query_21.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_21-err.log@tmp
+(sqlite/query_22.sql@tpcds_query)@sqlite             1       0   0.3s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_22-err.log@tmp
+(sqlite/query_23.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_23-err.log@tmp
+(sqlite/query_24.sql@tpcds_query)@sqlite             0       0   0.46s     
+(sqlite/query_24_1.sql@tpcds_query)@sqlite           0       0   0.33s     
+(sqlite/query_25.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_25-err.log@tmp
+(sqlite/query_26.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_26-err.log@tmp
+(sqlite/query_27.sql@tpcds_query)@sqlite             0     100   0.26s     
+(sqlite/query_28.sql@tpcds_query)@sqlite             0       1   0.40s     
+(sqlite/query_29.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_29-err.log@tmp
+(sqlite/query_30.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_30-err.log@tmp
+(sqlite/query_31.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_31-err.log@tmp
+(sqlite/query_32.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_32-err.log@tmp
+(sqlite/query_33.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_33-err.log@tmp
+(sqlite/query_34.sql@tpcds_query)@sqlite             0      12   0.16s     
+(sqlite/query_35.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_35-err.log@tmp
+(sqlite/query_36.sql@tpcds_query)@sqlite             0     100   0.30s     
+(sqlite/query_37.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_37-err.log@tmp
+(sqlite/query_38.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_38-err.log@tmp
+(sqlite/query_40.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_40-err.log@tmp
+(sqlite/query_41.sql@tpcds_query)@sqlite             0       0   0.10s     
+(sqlite/query_42.sql@tpcds_query)@sqlite             0       6   0.13s     
+(sqlite/query_43.sql@tpcds_query)@sqlite             0       2   0.27s     
+(sqlite/query_44.sql@tpcds_query)@sqlite             0      10   0.227s    
+(sqlite/query_45.sql@tpcds_query)@sqlite             1       0   0.3s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_45-err.log@tmp
+(sqlite/query_46.sql@tpcds_query)@sqlite             0     100   0.18s     
+(sqlite/query_47.sql@tpcds_query)@sqlite             0     100   0.110s    
+(sqlite/query_48.sql@tpcds_query)@sqlite             0       1   0.17s     
+(sqlite/query_49.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_49-err.log@tmp
+(sqlite/query_50.sql@tpcds_query)@sqlite             0       2   0.35s     
+(sqlite/query_52.sql@tpcds_query)@sqlite             0      10   0.12s     
+(sqlite/query_53.sql@tpcds_query)@sqlite             0       0   0.51s     
+(sqlite/query_54.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_54-err.log@tmp
+(sqlite/query_55.sql@tpcds_query)@sqlite             0       7   0.12s     
+(sqlite/query_56.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_56-err.log@tmp
+(sqlite/query_57.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_57-err.log@tmp
+(sqlite/query_58.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_58-err.log@tmp
+(sqlite/query_59.sql@tpcds_query)@sqlite             0     100   0.86s     
+(sqlite/query_60.sql@tpcds_query)@sqlite             1       0   0.3s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_60-err.log@tmp
+(sqlite/query_61.sql@tpcds_query)@sqlite             0       1   0.20s     
+(sqlite/query_62.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_62-err.log@tmp
+(sqlite/query_63.sql@tpcds_query)@sqlite             0       0   0.47s     
+(sqlite/query_64.sql@tpcds_query)@sqlite             1       0   0.4s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_64-err.log@tmp
+(sqlite/query_65.sql@tpcds_query)@sqlite             0       4   0.39s     
+(sqlite/query_66.sql@tpcds_query)@sqlite             1       0   0.3s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_66-err.log@tmp
+(sqlite/query_67.sql@tpcds_query)@sqlite             0     100   0.75s     
+(sqlite/query_68.sql@tpcds_query)@sqlite             0      79   0.13s     
+(sqlite/query_69.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_69-err.log@tmp
+(sqlite/query_70.sql@tpcds_query)@sqlite             0       1   0.36s     
+(sqlite/query_71.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_71-err.log@tmp
+(sqlite/query_72.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_72-err.log@tmp
+(sqlite/query_73.sql@tpcds_query)@sqlite             0       0   0.12s     
+(sqlite/query_74.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_74-err.log@tmp
+(sqlite/query_75.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_75-err.log@tmp
+(sqlite/query_76.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_76-err.log@tmp
+(sqlite/query_77.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_77-err.log@tmp
+(sqlite/query_78.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_78-err.log@tmp
+(sqlite/query_79.sql@tpcds_query)@sqlite             0     100   0.15s     
+(sqlite/query_80.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_80-err.log@tmp
+(sqlite/query_81.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_81-err.log@tmp
+(sqlite/query_82.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_82-err.log@tmp
+(sqlite/query_83.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_83-err.log@tmp
+(sqlite/query_84.sql@tpcds_query)@sqlite             0       1   0.7s      
+(sqlite/query_85.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_85-err.log@tmp
+(sqlite/query_86.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_86-err.log@tmp
+(sqlite/query_88.sql@tpcds_query)@sqlite             0       1   0.108s    
+(sqlite/query_89.sql@tpcds_query)@sqlite             0     100   0.47s     
+(sqlite/query_90.sql@tpcds_query)@sqlite             1       0   0.3s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_90-err.log@tmp
+(sqlite/query_91.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_91-err.log@tmp
+(sqlite/query_92.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_92-err.log@tmp
+(sqlite/query_93.sql@tpcds_query)@sqlite             0       0   0.2s      
+(sqlite/query_94.sql@tpcds_query)@sqlite             1       0   0.1s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_94-err.log@tmp
+(sqlite/query_95.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_95-err.log@tmp
+(sqlite/query_96.sql@tpcds_query)@sqlite             0       1   0.14s     
+(sqlite/query_98.sql@tpcds_query)@sqlite             0     237   0.38s     
+(sqlite/query_99.sql@tpcds_query)@sqlite             1       0   0.2s      A sql request execution... See execute/20251020-173349-917-pipe-tabul-data-exec/query_99-err.log@tmp
+</console>
+</unit>

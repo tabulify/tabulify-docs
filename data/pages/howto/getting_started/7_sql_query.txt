@@ -1,0 +1,196 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:getting_started:7_query" }
+    ],
+    "page_id": "bwc6wxcx5o26z8g6nt0sq"
+}
+---
+====== Learning Tabulify - Step 7 - How to execute a SQL Query ======
+
+===== Query =====
+For ''Tabulify'', a  [[:docs:resource:sql_select|SQL Query]] is a [[docs:resource:runtime|runtime resource]] that when executed returns a ''data set'' in [[docs:resource:tabular|tabular format]] (known as the result set).
+
+The [[docs:flow:selector|selector]] of a [[docs:resource:runtime|runtime]] is known as a [[docs:flow:runtime_selector|runtime selector]]. This ''selector'' is composed of a [[docs:flow:data_selector|data selector]] inside its expression.
+
+The syntax is:
+<code bash>
+(sqlSelector)@connection
+</code>
+where:
+  * ''sqlSelector'' is a [[docs:flow:data_selector|data selector]] that locates a [[docs:resource:resource|data resource]] that contains [[:docs:system:database:sql_statement|sql statements]]
+  * ''@connection'' defined the [[docs:connection:connection|connection]] where the SQL Statements will be executed.
+
+In the next steps, we will show this concepts by running a [[:docs:resource:sql_select|query]] of the [[docs:system:tpcds|Tpcds]] benchmark.
+
+===== Query 11 =====
+
+[[docs:system:tpcds|Tpcds]] offers 100 queries that are all located in the [[docs:connection:tpcds_query|tpcds-queries]] connection
+
+
+We will execute the ''query 11'' that lists the customers that have generated growing sales from one year to another in the ''s'' and ''w'' sales type.
+
+
+Below is the ''query 11'' located at ''sqlite/query_11.sql@tpcds_query''
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode sqlite/query_11.sql@tpcds_query
+# --type text disable sql statement parsing
+# --pipe-mode disallow the headers
+</code>
+<console sql height="300px" scroll="toggle">
+with year_total as (
+ select c_customer_id customer_id
+       ,c_first_name customer_first_name
+       ,c_last_name customer_last_name
+       ,c_preferred_cust_flag customer_preferred_cust_flag
+       ,c_birth_country customer_birth_country
+       ,c_login customer_login
+       ,c_email_address customer_email_address
+       ,d_year dyear
+       ,sum(ss_ext_list_price-ss_ext_discount_amt) year_total
+       ,'s' sale_type
+ from customer
+     ,store_sales
+     ,date_dim
+ where c_customer_sk = ss_customer_sk
+   and ss_sold_date_sk = d_date_sk
+ group by c_customer_id
+         ,c_first_name
+         ,c_last_name
+</file>
+</unit>
+
+
+To make the ''query 11'' [[docs:resource:runtime|executable]], we need to add the execution connection.
+
+The [[:docs:resource:data_uri#executable|executable data uri]] will be then:
+<code bash>
+(sqlite/query_11.sql@tpcds_query)@connection
+</code>
+===== Printing the query =====
+
+[[docs:tabul:data:print|Printing]] the query against [[docs:connection:howtos|the sqlite connection]] will show us the customers that have generated growing sales from one year to another in the ''s'' and ''w'' sales type.
+
+<unit>
+<code bash>
+tabul data print '(sqlite/query_11.sql@tpcds_query)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+(sqlite/query_11.sql@tpcds_query)@sqlite
+customer_id        customer_first_name   customer_last_name   customer_email_address
+----------------   -------------------   ------------------   ----------------------------------
+AAAAAAAABMDAAAAA   Jose                  Guzman               Jose.Guzman@stJp.edu
+AAAAAAAAFLAAAAAA   Joseph                Riley                Joseph.Riley@znxF.com
+AAAAAAAAJGBAAAAA   Bonnie                Harrison             Bonnie.Harrison@AKYSOPlHEYkd.com
+AAAAAAAAKMDAAAAA   Alexander             White                Alexander.White@7v2XsptkFrc50K.org
+AAAAAAAAOFCAAAAA   Timothy               Grogan               Timothy.Grogan@pn3NH2BDng.org
+</console>
+</unit>
+
+===== A query is just a data resource =====
+
+
+Don't forget that:
+  * a [[:docs:resource:sql_select|sql query]] is a [[docs:resource:runtime|runtime]]
+  * an [[docs:resource:runtime|runtime]] is just a [[docs:resource:resource|data resource]].
+
+A query can therefore be used on every command as any other [[docs:resource:resource|data resource]].
+
+
+==== How to copy a query into another table ====
+
+<unit display="none">
+In case of resume, we need to be sure that the target does not exist
+<code bash>
+tabul data drop --no-strict-selection query_11@sqlite
+</code>
+</unit>
+
+For instance, if you want to [[docs:tabul:data:copy|copy]] its output to a [[docs:resource:sql_table|table]] called ''query_11'', you would issue the following command:
+<unit>
+<code bash>
+tabul data copy '(sqlite/query_11.sql@tpcds_query)@sqlite'  query_11@sqlite
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+</unit>
+And the content of the new [[docs:resource:sql_table|table]] is just the same as the output  of the ''query 11''.
+<unit>
+<code bash>
+tabul data print query_11@sqlite
+</code>
+<console>
+query_11@sqlite
+customer_id        customer_first_name   customer_last_name   customer_email_address
+----------------   -------------------   ------------------   ----------------------------------
+AAAAAAAABMDAAAAA   Jose                  Guzman               Jose.Guzman@stJp.edu
+AAAAAAAAFLAAAAAA   Joseph                Riley                Joseph.Riley@znxF.com
+AAAAAAAAJGBAAAAA   Bonnie                Harrison             Bonnie.Harrison@AKYSOPlHEYkd.com
+AAAAAAAAKMDAAAAA   Alexander             White                Alexander.White@7v2XsptkFrc50K.org
+AAAAAAAAOFCAAAAA   Timothy               Grogan               Timothy.Grogan@pn3NH2BDng.org
+</console>
+</unit>
+
+
+Let's [[:docs:tabul:data:drop|drop]] it to keep a clean schema
+<unit>
+<code bash>
+tabul data drop query_11@sqlite
+</code>
+<console>
+Dropped data resources
+data_uri          media_type
+---------------   ----------
+query_11@sqlite   table
+</console>
+</unit>
+
+==== How to download a query as a CSV ====
+
+For instance, if you want to [[docs:tabul:data:copy|copy]] its output:
+  * to a [[:docs:resource:csv|CSV]] called ''query_11.csv''
+  * into the [[:docs:connection:cd|current directory (cd)]]
+you would issue the following command
+<unit display="none">
+Drop the target if exists
+<code bash>
+tabul data drop --no-strict-selection  query_11.csv@cd
+</code>
+</unit>
+<unit>
+<code bash>
+tabul data copy '(sqlite/query_11.sql@tpcds_query)@sqlite'  query_11.csv@cd
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+</unit>
+And the content of the new csv is also just the same than the output  of the ''query 11''.
+<unit>
+<code bash>
+tabul data print query_11.csv@cd
+</code>
+<console>
+query_11.csv@cd
+customer_id        customer_first_name   customer_last_name   customer_email_address
+----------------   -------------------   ------------------   ----------------------------------
+AAAAAAAABMDAAAAA   Jose                  Guzman               Jose.Guzman@stJp.edu
+AAAAAAAAFLAAAAAA   Joseph                Riley                Joseph.Riley@znxF.com
+AAAAAAAAJGBAAAAA   Bonnie                Harrison             Bonnie.Harrison@AKYSOPlHEYkd.com
+AAAAAAAAKMDAAAAA   Alexander             White                Alexander.White@7v2XsptkFrc50K.org
+AAAAAAAAOFCAAAAA   Timothy               Grogan               Timothy.Grogan@pn3NH2BDng.org
+</console>
+</unit>
+
+<unit display="none">
+Drop the target to not have it in the git repo if we run it from the repo
+<code bash>
+tabul data drop --no-strict-selection  query_11.csv@cd
+</code>
+</unit>
+
+===== Next =====
+Now that we can query our data, we are going to learn how to modify the content of a table
+
+<btn>
+[[8_data_manipulation|How to modify the content of a table]]
+</btn>

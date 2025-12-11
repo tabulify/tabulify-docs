@@ -1,10 +1,15 @@
+---json
+{
+    "page_id": "197p3olxuu9w3db0bxda2"
+}
+---
 ====== Tabulify Documentation ======
 
 {{ :docs:undraw_my_documents.svg?0x300 |}}
 
 ===== About =====
 
-Welcome to the documentation of Tabulify. This section regroups all reference documentation. 
+Welcome to the documentation of Tabulify. This section regroups all reference documentation.
 
 <note>
   * If you are new to Tabulify, we recommend to follow the [[howto:getting_started:getting_started|getting started guide]]
@@ -14,18 +19,18 @@ Welcome to the documentation of Tabulify. This section regroups all reference do
 
 <iterator>
     <data>select from descendants where is_home = 1  and depth = 1 order by path asc </data>
-<row >
-        <template>
-        <cell>
+<grid>
+        <fragment>
+        <box>
             <card clickable>
             <page-image path="$path" ratio="16:9" color="#336699"/>
             === $title ===
 
             $description [[$path| ]]
             </card>
-        </cell>
-        </template>
-</row>
+        </box>
+        </fragment>
+</grid>
 </iterator>
 
 

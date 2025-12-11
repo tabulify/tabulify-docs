@@ -1,0 +1,122 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:manifest" }
+    ],
+    "page_id": "zfu4m8nbzexo6xysyy434"
+}
+---
+====== Manifest File ======
+
+===== About =====
+
+''manifest files'' are [[:docs:common:yaml|yaml file]] that describes a tabulify resource.
+
+===== Syntax =====
+
+A ''manifest file'' follows the following syntax:
+```yaml
+kind: 'kind'
+spec:
+  attributeName: attributeValue
+  ....: ....
+```
+where
+  * `kind` is a single name resource identifier for a [[:docs:resource:media-type|media type]].
+  * `attributes` is map of [[:docs:conf:attribute|attribute]]
+
+
+===== Type =====
+
+There is 2 type of manifest
+  * [[#tabulify|tabulify manifest]]
+  * [[#resource|resource manifest]]
+
+
+==== Tabulify ====
+
+Tabulify manifests are files that:
+  * stores Tabulify objects.
+  * have their own specific schema
+
+List:
+  * [[docs:conf:tabul.yml|tabul]]
+  * [[:docs:resource:generator|generator]]
+  * [[:docs:flow:pipeline|pipeline]]
+
+==== Resource ====
+
+[[:docs:resource:manifest|Resource manifests]] are manifest that:
+  * defines a [[docs:resource:resource|resource]]
+  * with the following 3 attributes:
+    * [[:docs:resource:data_uri|data uri]]
+    * [[docs:resource:media-type|media type]]
+    * and [[:docs:resource:data-definition|data definition]]
+
+
+Example:
+  * [[docs:resource:sql_request|sql-fetch]]
+  * [[docs:resource:csv|csv]]
+  * ..
+
+
+<unit>
+<file yaml books--csv.yml>
+kind: csv
+spec:
+  data-def:
+    logical-name: favorite_books
+    header-row-id: 1
+    delimiter-character: ','
+    columns:
+      - name: asin
+        type: varchar
+        precision: 20
+      - name: description
+        type: varchar
+      - name: price
+        type: double
+      - name: group
+        type: varchar
+
+</file>
+</unit>
+
+
+
+
+
+
+
+===== Naming =====
+
+The name of a metadata file follows the following convention:
+<code>
+logical-Name--kind.yml
+</code>
+where:
+  * ''logical-name'' is an arbitrary name
+  * ''%%--kind%%'' is a prefix with the kind of resource
+
+For example for a [[:docs:resource:generator|generator]] that generates time data
+<code>
+time--generator.yml
+</code>
+
+
+===== Media Type =====
+
+The [[:docs:resource:media-type|media type]] follows the the [[https://datatracker.ietf.org/doc/html/rfc6838#section-3.2|Vendor tree media types (vnd) convention]]:
+<code>
+text/vnd.tabulify.kind+yaml
+</code>
+
+For instance, a [[:docs:resource:generator|generator]] has the following media type
+<code>
+text/vnd.tabulify.generator+yaml
+</code>
+
+
+===== Note =====
+==== Data URI ====
+In a manifest, the [[:docs:resource:data_uri|data uri]] can use the the [[docs:connection:md|md connection]] where ''md'' is the directory of the manifest.

@@ -1,0 +1,17 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:flow:start" }
+    ],
+    "page_id": "ashcyqvrq05z98vnfwlb6"
+}
+---
+====== What is the flow Command ? ======
+
+
+
+===== About =====
+The ''flow'' command is a [[docs:tabul:module|module]] that permits to manage the [[docs:flow:start|flow language]].
+
+
+It has for now only one command the [[docs:tabul:flow:execute|execute command]] that permits to execute pipeline.

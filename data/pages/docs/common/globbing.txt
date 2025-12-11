@@ -1,15 +1,20 @@
+---json
+{
+    "page_id": "6rcz68rng4n60g9fg9s2b"
+}
+---
 ====== Tabulify - Glob Pattern ======
 
 
 ===== Glob Pattern =====
 <icon name="carbon:character-patterns"/> ''Glob pattern'' are used in ''Tabulify'' to select objects such as :
   * [[docs:connection:connection|connection]]
-  * [[docs:resource:resource|resource]] (in [[docs:resource:data_selector|data selector]])
+  * [[docs:resource:resource|resource]] (in [[docs:flow:data_selector|data selector]])
   * or [[..:conf:conf|configuration]]
 
 
 <note info>
-If you are new to ''glob pattern'', see this page [[howto:tabli:glob]]
+If you are new to ''glob pattern'', see this page [[howto:tabul:glob]]
 </note>
 
 
@@ -34,22 +39,22 @@ ie:
 
 You can use this extra variable in:
   * a [[docs:conf:template|template name]]
-  * a [[:docs:resource:target_uri|target uri]]
+  * a [[docs:flow:template_data_uri|target uri]]
 
-Example with the [[:docs:tabli:data:list|data list command]] that:
+Example with the [[:docs:tabul:data:list|data list command]] that:
   * selects the table that starts with ''web'' on a [[:docs:system:tpcds|tpcds schema]]
-  * shows the [[:docs:resource:logicalname|logical]] and the ''1'' first back-reference value
+  * shows the ''1'' first back-reference value
 
 <unit>
 <code bash>
-tabli data list -a logicalName -a 1 web_*@tpcds
+tabul data list -a 1 web_*@tpcds
 </code>
 <console>
-logicalName   1
------------   -------
-web_page      page
-web_returns   returns
-web_sales     sales
-web_site      site
+path          media_type     1
+-----------   ------------   -------
+web_page      sql/relation   page
+web_returns   sql/relation   returns
+web_sales     sql/relation   sales
+web_site      sql/relation   site
 </console>
 </unit>

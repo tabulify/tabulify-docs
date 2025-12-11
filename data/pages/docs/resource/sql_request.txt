@@ -1,0 +1,165 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:sql_query" }
+    ],
+    "page_id": "x5a14zj7vzypxmfu1kr01"
+}
+---
+====== Data Resource - SQL Request======
+
+
+
+
+===== About =====
+
+A ''SQL request'' is a [[request|request]] against a [[docs:system:database:database|SQL database]]. It's the [[docs:resource:runtime|runtime data resource]] form of ''SQL''.
+
+In a ''SQL request'' processing, Tabulify will:
+  * parse the ''Sql scripts'' (a file or string)
+  * extract the [[:docs:system:database:sql_statement|SQL statements]]
+  * execute them one by one
+  * and returns the result
+
+
+
+===== Type =====
+
+''Sql scripts'' can be stored in
+  * [[#sql files]] - one file, one script
+  * any [[#other resources]] where one [[:docs:resource:record|record]] is one script
+==== SQL Files ====
+
+[[docs:resource:sql_file|SQL files]] will become ''SQL Request'' if they are represented in an [[docs:resource:runtime#data uri|runtime data uri]]
+
+For instance:
+<code>
+(top-5-clients.sql@cd)@sqlite
+</code>
+where:
+  * ''top-5-clients.sql'' is a [[docs:resource:sql_file|sql file]]
+  * located in the [[:docs:connection:cd|current directory (cd)]]
+  * and should be executed against a [[:docs:system:sqlite:sqlite|sqlite database]]
+
+==== Other resources ====
+
+''Sql scripts'' are generally stored in a [[docs:resource:sql_file|SQL File]] but you can get them from any [[docs:resource:resource|resource]].
+
+If the resource has:
+  * only one column, this column is supposed to store the SQL Scripts
+  * otherwise we search for the column named ''sql''
+
+Example:
+  * a [[docs:resource:sql_view|view]] where all scripts are returned in the ''sql'' column
+<code>
+(statements_view@sqlite)@sqlite
+</code>
+  * a [[docs:resource:sql_select|select]] where all scripts are returned in the ''sql'' column
+<code>
+((select_statement.sql@cd)@sqlite)@sqlite
+</code>
+  * a [[docs:resource:csv|csv file]] where all statements are on one line
+<code>
+(statements.csv@cd)@sqlite
+</code>
+
+
+===== List =====
+
+Tabulify supports all SQL Statements:
+  * [[sql_dml|Data Manipulation Language (DML)]] - ie ''[[sql_select|SELECT]]/UPDATE/INSERT/MERGE'' statement
+  * [[sql_ddl|Data Definition Language (DDL)]] - ie ''CREATE/ALTER/DROP'' statement
+  * [[docs:system:database:sql_procedure|SQL Procedures]]- ie ''CALL/DO/DECLARE/BEGIN/END'' statement
+
+
+
+
+
+===== Manifest =====
+
+Example of [[docs:resource:manifest#kind|kind manifest]]
+
+<file yaml syntax--sql-request.yml>
+kind: sql-request
+spec:
+  data-uri: (script.sql@cd)@database
+  data-def:
+    parameters:
+      - value: value1
+        direction: IN
+        type: varchar
+      - value: value2
+        direction: OUT
+        type: integer
+      - ...
+    strict-execution: true
+</file>
+
+where:
+  * ''data-uri'' is an [[docs:resource:runtime|runtime data-uri]]
+  * ''data-def'' is a [[:docs:resource:data-definition|data definition]] that accepts
+      * [[..:system:database:sql_parameterized_statement#parameters|parameters]] - A list of parameters if the script contains [[..:system:database:sql_parameterized_statement|SQL Parameterized Statement]]
+      * ''strict-execution'': if true, the execution will terminate when a SQL statement returns an error. Default to the [[docs:conf:global_env|global tabulify value]].
+
+===== Execution =====
+
+See [[docs:resource:runtime#execution|Runtime Execution]]
+
+===== Limitation: 1 SQL Request, 1 Result Set =====
+
+
+Tabulify is based on resource chaining (ie one resource, one response). Therefore, a ''SQL Request'' should return only one result set.
+
+It means that in a ''SQL Request'', you:
+  * cannot have:
+    * multiple [[:docs:resource:sql_select|Select statements]]
+    * multiple [[:docs:resource:sql_dml|DML statements]] that are using the ''RETURNING'' clause
+    * multiple [[:docs:system:database:sql_procedure|Sql procedure]] with ''OUT'' [[:docs:system:database:sql_parameterized_statement|parameters]]
+  * can have:
+    * multiple [[:docs:resource:sql_dml|DML statements]] that are **NOT** using the ''RETURNING'' clause
+    * multiple [[:docs:resource:sql_ddl|DDL statements]]
+    * multiple DCL statements (GRANT/REVOKE)
+    * multiple [[:docs:system:database:sql_procedure|Sql procedure]] **without** ''OUT'' [[:docs:system:database:sql_parameterized_statement|parameters]]
+
+
+
+If you want to execute a ''SQL Request'' with this limitation, you need to [[:docs:op:split|split]] the statements before running them in a [[:docs:flow:pipeline|pipeline]]
+
+
+Note that not all database supports returning multiple result set. For instance, [[:docs:system:sqlserver:sqlserver|SQL Server does not support it]].
+===== Note =====
+
+
+==== Execution Warnings ====
+
+When executing a query, the database engine may return warnings.
+
+A warning may come from:
+  * the database engine
+  * the user code (For example, the [[https://learn.microsoft.com/en-us/sql/t-sql/language-elements/print-transact-sql|sql server print statement]] create a warning)
+
+Tabulify sends this warnings to the [[wp>Standard_streams|standard error stream]] so that:
+  * the user will see them in a terminal
+  * the warnings will not interfere with the normal [[wp>Standard_streams|standard output stream]]
+
+==== Why Request? ====
+
+When creating this [[docs:resource:runtime|runtime]], we needed to give it a name.
+
+We went through the following names in order:
+  * ''query'' because this is the most common name used in the documentation
+  * ''script'' because we wanted it to be the counterpart of the [[:docs:resource:script|file system script]]
+  * ''fetch'' because we wanted to indicate that it was a [[:docs:resource:request|remote call with a result]]
+
+
+They were not selected:
+  * ''query'' because in the SQL world, it's an alias for a [[:docs:resource:sql_select|SELECT]] statement as seen in the [[https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#executeQuery-java.lang.String-|executeQuery]] method.
+  * ''script'' because it has a local meaning and does not reflect the fact that this is a call to a remote service
+  * ''fetch'' because it's a [[https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API|web word]] and is not well-known in the data world.
+
+
+Finally, we ended up with ''request'' because:
+  * it reflects the fact that this is a call to a remote service
+  * the result given by the java driver is known as a [[https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html|result set]]
+
+

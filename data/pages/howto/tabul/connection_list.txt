@@ -1,0 +1,125 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:tabli:connection_list" }
+    ],
+    "description": "This How-To shows you how to list  connections with the tabul connection list command",
+    "low_quality_page": "false",
+    "page_id": "imxef4iap2hhrt634j3o7"
+}
+---
+====== Tabul - How to list connections ======
+
+
+===== About =====
+How to list <icon name="mdi:connection"/> [[docs:connection:connection|connection]] with the [[docs:tabul:connection:list|tabul connection list]] command
+
+===== Steps =====
+
+
+==== Listing all connections ====
+
+<unit display="none">
+Delete the tabul file to start clean
+<code bash>
+tabul data drop --not-strict .tabul/.tabul.yml@home
+</code>
+</unit>
+
+<unit>
+<code bash>
+tabul connection list
+# or
+# tabul connection list '*'
+# The quotes are mandatory because a star in a bash shell will expand to files
+</code>
+<console>
+name            uri
+-------------   ------------------------------------------------------------------------
+cd              file:///home/tabulify/
+data-home       file:///home/admin/.local/share/tabul/
+desktop         file:///home/tabulify/Desktop
+entity          file:///opt/tabulify/resources/entity/
+home            file:///home/tabulify/
+howto           file:///opt/tabulify/resources/howto/
+log             file:///home/tabulify/.tabul/logs/
+memory          mem:/
+mysql           jdbc:mysql://localhost:3306/howto
+noop            noop
+oracle          jdbc:oracle:thin:@localhost:1521/freepdb1
+postgres        jdbc:postgresql://localhost:5432/postgres
+smtp            smtp://localhost:1025
+sqlite          jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3
+sqlite_target   jdbc:sqlite:////home/tabulify/.tabul/sqlite_target.sqlite3
+sqlserver       jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true
+tmp             file:///mnt/wslg/runtime-dir/tabul/
+tpcds           tpcds
+tpcds_query     file:///opt/tabulify/resources/tpcds_query/
+</console>
+</unit>
+==== Listing a subset with globbing ====
+
+  * List only the connections with ''sql'' in their name by using a [[docs:common:globbing|glob pattern]]
+<unit>
+<code bash>
+tabul connection list *sql*
+</code>
+<console>
+name            uri
+-------------   ------------------------------------------------------------------------
+mysql           jdbc:mysql://localhost:3306/howto
+sqlite          jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3
+sqlite_target   jdbc:sqlite:////home/tabulify/.tabul/sqlite_target.sqlite3
+sqlserver       jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true
+</console>
+</unit>
+
+==== Listing only  a set of connections ====
+
+  * List only the connections with the name [[howto:oracle:howto_connection|oracle]] and [[howto:sqlite:howto_connection|sqlite]]
+<unit>
+<code bash>
+tabul connection list oracle sqlite
+</code>
+<console>
+name     uri
+------   ---------------------------------------------------
+oracle   jdbc:oracle:thin:@localhost:1521/freepdb1
+sqlite   jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3
+</console>
+</unit>
+
+==== Choosing the attributes to return ====
+
+List the connections with the [[docs:connection:name|name]], ''user'' and [[docs:connection:uri|url]] [[docs:connection:attribute|connection attribute]]
+<unit>
+<code bash>
+tabul connection list -a name -a user -a uri
+# or
+# tabul connection list -a name -a user -a uri '*'
+# The quotes are mandatory because a star in a bash shell will expand to files
+</code>
+<console>
+name            user       uri
+-------------   --------   ------------------------------------------------------------------------
+cd                         file:///home/tabulify/
+data-home                  file:///home/admin/.local/share/tabul/
+desktop                    file:///home/tabulify/Desktop
+entity                     file:///opt/tabulify/resources/entity/
+home                       file:///home/tabulify/
+howto                      file:///opt/tabulify/resources/howto/
+log                        file:///home/tabulify/.tabul/logs/
+memory                     mem:/
+mysql           root       jdbc:mysql://localhost:3306/howto
+noop                       noop
+oracle          system     jdbc:oracle:thin:@localhost:1521/freepdb1
+postgres        postgres   jdbc:postgresql://localhost:5432/postgres
+smtp                       smtp://localhost:1025
+sqlite                     jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3
+sqlite_target              jdbc:sqlite:////home/tabulify/.tabul/sqlite_target.sqlite3
+sqlserver       sa         jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true
+tmp                        file:///mnt/wslg/runtime-dir/tabul/
+tpcds                      tpcds
+tpcds_query                file:///opt/tabulify/resources/tpcds_query/
+</console>
+</unit>

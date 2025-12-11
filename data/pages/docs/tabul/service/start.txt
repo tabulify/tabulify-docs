@@ -1,0 +1,72 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:service:start" }
+    ],
+    "page_id": "onui6vuy2eywe4u54nfmm",
+    "template": "holy"
+}
+---
+====== Tabul - Service Module ======
+
+
+===== About =====
+''Service'' is a [[docs:tabul:module|Tabul module]] that helps you manage [[:docs:service:service|services]] that starts [[docs:system:system|systems]]
+
+Within the service module, you can:
+  * [[start_command|start]] - Start a service (optionally creating it)
+  * [[stop|stop]] - stop a service
+  * [[drop|drop]] - delete a service from the service system (not from the [[docs:conf:tabul.yml|configuration vault]])
+  * [[:docs:tabul:connection:ping|ping]] - verify if a service can be reached with a connection name
+  * [[list|list]] - list the services in a table format
+  * [[info|info]] - get information on a service in a forms format.
+
+
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul service --help
+</code>
+<console>
+
+
+Tabul service
+=============
+
+Management of the Services (docker, ...)
+
+
+
+Syntax
+------
+
+
+    tabul service <command> [-h,--help]
+
+
+where:
+
+
+  Commands:
+
+    drop         Drop a service (In the service system, not in the configuration vault)
+
+    info         Show the service attributes
+
+    list         List the available services
+
+    ping         Ping a service (with a connection name)
+
+    start        Start a service (Optionally creating it if non-existent)
+
+    stop         Stop a service
+
+
+  Option:
+
+    -h,--help    Print this help
+
+
+</console>
+</unit>

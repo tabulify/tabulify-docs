@@ -1,0 +1,80 @@
+---json
+{
+    "page_id": "2vfe8wpbma7mqjcgpeu7c"
+}
+---
+====== Tabul - Summarize Command ======
+
+===== About =====
+''data summarize'' is a [[docs:tabul:command|command]] of the [[docs:tabul:data:start|data module]] that output summary/statistics for the selected [[docs:resource:resource|data resources]]
+
+You got the following summaries:
+  * [[docs:resource:count|count]]
+  * [[docs:resource:size|size]] (min, max, sum, avg)
+
+
+
+===== Syntax =====
+The important notions for this command are the [[docs:flow:data_selector|data selector]] that helps you [[howto:getting_started:4_select_data_resources|select data resources]]
+
+<unit>
+<code bash>
+tabul data summarize --help
+</code>
+<console>
+Tabul data summarize
+====================
+
+Summarize a data resources collection and return min, max, avg on count and size attributes
+
+
+
+Syntax
+------
+
+
+    tabul data summarize [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                      One or more data or script selectors
+
+
+  Selection Options:
+
+    -wd,--with-dependencies                                 If set, the dependencies will be also selected
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>
+
+

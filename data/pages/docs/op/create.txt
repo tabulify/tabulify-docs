@@ -1,10 +1,101 @@
+---json
+{
+    "page_id": "f7mucd52e9n370cbwm51g"
+}
+---
 ====== Data Operation - Create ======
 
 ===== About =====
-''create'' is an [[op|data operation]] that affects only [[docs:resource:metadata|metadata]].
+''create'' is an [[:docs:flow:intermediate|intermediate operation]] that creates the [[docs:resource:metadata|metadata]] (ie [[docs:resource:structure|structure]], ...) from its [[:docs:flow:input|inputs]] (ie [[docs:resource:resource|data resource]])
 
-This operation will create an ''empty'' [[docs:resource:resource|data resource]] and defines optionally its [[docs:resource:metadata|metadata]] (ie [[docs:resource:structure|structure]])
+<note>
+  * This operation does not create any data. It creates only the [[docs:resource:metadata|metadata]].
+</note>
 
 
-The [[docs:tabli:data:create|data create operation]] supports the ''create'' operation.
+===== Create vs SQL DDL Create =====
+
+This operation is not [[:docs:resource:sql_ddl|DDL CREATE statement]].
+
+This operation can:
+    * create by metadata copy of its inputs
+    * and optionally create a view from a [[:docs:resource:sql_select|select input]]
+
+
+If you want to use the ''SQL DDL CREATE statement'', you need to create and execute a [[:docs:resource:sql_ddl|SQL DDL Query]]
+
+
+===== Howto =====
+
+The [[docs:tabul:data:create|data create command]] gives you access to the ''create'' operation to create resources.
+
+Howto that are using the [[:docs:tabul:data:create|tabul create command]]:
+  * [[:howto:sql_view:create_from_select]]
+  * [[:howto:sql_table:create_table]]
+  * [[:howto:sql_schema:create_table_with_dependencies]]
+===== Usage =====
+
+==== Creation By Selection ====
+
+When you use the [[docs:op:select|select operation as supplier]] (ie when you select your resources), the ''create'' operation will apply the following `create` actions:
+
+^ Create Action ^ target-data-uri \\ argument ^ target-media-type \\ argument ^ Inputs Expected ^
+| Creation by [[docs:resource:metadata|metadata]] copy | Mandatory | Optional | All data resources expect [[docs:resource:runtime|runtime resources]] |
+| Create view as | Mandatory | [[docs:resource:sql_view|sql view]] | [[docs:resource:sql_select|sql select query]] |
+
+
+
+
+
+
+==== Creation By Definition ====
+
+When you use the [[docs:op:define|define operation as supplier]] (ie when you [[docs:op:define|define]] your data resources), the ''create'' operation will apply the following `create` actions:
+
+^ Action ^ ''target-data-uri'' ^
+| In-place creation | Null |
+| Out-of-place creation (by [[docs:resource:metadata|metadata]] copy) | Not null |
+
+===== Arguments =====
+
+
+^ Name ^ Default ^ Description ^
+| ''target-data-uri'' | See [[#usage]] | A [[:docs:flow:template_data_uri|template data uri]] that defines where the data resources should be created. |
+| ''target-media-type'' | Optional | The ''target'' [[:docs:resource:media-type|media type]] that defines the data type of resource created. \\ Derived from the `target-data-uri` if empty |
+| ''target-data-def'' | Optional | Metadata applied to the created resources (ie target) specified in a [[:docs:resource:data-definition|data definition format]] |
+| ''processing-type'' | ''batch'' | The [[:docs:flow:processing-type|processing type]] |
+| ''output'' | ''results'' | The [[:docs:flow:output|outputs]] type. One of: ''results'', ''inputs'', ''targets'' |
+
+
+==== Results Output Type ====
+
+The results output type is a [[:docs:resource:tabular|tabular resource]] with 2 columns:
+  * the ''input''
+  * the ''target''
+
+
+===== Cli =====
+
+The [[docs:tabul:data:create|data create command]] gives you access to the ''create'' operation to create resources.
+
+===== Note =====
+
+==== How to copy data resource with foreign keys? ====
+
+In [[:docs:flow:processing-type|Batch processing]], the ''create'' operation will also copy the [[:docs:generator:foreign_key|foreign keys]] of data resource in the batch.
+
+If you want to create a ''star schema'', you can specify in the [[:docs:op:select|select operation]] to take the foreign table with the ''-with-dependencies'' option. Example: [[:howto:sql_schema:create_table_with_dependencies]]
+==== Empty but Size not null ====
+
+The created resources are ''empty'' but may have a [[:docs:resource:size|size]] not null.
+
+Why? Some resource stores their metadata close to their data.
+
+For instance, a [[:docs:resource:csv|csv]] has headers that will count toward the size.
+
+==== Other operations that creates data resources ====
+
+  * By default, any [[:docs:op:transfer|transfer operations]] will create the [[docs:flow:target|target data resource]] from its input  if it does not exist
+  * The [[template|template operation]] will also create data resources.
+
 

@@ -1,0 +1,26 @@
+---json
+{
+    "page_id": "48u6fccu7hd4zi0230z59"
+}
+---
+====== Error Operation ======
+
+
+===== About =====
+Error is an [[:docs:flow:intermediate|intermediate operation]] that permits to simulate an error in order to [[docs:app:test|test your pipeline]].
+
+
+
+===== Arguments =====
+
+
+^ Name ^ Default ^ Description ^
+| ''processing-type'' | ''stream'' | The [[:docs:flow:processing-type|processing type]] |
+| ''enable'' | false in [[:docs:common:environment|prod]] | false disables the step |
+| ''fail-every-n-count'' | 0 | Fail every times N number of [[:docs:flow:message|data path]] as been seen (0 meaning always failing) |
+| ''fail-point'' | ''output'' | where to fail (at the ''input'' or the ''output'') |
+
+
+
+
+

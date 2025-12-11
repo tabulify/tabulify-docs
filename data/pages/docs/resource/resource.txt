@@ -3,32 +3,51 @@
     "description": "A data resource is container that contains data. This section lists all data resources supported from file to directory, sql, script and more",
     "low_quality_page": "false",
     "page_id": "t0mw1c6ff57bd90io67ej",
-    "title": "Data Resources - Master your environment"
+    "template": "holy"
 }
 ---
 ====== Tabulify - Data Resources ======
 
+{{ :docs:resource:undraw_environment.svg?600&ratio=16:9 |}}
 
 ===== About =====
-A ''data resource'' is container that contains data. This section lists all data resources supported.
+A [[:docs:system:file|file system]] manipulate [[:docs:resource:file|files]], a [[docs:system:database:database|database]] manipulates ''sql objects'' ([[docs:resource:sql_table|table]], [[docs:resource:sql_view|view]], ...).
 
-It can be of the following type:
-  * [[content|content resource]] (for instance, a [[table|table]] or a [[file|file]])
-  * [[script|script resource]] (for instance, a [[query|query]] or just a script)
-  * or other [[container|container resource]] (for instance, a [[schema|sql schema]], a [[directory|directory]])
+Tabulify regroups and manipulates all of them all under the term ''data resource''.
 
 
-A ''resource'' is uniquely located by a [[data_uri|data uri]] and has [[attribute|attributes]]
+This section lists all data resources supported.
 
-{{ :docs:resource:undraw_environment.svg?600&ratio=16:9 |}}
+===== Type =====
+
+A data resource can be of the following type:
+
+^ Type ^ Name ^ Example ^ Description ^
+| ''static'' | ''static resource'' | [[sql_table|table]], [[file|file]], ... | The content is stored on disk at rest |
+| ''runtime'' | [[runtime|runtime resource]] | [[request|request]], [[docs:resource:script|script]] | The content is generated at runtime |
+| ''container'' | [[container|container resource]] | [[sql_schema|sql schema]], [[directory|directory]] | Resources that contain data resources |
+
+===== Definition =====
+
+A ''resource'' is uniquely defined by:
+  * a [[data_uri|data uri]] to locate the resource
+  * and optionally:
+    * a [[docs:resource:media-type|media type]] to define the type of resource
+    * a [[docs:resource:data-definition|data definition]] to define the [[docs:resource:attribute|attributes]] of the resources
+
 
 ===== List by System =====
 
 ==== Database ====
-[[docs:system:database|database system]]
-  * [[table]]
-  * [[schema]]
-  * [[select]]
+
+List of resources for [[docs:system:database:database|database system]]
+  * [[sql_table|Sql Table]]
+  * [[sql_view|Sql View]]
+  * [[sql_schema|Sql Schema]]
+  * [[docs:resource:sql_request|Sql Request]] to execute SQL statements such as:
+    * [[:docs:resource:sql_dml|DML (SELECT/UPDATE/INSERT/MERGE)]]
+    * [[:docs:resource:sql_ddl|DDL (CREATE/ALTER/DROP)]]
+    * [[:docs:system:database:sql_procedure|SQL Procedures (CALL)]]
 
 ==== File System ====
 [[docs:system:file|file system]] data resources:
@@ -40,5 +59,7 @@ A ''resource'' is uniquely located by a [[data_uri|data uri]] and has [[attribut
       * [[excel]]
       * [[xml]]
       * [[yaml]]
+      * [[docs:resource:sql_file|]]
+      * ...
 
 

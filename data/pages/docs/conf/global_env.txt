@@ -1,0 +1,63 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabul:variable:docs:conf:global" }
+    ],
+    "page_id": "j04ifgu25upf36d17ul61"
+}
+---
+====== Global Env Attributes ======
+
+
+
+===== About =====
+
+
+This page is about the global [[docs:conf:attribute|attributes]] known as ''env''
+
+===== Parameters =====
+
+
+Global parameters attribute are:
+
+
+^ Name ^ [[:docs:tabul:tabul|Tabul Cli Options]] ^  Description ^
+| ''LOG_LEVEL'' | ''--log-level'' | the [[:docs:common:log|log level]] |
+| ''CONF'' | ''--conf'' | the [[docs:conf:tabul.yml|configuration vault path]] |
+| ''APP_HOME'' | ''--app-home'' | the [[docs:connection:app|App Home directory]] |
+| ''USER_HOME'' |  | the [[user_directory|user directory]] |
+| ''PASSPHRASE'' | ''--passphrase'' | the [[:docs:common:passphrase|vault passphrase]] |
+| ''EXEC_ENV'' | ''--exec-env'' | the [[:docs:common:environment|execution environment]] |
+| ''STRICT_EXECUTION'' | ''--not-strict'' | The [[docs:common:strictness|strictness]] (Fail ambiguous situation), true by default |
+
+
+===== How to =====
+
+==== List global attribute ====
+
+With the [[docs:tabul:env:list|env list command]]
+
+==== Set global parameters ====
+
+=== Env ===
+With an [[docs:conf:os|operating system environment variable]].
+
+Example:
+<code bash>
+export TABUL_LOG_LEVEL=warning
+</code>
+
+=== Configuration file ===
+
+Most advanced user may edit the [[docs:conf:tabul.yml|configuration vault]] manually
+<code yaml>
+envs:
+  log-level: warning
+</code>
+
+but for convenience, we provide also the following cli commands:
+
+  * add, remove attributes with:
+      * [[docs:tabul:env:set]]
+      * [[docs:tabul:env:delete]]
+

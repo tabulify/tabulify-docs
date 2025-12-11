@@ -1,0 +1,93 @@
+---json
+{
+    "page_id": "zppr4dosafwlgjt7pwacw"
+}
+---
+====== Data Operation - Unzip  ======
+
+
+===== About =====
+''unzip'' is a [[:docs:flow:processing-type#stream|stream]] [[:docs:flow:intermediate|intermediate operation]] that will unzip/unpack:
+  * its [[:docs:resource:archive|archive]] [[:docs:flow:input|input]]
+  * into a [[:docs:flow:target|target]] [[:docs:resource:directory|directory]] defined by the [[#target data uri|target-data-uri]] argument
+
+
+===== Example =====
+
+  * [[:howto:mysql:sample_schema|]]
+
+
+
+
+===== Cli =====
+
+The ''unzip'' operation is also available via the [[:docs:tabul:data:unzip|tabul data unzip]] command
+
+===== Arguments =====
+
+^ Argument ^ Default ^ Description ^
+| ''entry-selector'' | | A list of [[:docs:common:globbing|glob pattern]]. If set, only the archive entries that match will be extracted |
+| [[#strip-components]] | ''0'' | Number of parts striped from the [[:docs:resource:archive-entry#entry-path|entry path]] to calculate the destination relative path from the destination directory (equivalent to ''strip-components'' in tar) |
+| [[#target-data-uri]] | ''%%${entry_path}@tmp%%'' | a [[docs:flow:template_data_uri|template data uri]] that defines the destination [[:docs:resource:directory|directory]]  where ''input'' and ''entry'' attributes may be used \\ For instance ''%%${input_logical_name}@tmp%%'' |
+^ Flow Property ^^^
+| ''output-type'' | ''results'' | The [[:docs:flow:output|output]] \\ - ''targets'', the extracted entry  \\ - ''inputs'', the archive inputs are passed \\ - ''results'', the [[#results|results]] of the extraction is passed |
+| ''stream-type'' | ''map'' | The type of stream operation \\ * ''map'' will produce one output for one archive \\ * ''split'' will produce one output by archive entry |
+
+
+==== target-data-uri ====
+
+The ''target-data-uri'' defines the location of the extracted entry.
+
+The path therefore is mandatory and needs to be unique (By default, the ''%%${entry_path}%%'')
+
+The following variables may be used in the [[:docs:flow:template_data_uri|template data uri]]
+  * all [[:docs:resource:attribute|resource attribute]] of the ''input'' path. ie
+    * For instance, for the [[:docs:resource:logical_name|logical name]]:  ''%%${input_logical_name}@tmp%%''
+  * the following ''entry'' attributes:
+    * ''%%${entry_path}%%'' : the [[:docs:resource:archive-entry#path|entry path]]
+    * ''%%${entry_N}%%'': the [[:docs:flow:template_string#glob_matched_groups|matched group]] if there is a match with the ''entry_selector'' where ''N'' is the matched group position
+
+==== strip-components ====
+
+''strip-components'' removes one or more names from the ''entry path'' used in the [[#target data uri]].
+
+It is used generally to delete the root directory in the path.
+
+For instance, 
+  * if your ''entry path'' is ''archive-name/file.txt'', 
+  * setting ''strip-components'' to ''1'' will:
+      * remove the ''archive-name'' part
+      * set the ''entry path'' to ''file.txt''
+
+
+Note that if you knew that the root directory was called ''archive-name'', you could also delete it with [[:docs:flow:template_string#glob_matched_groups|matched group backreference]]. ie:
+  * ''entry-selector'': ''archive-name/*''
+  * ''target-data-uri'': ''${entry_1}@tmp''
+===== Results =====
+
+If you set as ''output'' the value ''results'', you will get a data resource with the following columns:
+
+^ Columns ^ Description ^
+| ''target_data_uri'' | the [[:docs:resource:data_uri|data uri]] of the extracted archive entry |
+| ''entry_path'' | the [[..:resource:archive-entry#path|archive entry path]] |
+| ''entry_media_type'' | the [[..:resource:archive-entry#media_type|archive entry media type]] |
+| ''entry_media_size'' | the [[..:resource:archive-entry#size|archive entry size]] |
+| ''entry_update_time'' | the [[..:resource:archive-entry#columns|archive update time]] |
+
+
+Example:
+<console>
+target_data_uri                    entry_path        entry_media_type   entry_size   entry_update_time
+--------------------------------   -------------     ----------------   ----------   ---------------------
+world/empty.txt@tmp                world/empty.txt   text/plain                  0   2025-08-19 08:57:53.0
+world/foo.txt@tmp                  world/foo.txt     text/plain                  5   2025-08-19 08:57:42.0
+</console>
+
+
+===== Important Note =====
+
+==== Overwritten Extraction Mode ====
+The target path is a path where an entry is going to be extracted.
+
+If this target path exists, the file is overwritten by the extracted entry.
+

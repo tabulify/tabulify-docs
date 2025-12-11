@@ -1,0 +1,122 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabul:attribute:list" },
+        { "path": ":docs:tabul:variable:list" }
+    ],
+    "page_id": "0x3oeuiayk97qos6bedi0"
+}
+---
+====== Tabul - Env List Command ======
+
+
+===== About =====
+The ''list'' command of the [[..:env:start|env module]] that lists the [[docs:conf:global_env|global attributes]]
+
+===== Example =====
+
+
+<unit>
+<code bash>
+tabul env list
+</code>
+<console>
+attribute          value                              origin           description
+----------------   --------------------------------   --------------   -----------------------------------------------------------------
+APP_HOME                                              Default          The app home directory (default to the .tabul.yml file directory)
+CONF               /home/tabulify/.tabul/.tabul.yml   Default          The conf vault file path
+EXEC_ENV           dev                                Os environment   The execution environment
+HOME               /opt/tabulify                      Default          The directory of the Tabulify installation
+LOG_LEVEL          ERROR                              Os environment   The log level
+PASSPHRASE                                            Default          The passphrase
+STRICT_EXECUTION   true                               Cli options      Strict mode (Fail ambiguous situation)
+USER_HOME          /home/tabulify/.tabul              Os environment   Tabulify User home Directory
+</console>
+</unit>
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul env list -h
+</code>
+<console>
+Tabul env list
+==============
+
+List the env attributes
+
+Tip:To have a nice output because a value may be very lengthy, you should set the width of your terminal to a big number (such as 10000)
+
+
+
+Examples
+--------
+
+ 1 - List all env attributes
+
+
+    tabul env list
+
+
+ 2 - List all Home configurations
+
+
+    tabul env list  *home*
+
+
+ 3 - List all attributes set by OS Environment variables
+
+
+    tabul env list --type OS
+
+
+
+
+Syntax
+------
+
+
+    tabul env list [options|flags] <name-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <name-selector...>                                      One or more glob selector(s) that will filter the output by the key name
+
+
+  Options:
+
+    -t,--type <mediaType|mimeType|extensionFile>            The type of the configurations to return ('all, command-line, default, dotenv, manifest, os, pipeline, sys, uri' or `all`)
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

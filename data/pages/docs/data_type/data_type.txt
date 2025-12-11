@@ -1,0 +1,250 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:common:data_type" }
+    ],
+    "description": "Data Type support in Tabulify",
+    "page_id": "lz3gvy9z9hjvk283r71k2",
+    "template": "holy"
+}
+---
+====== Tabulify - Data Type ======
+
+
+===== About =====
+
+This page regroups information about the <icon name="bi:fonts" /> ''data type'' support of [[:docs:resource:column|columns]].
+
+
+
+
+
+===== Example =====
+
+Type support depends on the [[:docs:system:system|target system]] (ie the connection)
+
+You can list the supported data type by connection with the [[:docs:tabul:connection:type|connection type]] command.
+
+For instance, for all [[:docs:resource:file|files]] stored in the [[:docs:connection:cd|current directory]], you can define the following data type:
+<unit>
+<code bash>
+tabul connection type --supported-only cd
+</code>
+<console height="400px" scroll="toggle">
+Known Types for the connection (cd)
+name                              aliases                                 ansi_type                         max_precision   supported   description
+-------------------------------   -------------------------------------   -------------------------------   -------------   ---------   ---------------------------------------------------------
+bigint                            int8                                    bigint                            19              ✓           Eight-byte integer
+bit                                                                       bit                                               ✓           Fixed-length bit string
+boolean                           bool                                    boolean                                           ✓           Logical Boolean (true/false)
+character                         char                                    character                                         ✓           Fixed-length blank padded character string
+character varying                 varchar, varying character              character varying                                 ✓           Variable-length character string
+clob                                                                      clob                                              ✓           Very long variable-length character string
+datalink                                                                  datalink                                          ✓           Link to external file or resource (URL)
+date                                                                      date                                              ✓           Calendar date (year, month, day)
+decimal                           dec                                     decimal                                           ✓           Exact numeric of selectable precision
+double precision                  double, float8                          double precision                                  ✓           Double precision floating-point number (8 bytes)
+float                                                                     float                                             ✓           Flexible Precision floating-point number
+integer                           int, int4                               integer                           10              ✓           Four-byte integer
+json                                                                      json                                              ✓           Textual JSON data
+jsonb                                                                     jsonb                                             ✓           Binary JSON data
+long character varying            long varchar                            long character varying                            ✓           Very long variable-length character string
+long national character varying   long nvarchar                           long national character varying                   ✓           Very long variable-length text in a Unicode character set
+mediumint                         int3                                    mediumint                         9               ✓           Three-byte integer
+national character                nchar                                   national character                                ✓           Fixed-length text in Unicode character set
+national character varying        nvarchar                                national character varying                        ✓           Variable-length text in a Unicode character set
+national clob                     nclob                                   national clob                                     ✓           Very long variable-length in a Unicode character set
+numeric                           num                                     numeric                                           ✓           Exact numeric of selectable precision
+real                              float4                                  real                                              ✓           Single precision floating-point number (4 bytes)
+rowid                                                                     rowid                                             ✓           Unique row identifier
+smallint                          int2                                    smallint                          5               ✓           Two-byte integer
+time                              time without time zone                  time                              6               ✓           Time of day without time zone
+time with time zone               timetz                                  time with time zone               6               ✓           Time of day, including time zone
+timestamp                         datetime, timestamp without time zone   timestamp                         6               ✓           Date and time without time zone
+timestamp with time zone          timestamptz                             timestamp with time zone          6               ✓           Date and time, including time zone
+tinyint                           int1                                    tinyint                           4               ✓           One-byte integer (0-255)
+xml                                                                       xml                                               ✓           XML data
+</console>
+</unit>
+
+===== List =====
+
+
+
+==== ANSI ====
+
+We support all primitive [[wp>SQL#Standardization_history|ANSI type]]:
+
+  * [[character]]
+  * [[integer]] (exact numeric)
+  * [[numeric_decimal]] (fixed point number)
+  * [[double_real_float]] (approximate numeric types)
+  * [[date_time|Date and Time data type]]
+  * [[..:data_type:boolean|Boolean Data Type]] (''boolean'', ''bit(1)'')
+
+
+
+Every ''connection type'' is coupled to a [[#ANSI type]]. 
+
+==== Json/Xml====
+
+Complex data type are type that are build upon the primitive type.
+
+We support the following complex data type for a column:
+
+  * ''xml''
+    * Note that we support also an [[docs:resource:xml|xml file]] as data resource
+  * ''json''
+    * Note that we support also 2 ''json'' [[docs:resource:media-type|data resource types]]
+      * the [[docs:resource:json|json file]],
+      * and the [[docs:resource:yaml|yaml file]]
+
+
+
+==== Custom by Connection ====
+
+Database may add data types that are not in the SQL standard.
+
+For instance,
+  * [[:docs:system:postgres:postgres|Postgres]] adds the following types:
+    * [[https://www.postgresql.org/docs/current/datatype-net-types.html|Network Address Type]]
+    * [[https://www.postgresql.org/docs/current/datatype-uuid.html|UUID]]
+  * [[:docs:system:mysql:mysql|MySql]] adds the following 2 types:
+    * [[https://dev.mysql.com/doc/refman/8.4/en/enum.html|enum]]
+    * [[https://dev.mysql.com/doc/refman/8.4/en/set.html|set]]
+
+Even if they are not in the SQL standard, Tabulify can read them because they can be mapped to them (ie ''enum'' and ''set'' values are just string data).
+
+You can get the full list of custom data type supported by connection with the [[:docs:tabul:connection:type|connection type command]].
+
+
+
+===== Attributes =====
+This section regroups information about type attribute that you can see with the [[:docs:tabul:connection:type|connection type]] command.
+==== ANSI Type ====
+
+An ''ANSI'' type:
+  * is the standardized type of the SQL specification.
+  * defined unequivocally, the type of data that stores a column.
+
+
+Why do we need an ANSI type next to a connection type ?  
+
+** Because the type names can conflict**
+
+For instance, 
+  * in [[:docs:system:oracle:oracle|Oracle]], a ''date'' type stores [[date_time|date and time]] information (''YYYY-MM-DD HH:MM:SS''), known as ''timestamp'' in ''ANSI''
+  * but in ''ANSI'', a ''date'' type stores only date information (''YYYY-MM-DD''), no time at all
+
+**Because you may want to store data in another type (known as ''Widening'')**
+
+For instance, 
+  * in [[:docs:system:oracle:oracle|Oracle]] if you want to store a ''ANSI date'' (''YYYY-MM-DD''), you need to use an ''Oracle date'' (''YYYY-MM-DD HH:MM:SS''). 
+  * so if you generate data in a ''Oracle date'' column, you would get date time data (''YYYY-MM-DD HH:MM:SS'')
+  * so if you want to generate ''ANSI date'' data (''YYYY-MM-DD''), you need to specify the ''ansi-type'' as ''date'' in your [[:docs:resource:generator|generator]] [[:docs:resource:data-definition#columns|columns data definition]]
+
+==== Supported  ====
+
+We support all [[#primitive|standard primitive SQL data type]] with the addition of ''JSON'' and ''XML'' as first class citizen.
+
+If the data type is not supported by the [[docs:system:system|system]], ''Tabulify'' may add them. For an example, see how ''Tabulify'' manages [[docs:system:sqlite:time|time data types in sqlite]]
+
+
+To see a list of type supported by connection, you can use the [[:docs:tabul:connection:type|connection type]] command to list all known data types by connection. 
+
+Note that unsupported types are mapped to a ''string'' so you will get them in a [[character|character format]]
+
+We don't support:
+  * composite data type such as:
+    * ''array''
+    * ''struct''
+  * reference type (ie ''ref'')
+  * and any binary type:
+    * ''bit(n>1)'' (`bit(1)` is supported as ''boolean'')
+    * ''binary''
+    * ''varbinary''
+    * ''longvarbinary''
+    * ''blob''
+
+
+==== Jdbc Code ====
+
+
+If there is a type error, the library may returns an integer known as the jdbc type code ((ie [[https://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html#getTypeInfo--|DATA_TYPE value of getTypeInfo]]) instead of a name.
+
+
+
+The table below shows the [[#ansi|ANSI standard mapping]] between the data type name and its code (ie integer).
+
+The vendor (ie database) may add its own. You can see this value in the [[:docs:tabul:connection:type|connection type]] command.
+
+<box height="300" scroll="toggle" width="500" align="center">
+^ Name ^ Code ^
+| array | 2003 |
+| bigint | -5 |
+| binary | -2 |
+| bit | -7 |
+| blob | 2004 |
+| boolean | 16 |
+| char | 1 |
+| clob | 2005 |
+| datalink | 70 |
+| date | 91 |
+| decimal | 3 |
+| distinct | 2001 |
+| double | 8 |
+| float | 6 |
+| integer | 4 |
+| java_object | 2000 |
+| longnvarchar | -16 |
+| longvarbinary | -4 |
+| longvarchar | -1 |
+| nchar | -15 |
+| nclob | 2011 |
+| null | 0 |
+| numeric | 2 |
+| nvarchar | -9 |
+| other | 1111 |
+| real | 7 |
+| ref | 2006 |
+| rowid | -8 |
+| smallint | 5 |
+| sqlxml | 2009 |
+| struct | 2002 |
+| time | 92 |
+| timestamp | 93 |
+| tinyint | -6 |
+| varbinary | -3 |
+| varchar | 12 |
+</box>
+
+\\
+
+The whole data type mapping is in the [[https://download.oracle.com/otn-pub/jcp/jdbc-4_1-mrel-spec/jdbc4.1-fr-spec.pdf|JDBC Specification JSR 221]] section ''Data Type Conversion Tables''
+
+==== Maximum Precision ====
+
+The ''maximum precision'' defines the maximum [[:docs:data_type:precision|precision]] that this type can store.
+
+ie for:
+  * a character type, the maximum length
+  * a number type, the maximum precision
+===== FAQ =====
+
+==== How can I define a value data Type in Yaml file ====
+
+See [[yaml]]
+
+
+==== What is the Type Name Precedence in a Manifest ? ====
+
+In a [[:docs:resource:data-definition#columns|resource data defintion]], you can define by column
+  * the ''type'' property name
+  * and optionally a ''ansi-type''
+
+If the ''ansi-type'' is not set, the type name is searched in precedence order:
+  * in the names and aliases of the connection that you can list with the [[:docs:tabul:connection:type|connection type]] command
+  * then in the ''ANSI'' names and aliases that you can list with the [[:docs:tabul:connection:type|connection type]] against a file connection.
+
+
+

@@ -1,0 +1,115 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:pipeline:enrich:enrich" }
+    ],
+    "page_id": "zv16wr10aztteapuiyeoc"
+}
+---
+====== How to add information about the selected resources with the Enrich operation ? ======
+
+
+===== About =====
+[[:docs:op:enrich|enrich]] is an intermediate operation that will add [[:docs:resource:virtual_column|virtual columns]] to its [[:docs:flow:input|inputs]] thanks to [[:docs:generator:data-supplier|data supplier]].
+
+
+Enrich accepts only one argument ''data-def'' where you can define extra columns called [[:docs:resource:virtual_column|virtual columns]] with their respective [[:docs:generator:data-supplier|data supplier]].
+
+A [[:docs:generator:data-supplier|data supplier]] is a function that supplies a value to a column.
+
+In the steps below, we add to the input resources:
+  * the input file name
+  * the input file extension
+  * and an increasing sequence
+===== Steps =====
+
+
+==== The input example ====
+
+In this example, we will showcase the [[:docs:op:enrich|enrich operation]] with the ''enrich-me.md''
+  * [[:docs:resource:text|text file]]
+  * located in the ''pipeline/enrich'' subdirectory of the [[:docs:connection:howto|howto directory]]
+
+With the [[:docs:tabul:data:concat|cat]] command
+<unit>
+<code bash>
+tabul data cat pipeline/enrich/enrich-me.md@howto
+</code>
+We can see the content:
+<console markdown>
+
+This is a file used in the [enrich pipeline](../enrich.yml)
+for demonstration
+
+</console>
+</unit>
+
+
+==== The pipeline ====
+
+
+
+In this example, the [[:docs:flow:pipeline|pipeline]]:
+  * a markdown [[:docs:resource:text|text file]] in the pipeline with the [[:docs:op:define|define operation]] 
+  * [[:docs:op:enrich|enrich]] its records with 3 [[:docs:resource:virtual_column|virtual columns]]:
+    * the input ''file name''  thanks to the [[:docs:generator:meta|meta data supplier]].
+    * the input ''file extension'' thanks to the [[:howto:generator:expression|expression data supplier]]
+    * a column ''line_id'' with an increasing sequence thanks to the [[:docs:generator:sequence|sequence data supplier]]  
+  * and [[:docs:op:print|print]] the records
+
+
+<unit>
+<file yaml pipeline/enrich.yml>
+kind: pipeline
+spec:
+  steps:
+    - operation: 'define'
+      arguments:
+        data-resource:
+          data-uri: 'pipeline/enrich/enrich-me.md@howto'
+    - operation: 'enrich'
+      arguments:
+        data-def:
+          columns:
+            - name: file_name
+              data-supplier:
+                type: meta
+                arguments:
+                  attribute: name
+            - name: file_extension
+              data-supplier:
+                type: expression
+                arguments:
+                  column-variable: file_name
+                  expression: "file_name.split('.').pop()"
+            - name: line_id
+              type: integer
+              data-supplier:
+                type: sequence
+    - operation: 'print'
+
+</file>
+</unit>
+
+==== The execution result ====
+
+By [[:docs:tabul:flow:execute|executing]] it, we can see the 4 columns created.
+  * the ''lines'' column with the content of the file (''lines'' is the value of the  [[:docs:resource:text|text file column-name attribute]])
+  * the ''file_name'' column with the name of the input
+  * the ''file_extension'' column with the extension of the input
+  * the ''line_id'' column with the line id. We have 2 lines.
+
+<unit>
+<code bash>
+tabul flow execute --no-results pipeline/enrich.yml@howto
+</code>
+
+<console>
+pipeline/enrich/enrich-me.md@howto
+lines                                                         file_name      file_extension   line_id
+-----------------------------------------------------------   ------------   --------------   -------
+This is a file used in the [enrich pipeline](../enrich.yml)   enrich-me.md   md                     1
+for demonstration                                             enrich-me.md   md                     2
+</console>
+</unit>
+

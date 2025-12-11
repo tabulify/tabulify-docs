@@ -1,0 +1,99 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:vault:decrypt" }
+    ],
+    "page_id": "ywfpo0wdj00i62d124pii"
+}
+---
+====== Tabul - Vault Decrypt Command ======
+
+
+===== About =====
+''vault decrypt'' is a [[docs:tabul:command|tabul command]] of the [[start|Vault Module]] that supports the [[docs:common:vault|decryption]] of a cipher that was encrypted with the [[encrypt|encrypt command]] or [[docs:connection:attribute#automatic_encryption|automatically]].
+
+
+===== Example =====
+Every ''ciphertext'' (text encrypted) starts with the ''vault'' prefix. This cipher comes from the [[encrypt#example|vault encrypt example]]
+<unit>
+<code bash>
+tabul --passphrase hardToGuess vault decrypt tvaultQVE9PT5sSWtUZDY3ZE1zYTlGb3ordFAwYTVRPT0+MUtrMXJZdGxLdTRXT25aZXhua2xFajNCWnd5Y1RlQ1RzWW5ZR012VXJTTT0+VWx0am1vZ0xXcWJQT3BSL3oxajdWUT09
+</code>
+<console>
+The cipher decryption:
+plaintext   ciphertext
+---------   ------------------------------------------------------------------------------------------------------------------------------------------
+secret      tvaultQVE9PT5sSWtUZDY3ZE1zYTlGb3ordFAwYTVRPT0+MUtrMXJZdGxLdTRXT25aZXhua2xFajNCWnd5Y1RlQ1RzWW5ZR012VXJTTT0+VWx0am1vZ0xXcWJQT3BSL3oxajdWUT09
+</console>
+</unit>
+
+
+
+===== Syntax =====
+
+
+<unit>
+<code bash>
+tabul vault decrypt -h
+</code>
+<console>
+Tabul vault decrypt
+===================
+
+Decrypt ciphertext into plaintext
+
+
+
+Example
+-------
+
+ 1 - To decrypt, you would execute
+
+
+    tabul vault decrypt --passphrase difficultToGuessPassPhrase! "vaultQVE9PT5KeU1OK1RXNWNSVDJCcVRq"
+
+
+
+
+Syntax
+------
+
+
+    tabul vault decrypt <ciphertext...>
+
+
+where:
+
+
+  Arguments:
+
+    <ciphertext...>                                         One or more ciphertext to decrypt
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

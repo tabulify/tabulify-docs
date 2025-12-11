@@ -1,0 +1,24 @@
+---json
+{
+    "page_id": "kav1nj3ek2cxjovs73bfo"
+}
+---
+====== Processing Type ======
+
+
+
+===== About =====
+[[:docs:op:op|Operations]] may implement the following ''processing type'':
+  * ''stream''
+  * ''batch''
+
+They may support both.
+===== Type =====
+
+
+
+^ Operation Type ^ Processing Type ^ Description ^
+| [[docs:flow:supplier|Supplier]] | ''batch'' | A batch supplier:\\ * will end\\ * supplies a finite number of data resources |
+| [[docs:flow:supplier|Supplier]] | [[docs:flow:stream_pipeline|stream]] | A stream supplier:\\ * will never end if no [[docs:flow:pipeline#duration control|duration control is set]] \\ * supplies an infinite number of data resources |
+| [[docs:flow:intermediate|Intermediate]] | ''batch'' | A intermediate batch operation will execute:\\ * at the end for a batch execution \\ * at interval for a [[docs:flow:stream_pipeline|stream]] (The interval being known as the ''window'') |
+| [[docs:flow:intermediate|Intermediate]] | ''stream'' | A intermediate stream operation will execute immediately. \\ \\ There is 2 kind of intermediate stream operation: \\ * **map**: return 1 output for 1 input \\ * **split**: return N outputs for 1 input |

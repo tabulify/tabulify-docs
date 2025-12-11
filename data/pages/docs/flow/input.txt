@@ -1,0 +1,14 @@
+---json
+{
+    "page_id": "0xbsqcqkng22j5k8pc16p"
+}
+---
+====== Pipeline Input ======
+
+
+===== About =====
+''inputs'' are [[message|data resources]] that a [[:docs:flow:intermediate|intermediate operation]] receives:
+  * from a [[:docs:flow:supplier|supplier]]
+  * from a [[:docs:flow:intermediate|intermediate operation]] (ie the [[output|outputs]] of a ''upstream'' operation are the ''inputs'' of a ''downstream'' operation)
+
+

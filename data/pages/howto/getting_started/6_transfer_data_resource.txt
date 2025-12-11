@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "fjkomnezcbbg34blw0od2"
+}
+---
 ====== Learning Tabulify - Step 6 - How to transfer Data Resources ======
 
 ===== Data Transfer =====
@@ -10,9 +15,9 @@ In ''Tabulify'', when you want to manipulate data, it's called a ''transfer''.
   * You want to [[docs:op:upsert|upsert]] data, you [[docs:op:transfer|transfer]]
   * You want to [[docs:op:delete|delete]] data, you [[docs:op:transfer|transfer]]
 
-For data manipulation, the [[docs:tabli:data:transfer|transfer command]] is the only command you need.
+For data manipulation, the [[docs:tabul:data:transfer|transfer command]] is the only command you need.
 
-The [[docs:tabli:data:transfer|transfer command]] is the most powerfull command and we will introduce it first with a [[docs:op:copy|copy]].
+The [[docs:tabul:data:transfer|transfer command]] is the most powerfull command and we will introduce it first with a [[docs:op:copy|copy]].
 
 ===== Sqlite HowTo Connection =====
 ''Tabulify'' comes pre-installed with [[docs:connection:connection|connections]] used in the [[howto:howto|HowTo]]. We call this connections, the [[docs:connection:howtos|Howto's connections]].
@@ -20,33 +25,49 @@ The [[docs:tabli:data:transfer|transfer command]] is the most powerfull command 
 In this learning guide, we will use as target connection, the [[docs:connection:howtos|local sqlite how-to connection]]
 
 <unit>
-<code dos>
-tabli connection info sqlite
+<code bash>
+tabul connection info sqlite
 </code>
-<console>
+<console height="300px" scroll="toggle">
 Information about the connection (sqlite)
-Attribute                Value                                                              Description
-----------------------   ----------------------------------------------------------------   --------------------------------------------------------------------
-DatabaseMajorVersion     3                                                                  The major version number of the database
-DatabaseMinorVersion     30                                                                 The minor version number of the database
-DatabaseProductName      SQLite                                                             The name of the database
-DatabaseProductVersion   3.30.1                                                             The version of the database
-Driver                   org.sqlite.JDBC                                                    The driver class
-Driver                   org.sqlite.JDBC                                                    The driver class
-DriverName               SQLite JDBC                                                        The driver name
-DriverVersion            3.30.1                                                             The driver version
-JdbcMajorVersion         2                                                                  The major version number of JDBC
-JdbcMinorVersion         1                                                                  The minor version number of JDBC
-MaxConcurrentThread      1                                                                  The maximum number of threads that can be created against the system
-MaxNameInPath            1                                                                  The maximum number of names in a path
-Name                     sqlite                                                             The name of the connection
-SupportBatchUpdates      true                                                               If the system supports batch SQL updates
-SupportNamedParameters   true                                                               If the system supports named parameters in the SQL statement
-TabBooleanDataType       Binary                                                             Boolean data type used to store boolean values
-TabDateDataType          SqlLiteral                                                         Date data type used to store date values
-TabTimeDataType          SqlLiteral                                                         Time format data type to store time values
-TabTimestampDataType     SqlLiteral                                                         Timestamp data type used to store timestamp values
-Url                      jdbc:sqlite:///C:/Users/gerardnico/AppData/Local/tabli/sqlite.db   The url of the connection
+Attribute                    Value                                                 Description
+--------------------------   ---------------------------------------------------   --------------------------------------------------------------------
+BOOLEAN_DATA_TYPE            Native                                                Boolean data type used to store boolean values
+BUILDER_CACHE_ENABLED        true                                                  Enable or disable the builder cache
+CHAR_DEFAULT_PRECISION       1                                                     Default CHAR precision
+COMMENT                      The sqlite default connection                         A connection description
+DATABASE_MAJOR_VERSION                                                             The major version number of the database
+DATABASE_MINOR_VERSION                                                             The minor version number of the database
+DATABASE_PRODUCT_NAME                                                              The name of the database
+DATABASE_PRODUCT_VERSION                                                           The version of the database
+DATE_DATA_TYPE               NATIVE                                                Date data type used to store date values
+DRIVER                       org.sqlite.JDBC                                       The jdbc driver class
+DRIVER_NAME                                                                        The driver name
+DRIVER_VERSION                                                                     The driver version
+HOST                                                                               Host Server
+JDBC_MAJOR_VERSION                                                                 The major version number of JDBC
+JDBC_MINOR_VERSION                                                                 The minor version number of JDBC
+LOGIN_STATEMENTS                                                                   Statements that runs after a connection has been established
+MAX_CONCURRENT_THREAD                                                              The maximum number of threads that can be created against the system
+MAX_NAME_IN_PATH                                                                   The maximum number of names in a path
+NAME                         sqlite                                                The name of the connection
+NAME_QUOTING_DISABLED_CASE   UPPERCASE                                             The case to apply when quoting is disabled
+NAME_QUOTING_ENABLED         true                                                  Enable quoting of names
+NATIVES                                                                            Native Driver attributes (jdbc properties, ...)
+NCHAR_DEFAULT_PRECISION      1                                                     Default NCHAR precision
+NVARCHAR_DEFAULT_PRECISION   0                                                     Default NVARCHAR precision
+ORIGIN                       CONF                                                  The origin of the connection
+PASSWORD                                                                           The user password
+PORT                                                                               Host Port
+SUPPORT_BATCH_UPDATES                                                              If the system supports batch SQL updates
+SUPPORT_NAMED_PARAMETERS                                                           If the system supports named parameters in the SQL statement
+TIMESTAMP_DATA_TYPE          NATIVE                                                Timestamp data type used to store timestamp values
+TIME_DATA_TYPE               NATIVE                                                Time format data type to store time values
+TYPE_AFFINITY_CONVERSION     false                                                 If true, the type name are converted to affinity name
+URI                          jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3   The uri of the connection
+USER                                                                               The user name
+VARCHAR_DEFAULT_PRECISION    0                                                     Default VARCHAR precision
+WORKING_PATH                                                                       The working path (Schema for database, directory for file system)
 </console>
 </unit>
 
@@ -56,48 +77,49 @@ Url                      jdbc:sqlite:///C:/Users/gerardnico/AppData/Local/tabli/
 
 <unit display="none">
 Just drop all tables
-<code dos>
-tabli data drop --not-strict *@sqlite
+<code bash>
+tabul data drop --no-strict-selection *@sqlite
 </code>
 </unit>
 
-For the purpose of this learning guide, we will [[docs:op:copy|copy]] the ''sales'' data from [[docs:system:tpcds|tpcds]] to the [[docs:connection:howtos|sqlite connection]] with the [[docs:tabli:data:copy|copy command]] that is an alias of the [[docs:tabli:data:transfer|transfer command]].
+For the purpose of this learning guide, we will [[docs:op:copy|copy]] the ''sales'' data from [[docs:system:tpcds|tpcds]] to the [[docs:connection:howtos|sqlite connection]] with the [[docs:tabul:data:copy|copy command]] that is an alias of the [[docs:tabul:data:transfer|transfer command]].
 
 
 
 <unit>
-<code dos>
-tabli data copy --with-dependencies *sales@tpcds @sqlite
+<code bash>
+tabul data copy --with-dependencies *sales@tpcds @sqlite
 </code>
 where:
-  * ''tabli data copy'' points to the [[docs:tabli:data:copy|copy command]]
-  * ''*sales@tpcds'' is a [[docs:resource:data_selector|data selector]] that select all table that ends with sales in the [[docs:system:tpcds|tpcds connection]] (<inote tip>We have covered this subject in the [[4_select_data_resources|how to select data resource page]]</inote>)
+  * ''tabul data copy'' points to the [[docs:tabul:data:copy|copy command]]
+  * ''*sales@tpcds'' is a [[docs:flow:data_selector|data selector]] that select all table that ends with sales in the [[docs:system:tpcds|tpcds connection]] (<inote tip>We have covered this subject in the [[4_select_data_resources|how to select data resource page]]</inote>)
   * ''%%--with-dependencies%%'' select the [[docs:resource:dependency|dependencies]] of the selected [[docs:resource:resource|data resources]]
   * ''@sqlite'' defines the [[docs:connection:howtos|sqlite connection]] as the target connection
 
 At the end of the process, you get a list of all tables where data were loaded and the number of row that were inserted.
 <console>
-Source                         Target                          Latency (ms)   Row Count   Error   Message
-----------------------------   -----------------------------   ------------   ---------   -----   -------
-call_center@tpcds              call_center@sqlite              28             2
-catalog_page@tpcds             catalog_page@sqlite             289            11718
-catalog_sales@tpcds            catalog_sales@sqlite            9080           89807
-customer@tpcds                 customer@sqlite                 79             1000
-customer_address@tpcds         customer_address@sqlite         66             1000
-customer_demographics@tpcds    customer_demographics@sqlite    24253          1920800
-date_dim@tpcds                 date_dim@sqlite                 5800           73049
-household_demographics@tpcds   household_demographics@sqlite   85             7200
-income_band@tpcds              income_band@sqlite              39             20
-item@tpcds                     item@sqlite                     453            2000
-promotion@tpcds                promotion@sqlite                29             3
-ship_mode@tpcds                ship_mode@sqlite                24             20
-store@tpcds                    store@sqlite                    26             2
-store_sales@tpcds              store_sales@sqlite              6726           120527
-time_dim@tpcds                 time_dim@sqlite                 1302           86400
-warehouse@tpcds                warehouse@sqlite                63             1
-web_page@tpcds                 web_page@sqlite                 37             2
-web_sales@tpcds                web_sales@sqlite                1308           11876
-web_site@tpcds                 web_site@sqlite                 32             2
+Transfer results
+input                          target                          latency   record_count   error_code   error_message
+----------------------------   -----------------------------   -------   ------------   ----------   -------------
+call_center@tpcds              call_center@sqlite              0.60s                2                
+catalog_page@tpcds             catalog_page@sqlite             0.220s           11718                
+catalog_sales@tpcds            catalog_sales@sqlite            6.675s           89807                
+customer@tpcds                 customer@sqlite                 0.52s             1000                
+customer_address@tpcds         customer_address@sqlite         0.42s             1000                
+customer_demographics@tpcds    customer_demographics@sqlite    19.117s        1920800                
+date_dim@tpcds                 date_dim@sqlite                 3.594s           73049                
+household_demographics@tpcds   household_demographics@sqlite   0.66s             7200                
+income_band@tpcds              income_band@sqlite              0.24s               20                
+item@tpcds                     item@sqlite                     0.185s            2000                
+promotion@tpcds                promotion@sqlite                0.17s                3                
+ship_mode@tpcds                ship_mode@sqlite                0.25s               20                
+store@tpcds                    store@sqlite                    0.21s                2                
+store_sales@tpcds              store_sales@sqlite              5.516s          120527                
+time_dim@tpcds                 time_dim@sqlite                 1.29s            86400                
+warehouse@tpcds                warehouse@sqlite                0.96s                1                
+web_page@tpcds                 web_page@sqlite                 0.22s                2                
+web_sales@tpcds                web_sales@sqlite                0.846s           11876                
+web_site@tpcds                 web_site@sqlite                 0.19s                2
 </console>
 </unit>
 
@@ -105,41 +127,43 @@ web_site@tpcds                 web_site@sqlite                 32             2
 
 ===== Copy Verification =====
 
-To check the ''copy'', we will list the [[docs:resource:table|tables]] in the [[docs:connection:howtos|sqlite connection]] with the [[docs:tabli:data:list|list command]] and the [[docs:resource:count|count attribute]] to see the number of rows by [[docs:resource:table|table]].
+To check the ''copy'', we will list the [[docs:resource:sql_table|tables]] in the [[docs:connection:howtos|sqlite connection]] with the [[docs:tabul:data:list|list command]] and the [[docs:resource:count|count attribute]] to see the number of rows by [[docs:resource:sql_table|table]].
 
 
 <unit>
-<code dos>
-tabli data list -a name --attribute count  *@sqlite
+<code bash>
+tabul data list --attribute count  *@sqlite
+# or with short options
+# tabul data list -a count  *@sqlite
 </code>
 <console>
-path                       count
-----------------------   -------
-call_center                    2
-catalog_page               11718
-catalog_sales              89807
-customer                    1000
-customer_address            1000
-customer_demographics    1920800
-date_dim                   73049
-household_demographics      7200
-income_band                   20
-item                        2000
-promotion                      3
-ship_mode                     20
-store                          2
-store_sales               120527
-time_dim                   86400
-warehouse                      1
-web_page                       2
-web_sales                  11876
-web_site                       2
+path                     media_type     count
+----------------------   ----------   -------
+call_center              table              2
+catalog_page             table          11718
+catalog_sales            table          89807
+customer                 table           1000
+customer_address         table           1000
+customer_demographics    table        1920800
+date_dim                 table          73049
+household_demographics   table           7200
+income_band              table             20
+item                     table           2000
+promotion                table              3
+ship_mode                table             20
+store                    table              2
+store_sales              table         120527
+time_dim                 table          86400
+warehouse                table              1
+web_page                 table              2
+web_sales                table          11876
+web_site                 table              2
 </console>
 </unit>
 
 ===== Next =====
-Now, that we got data, we can discover how to execute a [[docs:resource:select|Sql Query]]
+Now, that we got data, we can discover how to execute a [[docs:resource:sql_select|Sql Query]]
 
 <btn>
-[[7_query|How to execute a Sql Query]]
+[[7_sql_query|How to execute a Sql Query]]
 </btn>

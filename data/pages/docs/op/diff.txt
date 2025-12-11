@@ -1,52 +1,206 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:op:compare" }
+    ],
+    "page_id": "xh2mvotwt2ky7k4pjza6x"
+}
+---
 ====== Data Operation - Diff (Comparison) ======
 
 
 ===== About =====
-A ''diff'' is a [[op|data operation]] that will search and show differences between [[docs:resource:resource|data resources]].
+A ''diff'' is a [[:docs:flow:intermediate|intermediate operation]] that will perform a diff between:
+  * its [[:docs:flow:input|input]]
+  * and a target resource defined by the [[#target data uri|target-data-uri]] argument
+
+The [[:docs:flow:output|output]] is the [[#diff-target-uri|diff data uri report]].
 
 The ''diff'' may be performed:
   * at the [[docs:resource:metadata|metadata level]], meaning
       * on the [[docs:resource:attribute|data resource attributes]]
       * on the [[docs:resource:structure|data structure]]
-  * or and at the data level record by record
+  * or and at the data level:
+    * logically: record by record
+    * physically: block by block
+
+===== Howto / Examples  =====
 
 
-
-<note>
-Howto: [[howto:getting_started:10_resource_comparison]]
-</note>
+  * [[howto:getting_started:10_resource_comparison]]
+  * [[:howto:sql_table:diff|]]
 
 
-===== Command and Arguments =====
+===== Cli =====
 
-The ''compare'' operation is supported by the [[docs:tabli:data:diff|data compare command]]
-==== Data Selector (Source) ====
-The [[docs:resource:data_selector|data selector]] can choose any [[docs:resource:content|content resource]] such as:
-  * [[docs:resource:table|table]]
-  * [[docs:resource:query|query]]
-  * [[docs:resource:file|file]]
-==== Target Uri ====
+The ''diff'' operation is also available via the [[:docs:tabul:data:diff|tabul data diff]] command
+===== Arguments =====
 
-  * The [[docs:resource:target_uri|target uri]] may be not given as argument. If this is the case, the comparison will except an empty target.
+^ Argument ^ Default ^ Description ^
+| [[#data origin|data-origin]] | ''record'' | The origin of the data to diff |
+| [[#driver columns|driver-columns]] |  | The columns name that drive the diff (Should be set to the unique columns normally). Default to \\ the record id (ie row id, line id) for a data comparison \\ the column name for a data structure comparison |
+| [[#equality type|equality-type]] | ''loss'' | define the [[#equality type|equality strictness]]. Possible values: ''loss'', ''strict'' |
+| ''fail'' | true | If true, the operation fails if the diff shows a change |
+| ''max-change-count'' | 100 | The maximum number of change allowed before failing |
+| [[#report type|report-type]] | ''summary'' | The type of report |
+| [[#report-data-uri]] | See [[#report data uri|report-data-uri]] | a [[docs:flow:template_data_uri|template data uri]] where the diff report should be stored |
+| ''report-density'' | ''dense'' | If sparse, show only the changes in a unified report (known as context in textual data diff) |
+| ''report-diff-columns'' | [[#status]] | List of [[#diff columns|diff columns added to the unified report]] |
+| ''report-diff-column-prefix'' | ''diff_'' | A prefix added the diff columns |
+| [[#terminal-colors]] | ''true'' if detected | color the output in the terminal |
+| [[#target-data-uri|target-data-uri]] | | a [[docs:flow:template_data_uri|template data uri]] that will define and select the target resource to compare (if not set, the comparison is done against an empty set) |
+| ''target-data-def'' | | The [[docs:resource:attribute|data attributes]] defined in a [[:docs:resource:data-definition|data definition]] format |
 
-==== Report Level ====
-The ''report-level'' argument defines what the command will return:
-  * ''resource'' - a comparison report will be created for all comparison
-  * ''record'' - a comparison report will be created for each comparison and the record data comparison will be available
-  * ''all'' - all type of comparison report will be created
 
-==== Data Source ====
-The ''data-source'' defines the origin of the data to compare.
-  * ''content'' - the default - the data to compare will be the records
-  * ''structure'' - the data to compare will be the column definitions.
+===== Arguments Detailed =====
+==== Target Data Uri ====
 
-==== Unique Columns / Driver Columns ====
-The ''unique columns (driver columns)'' are the columns that drives the comparison process.
+The [[docs:flow:template_data_uri|template data uri]] may be not given as argument. If this is the case, the comparison will except an empty resource.
+
+
+==== Report Data Uri ====
+
+''diff-data-uri'' is a [[:docs:flow:template_data_uri|template data uri]] that defines the [[:docs:resource:data_uri|data uri]] of the accumulator [[#report type|diff report]]
+
+By default, the diff result is stored in [[:docs:connection:memory|memory]].
+<code bash>
+diff_${input_logical_name}_${target_logical_name}@memory
+</code>
+
+Note:
+  * the ''input'' and ''target'' [[:docs:resource:attribute|resource attributes]] should be prefixed respectively with ''input_'' and ''target_''
+
+If you plan to make a diff on millions of [[:docs:resource:record|records]] that may saturate the memory, you should select another [[docs:connection:connection|connection]].
+==== Report Type ====
+The ''report-type'' argument defines the report generated:
+
+^ Name ^ Grain ^ Accumulator ^ A record is ^
+| ''summary'' | ''resource'' | No | Yes/No equality report with diff stats |
+| [[#unified]] | ''record'' | Yes | input and target [[:docs:resource:record|record]] |
+<!-- | ''cell'' | ''cell'' | Yes | Cell (column, record id) | -->
+
+An accumulator report is a report that will accumulate the changes.
+You can set their location with the [[#Diff Data Uri|Diff Data Uri]]
+
+
+==== Data Origin ====
+The ''data-origin'' defines the origin of the data to compare.
+
+^ Name ^ Description ^
+| ''record'' (default) | the [[:docs:resource:record|records]] of the data resource |
+| ''structure'' | the [[:docs:resource:structure|structure (column definitions)]] of the data resource |
+| ''attributes'' | the [[:docs:resource:attribute|scalar data attributes]] of the data resource |
+
+
+==== Driver Columns ====
+The ''driver columns'' are the columns that drives the comparison process.
 
 For instance, if you compare two resources that have an unique id column,
-  * if the comparison has fetched:
-      * a source record with a id value of ''1''
+  * if the diff has fetched:
+      * a input record with a id value of ''1''
       * a target record with a id value of ''2''
-  * the comparator will:
-      * mark the source record has missing in the target
-      * fetch records only from the source until it finds the record with the id ''2'' or above.
+  * the diff will:
+      * mark the input record has missing in the target
+      * fetch records only from the input until it finds the record with the id ''2'' or above.
+
+
+By default, the ''driver columns'' are:
+  * the ''primary key'' columns if found
+  * the ''first unique key'' columns if found
+  * otherwise all [[:docs:resource:column|columns]].
+
+Note: the equality on ''driver columns'' is always [[#equality-type|loose]].
+
+Why? If this not the case, the diff would report a ''added'' and ''deleted'' record change because the record identifier would not match and it will be difficult to spot it. With a [[#equality-type|loose]] equality,
+  * the record are the same
+  * but the ''driver columns'' get a blue color (the [[#colors|color]] of [[#equality type|loose equality]])
+
+
+==== Equality Type ====
+
+The ''equality-type'' defines the strictness of the equality about the [[docs:data_type:data_type|data type]]
+  * If ''loss''
+      * the character 2 will be equal to the number 2
+      * float equality will also be lose
+      * empty string or string with only white space will be equal to ''null''
+      * the string ''yes'' would be equal to the [[:docs:data_type:boolean|boolean]] ''true''
+  * If ''strict'', the equality will fail if the [[docs:data_type:data_type|data type]] is not the same
+
+
+Note: in a ''strict'' equality, if the data type of the driver column are not the same, the string version is used to determine the order of the diff.
+
+==== Terminal-Colors ====
+If ''true'', the following terminal colors [[https://en.wikipedia.org/wiki/ANSI_escape_code|escape sequences]] are applied:
+  * ''green'' for an ''added'' change
+  * ''red'' for a ''deleted'' change
+  * ''blue'' for a [[docs:data_type:data_type|type]] change (ie [[#equality type|loose equality]])
+
+
+===== Report Type =====
+
+==== Unified ====
+
+An unified report has the following [[:docs:resource:structure|structure (columns)]]:
+  * at minima the [[#status column|status diff column]] and optionally other [[#diff columns]]
+  * and the columns of the input/target
+
+=== Status Column ===
+
+The ''status'' column gives a short description of the change.
+
+The format is:
+<code>
+(+|-)n (n)
+</code>
+where:
+  * ''+'' for added record in the target (ie record found in the target but not in the input)
+  * ''-'' for deleted records in the target (ie record found in the input but not in the target)
+  * ''n'' is the change id (added only when the change is a value modification)
+  * ''(n)'' is the record id if no [[#driver columns]] was specified
+
+An empty status means no change.
+
+Example:
+
+**value modification** without [[#driver columns]],
+```
+status  color
+------  -----
++1 (2)  blue
+-1 (2)  red
+```
+where:
+  * this is the first change, ie the ''1'' in ''+1'' and ''-1'',
+  * ''+'' - the target record
+  * ''-'' - the input record
+  * ''(2)'' - 2nd record in the target and input
+
+
+=== Diff Columns ===
+
+With the `report-diff-columns`, you can add any of the following columns:
+
+^ Name ^ Description ^
+| ''change_id'' | change identifier \\ The third change would have the number 3) \\ The last number on the report would show the total number of change found. |
+| ''colors'' | A [[:docs:op:print#color|color definition]] for the [[:docs:op:print|print operation]] |
+| ''id'' | a report sequence identifier to locate the report records |
+| ''origin'' | the origin of the record \\ * ''Source'' means that the record comes from the [[docs:flow:source|source]] \\ * ''Target'' means that record comes from the [[docs:flow:target|target]] \\ * Blank means that the record is the same in the [[docs:flow:source|source]] and in the [[docs:flow:target|target]] |
+| ''origin_id'' | the record id of the input or target origin  (row id, line id, ...) |
+| [[#status column|status]] | The type of change |
+
+With the `report-diff-column-prefix`, you can change the prefix added to the name.
+
+==== Summary ====
+
+A summary report is a report with one line that contains the following columns:
+
+^ Name ^ Type | Description ^
+| ''from'' | varchar | the input [[:docs:resource:data_uri|data uri]] (also known as the ''original'', ''source'' or ''left'' resource)  |
+| ''to'' | varchar | the target [[:docs:resource:data_uri|data uri]] (also known as the ''new'', ''target'' or ''right'' resource) |
+| ''equals'' | boolean | the equality result (yes/no) |
+| ''record_count'' | long | the number of record compared |
+| ''change_count'' | long | the number of record changed \\ A record deletion, addition or update count towards 1 change |
+
+In case of multiple input/target, you can aggregate the summary report with the [[:docs:op:concat|concat operation]].
+
+

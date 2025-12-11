@@ -1,29 +1,38 @@
-====== Step Granularity ======
+---json
+{
+    "page_id": "zhoshduiy5eea5bcyamet"
+}
+---
+====== Step Granularity (Grain) ======
 
 
 ===== About =====
-''step-granularity'' is a [[docs:tabli:option|step property]] that tells if the step is performed:
-  * on each resource (default)
-  * or on each record of the resource
+''granularity'' is a operation argument that sets the granularity of the execution.
 
-  
-  
-  
-  
-  
+If the value is:
+  * ''resource'', the operation is performed on each [[:docs:resource:resource|resource]]
+  * ''record'', the operation is performed on each [[:docs:resource:record|record]] of the resource
+
+
 
 ===== Example =====
-==== Resource Granularity: Table to Csv file ====
-In this case, the granularity would be ''resource''.
 
-You would get one file for one table.
+==== Split ====
 
-==== Record Granularity: Log Column to a SQL file ====
-Suppose that you have a log table that stores all SQL execution history.
+The [[:docs:op:split|split operation]] permits to split data resource into data resources.
 
-It has generally one record for each execution with a column that stores the SQL executed.
+  * In a ''record'' granularity, it will create a data resource by record
+  * In a ''resource'' granularity, it will create multiple data resource by data resource
 
-If you want to export the SQL with one file by SQL, you would choose the ''record'' granularity.
+
+==== Sendmail ====
+
+The [[:docs:op:sendmail|sendmail operation]] will:
+
+  * In a ''record'' granularity, send an email by record
+  * In a ''resource'' granularity, send the resource as attachment
+
+
 
 
 ===== What are the steps implementing granularity ? =====
@@ -38,4 +47,4 @@ If you want to export the SQL with one file by SQL, you would choose the ''recor
 </webcode>
 
 
- 
+

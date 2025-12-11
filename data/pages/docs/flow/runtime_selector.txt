@@ -1,0 +1,28 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:script_selector" }
+    ],
+    "page_id": "n5ceigen4hqnqtq2ssk65"
+}
+---
+====== Data Resource - Runtime Selector ======
+
+
+===== About =====
+[[docs:resource:runtime|Runtime resources]] (such as [[..:resource:request|request]] and [[..:resource:script|script]]) can be selected in a [[:docs:op:select|select operation]] with an ''runtime selector''.
+
+
+===== Syntax =====
+
+A ''runtime selector'' is a [[..:flow:data_selector|data selector]] with an extra connection known as the execution connection.
+
+
+The syntax is:
+<code>
+(globPattern@executableConnection)@executionConnection
+</code>
+where:
+  * ''globPattern@executableConnection'' is [[:docs:flow:data_selector|data selector]] that selects the [[:docs:resource:file|file data resources]] (known also as the ''executable'')
+  * and the second  part defines the [[docs:connection:connection|connection]] where the ''executable'' is executed
+

@@ -1,0 +1,271 @@
+---json
+{
+    "description": "This database howto will show you how to load Xml file and document into a database.",
+    "low_quality_page": "false",
+    "page_id": "k9z63dibggq5kin4ubajf"
+}
+---
+====== HowTo - How to load XML files into a Postgres with Tabulify ======
+
+
+===== Howto =====
+This [[postgres|postgres howto]] will show you how to load <icon name="mdi:xml"/> [[docs:resource:xml|Xml file and document]] into [[postgres|postgres]].
+
+
+===== Steps =====
+
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection wikipedia@postgres
+</code>
+</unit>
+
+
+==== Start Postgres ====
+
+
+The next steps will be using the [[howto:postgres:howto_connection_service|postgres howto connection]].
+
+  * You need to [[howto:postgres:howto_connection_service#docker|start the postgres docker image]].
+<unit>
+<code bash>
+tabul service start postgres
+</code>
+<console>
+1 service was started
+Name       Type
+--------   ------
+postgres   docker
+</console>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] your connection to check that the database is up.
+
+<unit>
+<code bash>
+tabul connection ping postgres
+</code>
+<console>
+The connection (postgres) has been pinged successfully
+</console>
+</unit>
+
+==== The XML file to load ====
+
+We will load the [[docs:resource:xml|XML file]] ''relation.xml''
+  * located in the ''XML'' subdirectory of the [[docs:connection:howto|howto directory connection]]
+  * that contains information over the [[wp>Relation_(database)|relation wikipedia page]]
+  * that have been created by the [[https://www.mediawiki.org/w/api.php|mediawiki API]]
+
+<unit>
+<file xml xml/relation.xml>
+<?xml version="1.0"?>
+<api batchcomplete="">
+  <query>
+    <normalized>
+      <n from="Relation_(database)" to="Relation (database)"/>
+    </normalized>
+    <pages>
+      <page _idx="23720058" pageid="23720058" ns="0" title="Relation (database)" description="The base data structure of relational databases">
+        <categories>
+          <cl ns="14" title="Category:Articles with example SQL code"/>
+          <cl ns="14" title="Category:Database management systems"/>
+          <cl ns="14" title="Category:Relational model"/>
+        </categories>
+      </page>
+    </pages>
+  </query>
+</api>
+
+</file>
+</unit>
+
+==== The structure of an XML file ====
+
+=== Default ===
+
+An [[docs:resource:xml|XML resource]] is seen by ''Tabulify'' by default as a [[docs:resource:tabular|tabular resource]] that have:
+  * one column with the name ''xml'' and the ''xml'' [[docs:data_type:data_type|data type]]
+  * one row.
+
+<unit>
+<code bash>
+tabul data describe xml/relation.xml@howto
+</code>
+<console>
+Structure of the resource xml/relation.xml@howto
+position   name   type   precision   scale   primary_key   nullable   autoincrement   comment
+--------   ----   ----   ---------   -----   -----------   --------   -------------   -------
+1          xml    xml    0           0                     x
+</console>
+</unit>
+
+=== Changing the XML column name ===
+
+You can change the name of the ''xml'' column with the [[docs:resource:xml#attributes|columnName attribute]]
+
+For instance, to name the column ''data'', you would set the ''%%--attribute%%'' [[docs:tabul:option|option]] with the value ''column_name=data''
+<unit>
+<code bash>
+tabul data describe --attribute column_name=data xml/relation.xml@howto
+</code>
+<console>
+Structure of the resource xml/relation.xml@howto
+position   name   type   precision   scale   primary_key   nullable   autoincrement   comment
+--------   ----   ----   ---------   -----   -----------   --------   -------------   -------
+1          data   xml    0           0                     x
+</console>
+</unit>
+
+=== Adding context with virtual columns ===
+
+You can add extra information about the [[docs:resource:xml|XML resource]] loaded via the [[docs:resource:virtual_column|virtual column]].
+
+For instance, if you want to add the [[docs:resource:logical_name|logical name]].
+
+<unit>
+<code bash>
+tabul data describe --virtual-column filename=logical_name xml/relation.xml@howto
+</code>
+<console>
+Structure of the resource xml/relation.xml@howto
+position   name       type                precision   scale   primary_key   nullable   autoincrement   comment
+--------   --------   -----------------   ---------   -----   -----------   --------   -------------   -------
+1          xml        xml                 0           0                     x
+2          filename   character varying   0           0                     x
+</console>
+</unit>
+
+
+
+==== Loading the XML file into the Postgres database ====
+
+To load an XML file, you can use any [[docs:tabul:data:transfer|transfer command]].
+
+We will be using the [[docs:tabul:data:insert|insert command]] that will:
+  * insert the [[docs:resource:xml|XML file]]
+  * in a ''wikipedia'' target [[docs:resource:sql_table|table]]
+
+<unit>
+<code bash>
+tabul data insert \
+    --virtual-column name=logicalName \
+    xml/relation.xml@howto wikipedia@postgres
+</code>
+<console>
+Transfer results
+input                    target               latency   record_count   error_code   error_message
+----------------------   ------------------   -------   ------------   ----------   -------------
+xml/relation.xml@howto   wikipedia@postgres   0.70s                1
+</console>
+</unit>
+
+
+We can see that there is one row loaded in the ''wikipedia'' table with the [[docs:tabul:data:list|list command]]
+
+<unit>
+<code bash>
+tabul data list -a count wikipedia@postgres
+</code>
+<console>
+path        media_type   count
+---------   ----------   -----
+wikipedia   table            1
+</console>
+</unit>
+
+
+
+
+
+
+
+
+
+==== Loading from a Web API ====
+
+
+''Tabulify'' supports also to load XML data (even [[docs:resource:json|JSON]]) from a [[docs:resource:uri|URL]].
+
+Let's add the wikipedia XML data for the page  [[wp>SQL|SQL wikipedia page]]
+
+<note important>
+This command line will work only with a [[docs:common:bash|bash based terminal]]. More ... see [[docs:common:bash#why_do_we_recommend_bash|Why Bash]]
+</note>
+<unit>
+<code bash>
+tabul data insert "https://en.wikipedia.org/w/api.php?action=query&titles=SQL&format=xml&prop=description|categories" wikipedia@postgres
+</code>
+<console>
+Transfer results
+input                              target               latency   record_count   error_code   error_message
+--------------------------------   ------------------   -------   ------------   ----------   -------------
+api.php@https-en.wikipedia.org\w   wikipedia@postgres   0.603s               1
+</console>
+</unit>
+
+And we have now 2 rows
+
+<unit>
+<code bash>
+tabul data list -a count wikipedia@postgres
+</code>
+<console>
+path        media_type   count
+---------   ----------   -----
+wikipedia   table            2
+</console>
+</unit>
+
+
+
+
+==== Analyzing the XML with the SQL XML functions ====
+
+
+Now that our XML have been loaded, we can analyze them with SQL XML function. [[docs:system:postgres:postgres|Postgres]] documents all this XML function on this [[https://www.postgresql.org/docs/9.1/functions-xml.html|page]].
+
+For instance, to extract the title and description, we can use the [[https://www.postgresql.org/docs/9.1/functions-xml.html#FUNCTIONS-XML-PROCESSING|xpath function]]
+
+<unit>
+<file sql postgres/xml_wikipedia.sql>
+SELECT
+  CAST((xpath('/api/query/pages/page/@title', xml))[1] AS text) AS title,
+  CAST((xpath('/api/query/pages/page/@description', xml))[1] AS text) AS description
+FROM wikipedia;
+
+</file>
+</unit>
+
+Let's run this [[docs:resource:sql_select|Query SQL select]]
+<unit>
+<code bash>
+tabul data print '(postgres/xml_wikipedia.sql@howto)@postgres'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+(postgres/xml_wikipedia.sql@howto)@postgres
+title                 description
+-------------------   -----------------------------------------------
+Relation (database)   The base data structure of relational databases
+SQL                   Relational database programming language
+</console>
+</unit>
+
+
+
+
+==== Next ====
+
+You can explore further, the [[https://www.postgresql.org/docs/9.1/functions-xml.html|XML Postgres functions]]
+<code sql>
+select
+    xml, -- Because XML is an XML object, you will normally not see the content in a database IDE
+    cast(xml as text) -- By casting it as text, you will see the content
+    xml is document,  -- You can also check that this is a XML document
+    xml_is_well_formed_document(cast(xml as text)), -- And that it's well formed
+from
+    wikipedia;
+</code>
+
+or you can also try to [[howto:json:load_json|load JSON document]].
+

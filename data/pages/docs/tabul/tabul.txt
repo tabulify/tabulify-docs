@@ -1,0 +1,89 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:tabli" }
+    ],
+    "page_id": "xq9mwfprnhk456p4lov7s"
+}
+---
+====== Tabulify - Tabul Command line ======
+
+
+===== Introduction =====
+''tabul'' is the command line client of ''tabulify''.
+
+
+
+
+===== Syntax =====
+
+
+<code bash>
+tabul [options] module action
+</code>
+where:
+   * [[docs:tabul:module|module]] is a group of command
+   * [[docs:tabul:command|command]] is an action performed
+   * [[docs:tabul:option|option]] are optional words that configure an command.
+
+===== Help =====
+
+<unit>
+<code bash>
+tabul --help
+</code>
+<console>
+Tabul
+=====
+
+Tabul, the tabulify command line data processing tool
+
+
+
+Example
+-------
+
+ 1 - To load a csv file into the sqlite database, you would type:
+
+
+    tabul data transfer data.csv @sqlite
+
+
+
+
+Syntax
+------
+
+
+    tabul <command> [-h,--help]
+
+
+where:
+
+
+  Commands:
+
+    app             Management apps
+
+    connection      Management and configuration of the connections to systems.
+
+    data            Data operations against data resources (table, file, ...).
+
+    env             Management and configuration of the tabul execution environment
+
+    flow            Execute Flows
+
+    service         Start and stop services
+
+    vault           Encrypt and decrypt sensitive information
+
+    version         Show build and version information
+
+
+  Option:
+
+    -h,--help       Print this help
+
+    -v,--version    Print version information
+</console>
+</unit>

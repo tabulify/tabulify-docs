@@ -1,7 +1,0 @@
-====== System Connection - Sd (Script Directory) ======
-
-
-===== About =====
-
-The ''sd'' [[connection|connection]] is a [[built-in|built-in connection]] that points to the [[docs:resource:directory|directory]] of the [[beta:flow:pipeline|pipeline file]] being executed.
-

@@ -1,0 +1,29 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:home" }
+    ],
+    "page_id": "ive0ez35doqgx1avpkw67"
+}
+---
+====== Tabul - Home Directory ======
+
+
+===== About =====
+''Tabulify Home (TABULIFY_HOME)'' is the directory where the [[howto:getting_started:1_install|installation file]] were unzipped.
+
+
+
+===== See =====
+''tabul'' is able to detect your home. You can see it with the [[docs:tabul:env:list|conf list]] command
+
+<unit>
+<code bash>
+tabul env list home
+</code>
+<console>
+attribute   value           origin    description
+---------   -------------   -------   ------------------------------------------
+HOME        /opt/tabulify   Default   The directory of the Tabulify installation
+</console>
+</unit>

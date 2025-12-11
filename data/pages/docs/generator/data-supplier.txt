@@ -1,0 +1,49 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:generator:column" }
+    ],
+    "page_id": "hols5gb5l4pjcnmn32luu"
+}
+---
+====== Column Data Supplier ======
+
+
+===== About =====
+A ''data supplier'' defines how data is supplied to a column.
+
+
+===== Syntax =====
+
+This syntax is in a [[:docs:resource:data-definition|data definition format]] that can be used:
+  * in a [[:docs:resource:generator|resource generator (aka generator)]] to define the data generated for each columns.
+  * pr in the [[:docs:op:enrich|enrich operation]] to define virtual columns
+
+
+<code yaml>
+Columns:
+  - name: columnName
+  # the data supplier
+    data-supplier:
+      # the data supplier type
+      type: sequence
+      # the arguments of the data supplier type
+      arguments:
+        start: 3
+        step: 2
+        maxTick: 5
+</code>
+
+===== List =====
+
+
+^ Name ^ Generator/Enrich \\ support ^ Description ^
+| [[docs:generator:data-set|Data Set]] | Generator/Enrich | Generates data from a data set |
+| [[docs:generator:entity|Entity]] | Generator/Enrich | Generates data from an entity data set |
+| [[docs:generator:expression|Expression]] | Generator/Enrich | Supplies derived data (expression from other columns) |
+| [[histogram|Histogram]] | Generator/Enrich | Generates a distribution of data |
+| [[meta|Meta]] | Enrich | Add metadata from input data resources (such as file name, ...) |
+| [[random|Random]] | Generator/Enrich | Generates data randomly |
+| [[docs:generator:regexp|Regular Expression]] | Generator/Enrich | Generates data from a regular expression |
+| [[sequence|Sequence]] | Generator/Enrich | Generates data in sequence |
+

@@ -1,0 +1,170 @@
+---json
+{
+    "page_id": "hq020bdc3ffohcie057hm"
+}
+---
+====== How to create a CSV dynamically with a script? ======
+
+
+===== About =====
+This ''howto'' will show you how you can create any resource dynamically with a [[:docs:resource:script|script]].
+
+In this example, we will create a [[docs:resource:csv|CSV]] but you can create any type of resource on the fly.
+
+
+===== Steps =====
+
+==== Pre-requisites ====
+
+
+You should have followed the [[script|bash script howto]] to understand how to execute and pass ''arguments'' via a [[:docs:resource:command|command]]
+==== The bash script that creates the csv ====
+
+The bash script that will be executed is:
+  * a ''hello-csv'' sample [[:docs:resource:script|script]] 
+  * that 
+    * accepts the number of lines generated as first argument (default to 1)
+    * is located in the ''command'' directory of the [[:docs:connection:howto|howto connection]]
+    * outputs a [[:docs:resource:csv|CSV]]
+
+We can print the content with the [[:docs:tabul:data:concat|data cat]] command
+
+<unit>
+<code bash>
+tabul data cat command/hello-csv@howto
+</code>
+<console bash>
+#!/usr/bin/env bash
+
+# The first argument is the number of lines generated, default to 1
+LINES=${1:-1}
+
+# Print CSV headers
+echo "Id;Greeting"
+
+# Generate the lines
+for ((i=1; i<=LINES; i++)); do
+  if [ "$i" -gt 1 ]; then
+    echo "$i;Hello World $i times"
+    continue
+  fi
+  echo "$i;Hello World $i time"
+done
+</console>
+</unit>
+
+==== Simple execution ====
+
+We can execute it to test that it works.
+
+<unit>
+<code bash>
+tabul data print --strict-selection '(command/hello-csv@howto)@tmp'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+# We execute it with a strict-selection flag so that we get an error if the executable file is not found.
+</code>
+<console>
+(command/hello-csv@howto)@tmp
+lines
+--------------------
+Id;Greeting
+1;Hello World 1 time
+</console>
+</unit>
+
+==== Generating 3 lines ====
+
+
+To pass the argument, we have created the following [[:docs:resource:command#manifest|command manifest]]
+
+<unit>
+<code bash>
+tabul data cat command/hello-csv--command.yml@howto
+</code>
+<console yaml>
+kind: command
+spec:
+  # the runtime data uri
+  data-uri: (command/hello-csv@howto)@tmp
+  # The data definition (attributes)
+  data-def:
+    # A list of arguments passed to the command
+    arguments:
+      - 3 # The first argument, the number of lines
+    # Create a file with the CSV extension
+    stdout-data-uri: 'execute/${execution_start_time}-${executable_logical_name}.csv@tmp'
+</console>
+</unit>
+
+Executing it yield 3 lines
+
+<unit>
+<code bash>
+tabul data print --strict-selection command/hello-csv--command.yml@howto
+# We execute it with a strict-selection flag so that we get an error if the file is not found.
+</code>
+<console>
+(command/hello-csv@howto)@tmp
+Id;Greeting
+---------------------
+1;Hello World 1 time
+2;Hello World 2 times
+3;Hello World 3 times
+</console>
+</unit>
+
+
+==== Defining the CSV structure ====
+
+
+Unfortunately, we can see that the CSV does not split correctly the columns because the separator is a semicolon '';'' and not a the default colon '','' character.
+
+To define the csv structure, we created the following [[:docs:resource:csv#manifest|csv manifest]]
+
+
+<unit>
+<code bash>
+tabul data cat command/hello-csv--csv.yml@howto
+</code>
+<console yaml>
+kind: csv
+spec:
+  # the command manifest
+  data-uri: hello-csv--command.yml@md
+  data-def:
+    # the character separator
+    delimiter-character: ;
+    # the columns to define the data type
+    columns:
+      - name: Id
+        type: integer
+      - name: Greeting
+        type: varchar
+</console>
+</unit>
+
+Executing it yield now a [[:docs:resource:csv|CSV]] with 2 columns
+
+<unit>
+<code bash>
+tabul data print --strict-selection command/hello-csv--csv.yml@howto
+# We execute it with a strict-selection flag so that we get an error if the file is not found.
+</code>
+<console>
+execute/20251110-204747-850-hello-csv.csv@tmp
+Id   Greeting
+--   -------------------
+ 1   Hello World 1 time
+ 2   Hello World 2 times
+ 3   Hello World 3 times
+</console>
+</unit>
+
+===== Conclusion  =====
+
+This example shows how you can create dynamic resources. 
+
+It's the way to hack Tabulify and because it's based on programing language, the sky is your only limit.
+
+
+

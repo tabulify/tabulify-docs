@@ -1,11 +1,52 @@
+---json
+{
+    "page_id": "9hqpnuaqvy4m1k0haz48w"
+}
+---
 ====== Data Operation - Fill ======
 
 
 ===== About =====
-''fill'' is an [[op|data operation]] that creates or loads [[docs:generator:generator|generated data]] into a [[docs:resource:resource|data resource]].
+''fill'' is an [[:docs:flow:intermediate|intermediate data operation]] that creates automatically [[:docs:resource:generator|data resource generator]] for its [[:docs:flow:input|inputs]].
 
-<note>
-This ''data operation'' can be performed with the [[docs:tabli:data:fill|tabli data fill command]] that pilots the [[docs:generator:generator|data generator]].
-</note>
+When passed to the [[:docs:op:transfer|transfer operation]], you will ''fill'' the defined target.
 
 
+Optionally, you can define your own [[:docs:resource:generator|generator resource]] with the ''generator-selectors'' arguments to take control over the generated data for a specific resource
+
+
+===== Cli =====
+
+This ''data operation'' is available via the [[docs:tabul:data:fill|tabul data fill command]] 
+
+
+
+===== Arguments =====
+
+The [[:docs:flow:argument|arguments]] are:
+
+^ Name ^ Default ^ Description ^
+| ''max-record-count'' | 100 | The [[:docs:resource:generator##maxrecordcount|maximum of record]] generated for generators created by the ''fill'' operation |
+| ''generator-selectors'' | | A list of [[:docs:flow:data_selector|data selector]] that selects [[:docs:resource:generator|generator files]] created manually |
+
+===== Note =====
+
+==== Dependent Load: Don't forget to set the order ====
+
+If you want to load [[:docs:resource:dependency|dependent data resources]], you need to set the the ''order'' argument of the [[:docs:op:select|select operation]] to ''create''.
+
+Why? Because the foreign tables needs to be loaded first. 
+
+For instance, when loading a star schema, the dimension needs to be loaded before the fact tables.
+
+==== How are mapped the generator selected? ====
+
+The [[:docs:resource:generator|generator files]] selected with the ''generator-selectors'' are mapped to the [[:docs:flow:input|inputs]]:
+  * by their [[docs:resource:logical_name|logical name]] for a multi-fill operation
+  * by position for a mono-fill operation (one generator, one target)
+
+
+
+**Example:** The generator file name ''d_time-datagen.yml'' would be mapped to a data resource with the [[:docs:resource:logical_name|logical name]] ''d_time''. For instance:
+  * the ''d_time.csv'' [[:docs:resource:csv|CSV]]
+  * or the ''d_time'' [[docs:resource:sql_table|sql table]]

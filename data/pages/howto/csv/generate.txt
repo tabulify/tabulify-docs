@@ -1,0 +1,159 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:generator:csv" }
+    ],
+    "description": "This article shows you how to generate a csv file from a generator tabular file.",
+    "low_quality_page": "false",
+    "name": "Generate a CSV",
+    "page_id": "dldtsswriy1bmcinb28vy"
+}
+---
+====== Tabulify - How to create a CSV File with generated data ======
+
+===== About =====
+This article shows you how to generate a <icon name="carbon:csv" /> [[docs:resource:csv|csv file]] from a [[docs:resource:generator|generator]] [[docs:resource:tabular_file|tabular file]]
+
+<note important>
+As a [[docs:resource:generator|generator]] is a [[docs:resource:file|file]], if you use any [[docs:op:op|data operation]] against a [[docs:system:file|file system]] data store, the target created would be a [[docs:resource:file|file]].
+
+Therefore, this is mandatory to use the [[docs:op:fill|fill operation]]
+</note>
+===== Steps by Step =====
+
+==== Prerequisites ====
+  * [[howto:getting_started:1_install|A Tabulify Installation]]
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection date_dim.csv@tmp
+</code>
+</unit>
+
+==== Create your generator ====
+You first need to create your [[docs:resource:generator|generator data resource]] to define the data that should be generated.
+
+We will take as example the ''d_date--generator.yml'' generator that generates a ''date dimension''.
+<note info>
+This generator is explained in this [[..:sql_table:date_dimension|howto]]
+</note>
+
+<unit >
+<file yaml date_dim--generator.yml>
+kind: generator
+spec:
+  Comment: An example of date dimension generator based on the `date_dim` table of TPCDS
+  primary-columns: [ "d_date_sk" ]
+  Columns:
+    - name: d_date_sk
+      comment: A surrogate key
+      Type: integer
+      data-supplier:
+        type: sequence
+    - name: d_date
+      comment: A business key in date format
+      Type: date
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 2025-05-13
+    - name: d_date_id
+      comment: A business key in string
+      Type: varchar
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.toISOString().substring(0,10)"
+    - name: d_month_seq
+      comment: An ascendant sequence for the month
+      Type: integer
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "function pad(number) {if (number < 10) { return '0' + number; } return number; }; d_date.getFullYear()+''+(pad(d_date.getMonth()+1))"
+    - name: d_day_name
+      comment: The name of the day
+      Type: varchar
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; days[d_date.getDay()]"
+    - name: d_moy
+      comment: the month number in year
+      Type: Integer
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.getMonth()+1"
+    - name: d_year
+      comment: The year number
+      Type: Integer
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.getFullYear()"
+
+</file>
+</unit>
+==== Run the fill command ====
+
+The below [[docs:tabul:data:copy|data copy]] command will create a [[docs:resource:csv|CSV file]] named ''d_date.csv'' in the [[docs:connection:tmp|temporary directory]].
+<unit >
+<code bash>
+tabul data copy date_dim--generator.yml@howto date_dim.csv@tmp
+</code>
+<console>
+Transfer results
+input             target             latency   record_count   error_code   error_message
+---------------   ----------------   -------   ------------   ----------   -------------
+date_dim@memgen   date_dim.csv@tmp   0.831s             100
+</console>
+</unit>
+
+==== Check the result ====
+
+What is the data of the CSV file with the [[docs:tabul:data:head|data head command]]?
+<unit >
+<code bash>
+tabul data head --limit 30 date_dim.csv@tmp
+</code>
+<console>
+The first 30 rows of the data resource (date_dim.csv@tmp):
+d_date_sk   d_date       d_date_id    d_month_seq   d_day_name   d_moy   d_year
+---------   ----------   ----------   -----------   ----------   -----   ------
+1           2025-05-12   2025-05-12   202505        Monday       5       2025
+2           2025-05-11   2025-05-11   202505        Sunday       5       2025
+3           2025-05-10   2025-05-10   202505        Saturday     5       2025
+4           2025-05-09   2025-05-09   202505        Friday       5       2025
+5           2025-05-08   2025-05-08   202505        Thursday     5       2025
+6           2025-05-07   2025-05-07   202505        Wednesday    5       2025
+7           2025-05-06   2025-05-06   202505        Tuesday      5       2025
+8           2025-05-05   2025-05-05   202505        Monday       5       2025
+9           2025-05-04   2025-05-04   202505        Sunday       5       2025
+10          2025-05-03   2025-05-03   202505        Saturday     5       2025
+11          2025-05-02   2025-05-02   202505        Friday       5       2025
+12          2025-05-01   2025-05-01   202505        Thursday     5       2025
+13          2025-04-30   2025-04-30   202504        Wednesday    4       2025
+14          2025-04-29   2025-04-29   202504        Tuesday      4       2025
+15          2025-04-28   2025-04-28   202504        Monday       4       2025
+16          2025-04-27   2025-04-27   202504        Sunday       4       2025
+17          2025-04-26   2025-04-26   202504        Saturday     4       2025
+18          2025-04-25   2025-04-25   202504        Friday       4       2025
+19          2025-04-24   2025-04-24   202504        Thursday     4       2025
+20          2025-04-23   2025-04-23   202504        Wednesday    4       2025
+21          2025-04-22   2025-04-22   202504        Tuesday      4       2025
+22          2025-04-21   2025-04-21   202504        Monday       4       2025
+23          2025-04-20   2025-04-20   202504        Sunday       4       2025
+24          2025-04-19   2025-04-19   202504        Saturday     4       2025
+25          2025-04-18   2025-04-18   202504        Friday       4       2025
+26          2025-04-17   2025-04-17   202504        Thursday     4       2025
+27          2025-04-16   2025-04-16   202504        Wednesday    4       2025
+28          2025-04-15   2025-04-15   202504        Tuesday      4       2025
+29          2025-04-14   2025-04-14   202504        Monday       4       2025
+30          2025-04-13   2025-04-13   202504        Sunday       4       2025
+</console>
+</unit>

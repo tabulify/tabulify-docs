@@ -1,0 +1,105 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:email:attachment" }
+    ],
+    "page_id": "pfxfd4ndhmp8h1al4g4ff"
+}
+---
+====== How to send data resources ======
+
+===== About =====
+This howto shows you how to send an email <icon name="email" /> with a data resource attached via the [[:docs:op:sendmail|sendmail]] operation.
+
+===== Steps =====
+
+
+In the below [[:docs:flow:pipeline|pipeline]], we use the following steps:
+  * [[docs:op:select|select]] to select data resources that will be send as attachement.
+  * [[:docs:op:sendmail|sendmail]] to send them
+==== Start the howto smtp server ====
+
+Start the [[howto:email:howto_connection_service|howto smtp server]]
+
+<unit>
+<code bash>
+tabul service start smtp
+</code>
+<console>
+1 service was started
+Name   Type
+----   ------
+smtp   docker
+</console>
+</unit>
+
+Check that you can ping it
+<unit>
+<code bash>
+tabul connection ping smtp
+</code>
+<console>
+The connection (smtp) has been pinged successfully
+</console>
+</unit>
+
+==== The pipeline ====
+
+<unit>
+<file yaml pipeline/email_resources.yml>
+kind: pipeline
+spec:
+  steps:
+    - name: "Select"
+      comment: "This operation select the resources to send"
+      operation: "select"
+      args:
+        data-selector: "email/*.csv@howto"
+    - name: "Send"
+      comment: "Send the selected resources as email attachment"
+      operation: "sendmail"
+      args:
+        target-uri: "@smtp" # smtp is the default smtp connection and is therefore optional
+        to: "support@tabulify.com"
+        subject: "Demo: How to send resources"
+        txt: |
+          Please, find attached the report data
+
+</file>
+</unit>
+
+==== The execution ====
+
+<unit>
+You can execute this pipeline with the [[docs:tabul:flow:execute|execute command]]
+<code bash>
+tabul flow execute pipeline/email_resources.yml@howto
+</code>
+Output:
+<console>
+Execution Metrics of the pipeline (email_resources)
+metrics                  value
+----------------------   ----------------------------------------------------------
+pipeline-path            /opt/tabulify/resources/howto/pipeline/email_resources.yml
+processing-type          batch
+start-time               2025-11-10T20:01:57.699313769Z
+end-time                 2025-11-10T20:01:57.821443266Z
+total-elapsed-time       0.122s
+execution-elapsed-time   0.122s
+
+
+
+Step execution results for the pipeline (email_resources)
+step_id   step_name   operation_name   operation_type   processing_type   input_counter   output_counter   execution_counter   error_counter   parking_counter
+-------   ---------   --------------   --------------   ---------------   -------------   --------------   -----------------   -------------   ---------------
+      1   Select      select           Supplier         batch                         0                1                   0               0                 0
+      2   Send        sendmail         Map              stream                        1                1                   1               0                 0
+</console>
+</unit>
+
+==== Check the Inbox ====
+
+
+In the [[http://localhost:8025|mailpit inbox]], you can then see the  email with the attached <icon name="carbon:csv" /> [[:docs:resource:csv|csv]].
+
+{{:howto:email:email_send_resource_illustration.png|}}

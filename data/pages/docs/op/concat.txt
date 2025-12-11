@@ -1,0 +1,39 @@
+---json
+{
+    "page_id": "ftklb3gk91n09fgm5ndby"
+}
+---
+====== Data Operation - Concat ======
+
+
+===== About =====
+
+''Concat'' is a [[:docs:flow:intermediate|intermediate data operation]] that will concatenate multiple data resources into one.
+
+
+
+It's an alias of the [[docs:op:transfer|transfer operation]] where:
+  * the method is set to [[:docs:op:insert|insert]]
+  * the target name stays the same for all sources (ie the [[docs:flow:template_data_uri|target data uri]] does not have a [[docs:flow:template_string|target pattern]] in its path)
+
+===== Cli =====
+
+The ''concat'' operation is also available via the [[:docs:tabul:data:concat|tabul data command]].
+===== Note =====
+
+
+==== What if the target exists ====
+
+Note that the data operation is [[:docs:op:insert|insert]] therefore if the target resource exists, the data is appended.
+
+==== Effect of metadata on file concatenation ====
+
+
+Note that concatenating [[:docs:system:file|files]] that does not store any [[:docs:resource:metadata|metadata]] (such as [[:docs:resource:csv|csv file]] without ''header'') 
+should be quicker.
+
+Why ?
+
+The concatenation is performed:
+  * physically: ''block by block'' (bytes disk operation)
+  * and not logically: [[:docs:resource:record|record by record]]

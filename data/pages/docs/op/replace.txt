@@ -1,0 +1,24 @@
+---json
+{
+    "page_id": "bg72e3yxghasp1ypsd4od"
+}
+---
+====== Data Operation - Replace ======
+
+
+===== About =====
+''replace'' is a [[transfer|transfer operation]] that will:
+    * [[drop|drop]] the target if it exists
+    * [[copy|copy]] the source to the target
+
+
+===== Transfer Shortcut =====
+
+A ''replace'' operation is a [[transfer|transfer operation]]:
+  * with a [[transfer#transfer_operation|transfer operation]] set to ''copy''
+  * and a [[docs:op:transfer#resource_operation|target-operation set to drop]]
+
+===== Cli =====
+
+See the [[:docs:tabul:data:replace|replace tabul command]]
+

@@ -1,5 +1,30 @@
+---json
+{
+    "page_id": "trkc6eg0gyo1bcwdg9j75"
+}
+---
 ====== Data Operation - Truncate ======
 
 ===== About =====
-''truncate'' is a [[op|data operation]] that is supported by the [[docs:tabli:data:truncate|data truncate command]] that will delete the [[docs:resource:content|content]] of a [[docs:resource:resource|data resource]] but not it's [[docs:resource:metadata|metadata]]
+''truncate'' is a [[:docs:flow:intermediate|intermediate operation]] that will delete the [[docs:resource:content|content]] of a [[docs:resource:resource|data resource]] but not it's [[docs:resource:metadata|metadata]]
+
+
+===== Arguments =====
+
+Truncate supports the following [[:docs:flow:argument|arguments]]:
+
+^ Name ^ Default ^ Description ^ 
+| ''force'' | ''false'' | Delete the foreign keys constraints if true |
+| ''cascade'' | ''false'' | Truncate recursively the [[:docs:resource:dependency|dependent resources]] |
+| ''processing-type'' | ''batch'' | The [[:docs:flow:processing-type|processing type]] (all at once or one by one) |
+
+===== Note =====
+
+  * If you want to truncate in a [[:docs:flow:processing-type|stream]] fashion (ie one by one), you should set the ''order'' argument of the [[docs:resource:sql_select|select]] to ''drop'' so that the tables are truncated in order.
+  * ''force'' is applied in [[:docs:flow:processing-type|batch]] mode only if all foreign tables are present in the ''batch''.
+  * the truncated data resources are returned
+  * on a [[:docs:system:file|file system]], ''force'' or ''cascade'' have the same effect, they will truncate all files recursively in a directory.
+===== Cli =====
+
+''Truncate'' is also available via the [[docs:tabul:data:truncate|data truncate command]] 
 

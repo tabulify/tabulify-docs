@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "ipbt4se51b4fggh7g7nn1"
+}
+---
 ====== Data Resource - Path  ======
 
 
@@ -23,25 +28,40 @@ You can see the pat value via the [[attribute|data resource attribute]].
 
 The file ''query_11.sql'' file in the [[docs:connection:tpcds_query|tpcds-query file connection]] has a ''path'' value of ''sqlite/query_11.sql''
 
-With the [[docs:tabli:data:info|data info command]]
+With the [[docs:tabul:data:info|data info command]]
 <unit>
-<code dos>
-tabli data info sqlite/query_11.sql@tpcds_query
+<code bash>
+tabul data info sqlite/query_11.sql@tpcds_query
 </code>
 <console>
-Information about the data resource (sqlite\query_11.sql@tpcds_query)
-ATTRIBUTE      VALUE
-------------   -----------------------------------------------------------------
-AbsolutePath   D:\code\bytle-mono\db-jdbc\src\main\sql\tpcds\sqlite\query_11.sql
-Characterset   ISO-8859-1
-Connection     tpcds_query
-Count          81
-DataUri        sqlite\query_11.sql@tpcds_query
-LogicalName    query_11
-Name           query_11.sql
-Path           sqlite\query_11.sql
-Size           2900
-Type           text/plain
+Information about the data resource (sqlite/query_11.sql@tpcds_query)
+attribute          value                                                                                              description
+----------------   ------------------------------------------------------------------------------------------------   ----------------------------------------------------------------------
+CHARACTER_SET      UTF-8                                                                                              The character set of the file
+COLUMN_NAME        sql                                                                                                The name of the column when the text content is returned on one column
+END_OF_RECORD      ;\r, ;\r\n, ;\n, /\r, /\r\n, /\n, \rgo\r, \r\ngo\r\n, \ngo\n, \rGO\r, \r\nGO\r\n, \nGO\n           The End Of Record string sequence
+PARSING_MODE       SQL                                                                                                How to parse the SQL files
+URI                file:///opt/tabulify/resources/tpcds_query/sqlite/query_11.sql                                     The URI of the file
+ABSOLUTE_PATH      /opt/tabulify/resources/tpcds_query/sqlite/query_11.sql                                            The absolute path on the data system
+ACCESS_TIME        2025-11-10 15:34:45.559263352                                                                      The access time (access time)
+COMMENT                                                                                                               A comment
+CONNECTION         tpcds_query                                                                                        The connection name
+COUNT              1                                                                                                  The number of records
+CREATION_TIME      2025-11-10 15:34:41.579095709                                                                      The creation time (birth time)
+DATA_URI           sqlite/query_11.sql@tpcds_query                                                                    The data uri
+KIND               sql                                                                                                The kind of media
+LOGICAL_NAME       query_11                                                                                           The logical name
+MD5                25d9c65fe0726c0d7b6e23655379e00d                                                                   The Md5 hash
+MEDIA_SUBTYPE      sql                                                                                                The media subType
+MEDIA_TYPE         text/sql                                                                                           The media type
+NAME               query_11.sql                                                                                       The name of the data resource
+PARENT             sqlite                                                                                             The parent
+PATH               sqlite/query_11.sql                                                                                The relative path to the default connection path
+SHA384             ab8b87103f126f50388a56d6da667840599b7aaadef0a6fbb1340f3764ffb2169d1e4f8ff471c3ebcbe4a4b944970e83   The Sha384 hash
+SHA384_INTEGRITY   sha384-q4uHED8Sb1A4ilbW2mZ4QFmbeqre8Kb7sTQPN2T/shadHk+P9HHD68vkpLlElw6D                            The sha384 value used in the html integrity attribute
+SIZE               2819                                                                                               The number of byte
+TABULAR_TYPE       data                                                                                               The tabular type
+UPDATE_TIME        2025-11-10 15:34:41.579095709                                                                      The last update time (modify time)
 </console>
 </unit>
 

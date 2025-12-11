@@ -1,0 +1,135 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:connection:delete" }
+    ],
+    "page_id": "lb677xhru39bk95r1atig"
+}
+---
+====== Tabul - Delete a Connection  ======
+
+
+===== About =====
+''delete'' is an action of the [[docs:tabul:connection:start|connection module]] that deletes a connection from the [[docs:conf:tabul.yml|connection vault]].
+
+===== Example =====
+  * [[upsert|Add a connection]]
+<unit>
+<code bash>
+tabul connection upsert --uri "jdbc:sqlite:///tmp/db.db" "dbConnectionName"
+</code>
+</unit>
+  * [[info|Get its info]]
+<unit>
+<code bash>
+tabul connection info "dbConnectionName"
+</code>
+<console>
+Information about the connection (dbConnectionName)
+Attribute                    Value                      Description
+--------------------------   ------------------------   --------------------------------------------------------------------
+BOOLEAN_DATA_TYPE            Native                     Boolean data type used to store boolean values
+BUILDER_CACHE_ENABLED        true                       Enable or disable the builder cache
+CHAR_DEFAULT_PRECISION       1                          Default CHAR precision
+COMMENT                                                 A connection description
+DATABASE_MAJOR_VERSION                                  The major version number of the database
+DATABASE_MINOR_VERSION                                  The minor version number of the database
+DATABASE_PRODUCT_NAME                                   The name of the database
+DATABASE_PRODUCT_VERSION                                The version of the database
+DATE_DATA_TYPE               NATIVE                     Date data type used to store date values
+DRIVER                                                  The jdbc driver class
+DRIVER_NAME                                             The driver name
+DRIVER_VERSION                                          The driver version
+HOST                                                    Host Server
+JDBC_MAJOR_VERSION                                      The major version number of JDBC
+JDBC_MINOR_VERSION                                      The minor version number of JDBC
+LOGIN_STATEMENTS                                        Statements that runs after a connection has been established
+MAX_CONCURRENT_THREAD                                   The maximum number of threads that can be created against the system
+MAX_NAME_IN_PATH                                        The maximum number of names in a path
+NAME                         dbConnectionName           The name of the connection
+NAME_QUOTING_DISABLED_CASE   UPPERCASE                  The case to apply when quoting is disabled
+NAME_QUOTING_ENABLED         true                       Enable quoting of names
+NATIVES                                                 Native Driver attributes (jdbc properties, ...)
+NCHAR_DEFAULT_PRECISION      1                          Default NCHAR precision
+NVARCHAR_DEFAULT_PRECISION   0                          Default NVARCHAR precision
+ORIGIN                       CONF                       The origin of the connection
+PASSWORD                                                The user password
+PORT                                                    Host Port
+SUPPORT_BATCH_UPDATES                                   If the system supports batch SQL updates
+SUPPORT_NAMED_PARAMETERS                                If the system supports named parameters in the SQL statement
+TIMESTAMP_DATA_TYPE          NATIVE                     Timestamp data type used to store timestamp values
+TIME_DATA_TYPE               NATIVE                     Time format data type to store time values
+TYPE_AFFINITY_CONVERSION     false                      If true, the type name are converted to affinity name
+URI                          jdbc:sqlite:///tmp/db.db   The uri of the connection
+USER                                                    The user name
+VARCHAR_DEFAULT_PRECISION    0                          Default VARCHAR precision
+WORKING_PATH                                            The working path (Schema for database, directory for file system)
+</console>
+</unit>
+  * Delete it
+<unit>
+<code bash>
+tabul connection delete dbConnectionName
+</code>
+<console>
+The connection(s) deleted
+connection
+----------------
+dbConnectionName
+</console>
+</unit>
+===== Syntax =====
+<unit>
+<code bash>
+tabul connection delete --help
+</code>
+<console>
+Tabul connection delete
+=======================
+
+Delete a connection from the connection vault
+
+
+
+Syntax
+------
+
+
+    tabul connection delete <name|glob>
+
+
+where:
+
+
+  Arguments:
+
+    <name|glob>                                             a connection name or a glob pattern
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        If the removed connection does not exist, the command will not exit with a failure code.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

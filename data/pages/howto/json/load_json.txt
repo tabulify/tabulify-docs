@@ -1,0 +1,290 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:database:load_json" }
+    ],
+    "canonical": ":howto:database:json:load",
+    "description": "This howto will show you how to load json document (files) into your relational database.",
+    "images": [
+        { "path": ":combostrap:icons:codicon:json.svg" }
+    ],
+    "low_quality_page": "false",
+    "name": "Load JSON in a Sql Table",
+    "page_id": "a8z097oexo9em70mdaha6"
+}
+---
+
+====== Database HowTo - How to load JSON documents in a database ======
+
+
+===== About =====
+
+This [[howto:howto|howto]] will show you how to load <icon name="codicon:json"/> [[docs:resource:json|json document (files)]] into a [[docs:system:database:database|relational database]].
+
+<note>
+This example uses the [[howto:sqlite:howto_connection|sqlite howto database]] but you may use any other [[docs:system:database:database|relational database]]
+</note>
+
+===== Steps =====
+
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection user@sqlite
+</code>
+</unit>
+
+==== The Json files ====
+To be able to follow along the [[https://www.sqlite.org/json1.html|SQLite examples of the JSON documentation]], we will load ''phones numbers'' in a ''user'' table.
+
+The [[docs:resource:json|JSON files]] are located in the subdirectory ''json/phone'' of the [[docs:connection:howto|howto directory]] where there is one file by ''user'' containing a JSON array of phones.
+
+With the [[docs:tabul:data:list|data list command]], we can list them.
+<unit>
+<code bash>
+tabul data list json/phone/*.json@howto
+</code>
+<console>
+
+path                     media_type
+----------------------   ----------
+json/phone/Arnold.json   text/json
+json/phone/Bob.json      text/json
+json/phone/Dale.json     text/json
+json/phone/Daniel.json   text/json
+json/phone/Don.json      text/json
+
+</console>
+</unit>
+
+
+With the [[docs:tabul:data:print|data print command]], we can see for instance the JSON array of phones in the ''Bob.json'' file
+<unit>
+<code bash>
+tabul data print json/phone/Bob.json@howto
+</code>
+<console>
+
+json/phone/Bob.json@howto
+json
+----------------------------------------------
+["323-423-2238","747-444-3222","475-202-7142"]
+
+</console>
+</unit>
+
+
+==== Json relational structure ====
+
+
+By default, a [[docs:resource:json|json file]] is seen as a [[docs:resource:tabular|relation]] with one column called ''json''
+
+
+The [[docs:resource:structure|structure]] of the JSON file can be seen with the [[docs:tabul:data:describe|data describe command]].
+
+For instance, for the ''Don.json'' file, there is one column:
+  * at the ''position 1''
+  * called ''json''
+  * with the ''json'' [[docs:data_type:data_type|data type]]
+<unit>
+<code bash>
+tabul data describe json/phone/Don.json@howto
+</code>
+<console>
+
+Structure of the resource json/phone/Don.json@howto
+position   name   type   precision   scale   primary_key   nullable   autoincrement   comment
+--------   ----   ----   ---------   -----   -----------   --------   -------------   -------
+1          json   json   0           0                     x
+
+</console>
+</unit>
+
+
+==== Loading the JSON files ====
+
+The below [[docs:tabul:data:insert|data insert command]] will load the JSON files into the ''phones'' [[docs:resource:sql_table|table]] of the [[howto:sqlite:howto_connection|sqlite howto]] database.
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection user@sqlite
+</code>
+</unit>
+<unit>
+<code bash>
+tabul data insert json/phone/*.json@howto  user@sqlite
+</code>
+<console>
+Transfer results
+input                          target        latency   record_count   error_code   error_message
+----------------------------   -----------   -------   ------------   ----------   -------------
+json/phone/Arnold.json@howto   user@sqlite   0.60s                1                
+json/phone/Bob.json@howto      user@sqlite   0.8s                 1                
+json/phone/Dale.json@howto     user@sqlite   0.9s                 1                
+json/phone/Daniel.json@howto   user@sqlite   0.9s                 1                
+json/phone/Don.json@howto      user@sqlite   0.8s                 1
+</console>
+</unit>
+
+You can inspect the content with the [[docs:tabul:data:head|head command]]
+
+<unit>
+<code bash>
+tabul data head user@sqlite
+</code>
+<console>
+
+The first 10 rows of the data resource (user@sqlite):
+json
+-----------------------------------------------
+["704-555-0150","202-555-0150"]
+["323-423-2238","747-444-3222","475-202-7142"]
+["731-414-7236","256-233-3557","409-645-3618"]
+["425-898-3481","360-637-7972", "205-533-8271"]
+["470-293-7517"]
+
+</console>
+</unit>
+
+==== Changing the name of the JSON column ====
+The name of the JSON column is by default ''json'' but we can change it by setting the [[docs:resource:json#attribute|columnName json attribute]]
+
+After running the below [[docs:tabul:data:head|head command]], we can see that the column name has changed to ''phones''
+<unit>
+<code bash>
+tabul data head --attribute columnName=phone json/phone/Don.json@howto
+</code>
+<console>
+
+The first 10 rows of the data resource (json/phone/Don.json@howto):
+phone
+----------------
+["470-293-7517"]
+
+</console>
+</unit>
+
+==== Adding a column with the logical name of the JSON file  ====
+Because the ''JSON'' content of files does not have any kind of identifier, we can see that the data is actually worthless because we can't relate the ''phone'' to a ''user''.
+
+To be able to add context to file loaded, ''Tabulify'' supports the concept of [[docs:resource:virtual_column|virtual columns]] where it's possible to add [[docs:resource:attribute|any attribute information about the file loaded]].
+
+The [[docs:resource:virtual_column|virtual columns]] are specified with the ''--virtual-column'' [[docs:tabul:option|option]] that has the following syntax:
+<code bash>
+--virtual-column virtualColumnName=resourceAttributeName
+</code>
+
+where:
+  * ''virtualColumnName'' is the name of the column added
+  * ''resourceAttributeName'' is the name of [[docs:resource:attribute|resource attribute]].
+
+For instance, if we want to add:
+  * the [[docs:resource:logical_name|logical name attribute]]
+  * into a column called ''name'',
+we would add ''--virtual-column name=logical_name''
+
+With the [[docs:tabul:data:print|print command]], the full command would look like below.
+<unit>
+<code bash>
+tabul data print --attribute columnName=phone --virtual-column name=logical_name json/phone/Bob.json@howto
+</code>
+<console>
+
+json/phone/Bob.json@howto
+phone                                            name
+----------------------------------------------   ----
+["323-423-2238","747-444-3222","475-202-7142"]   Bob
+
+</console>
+</unit>
+
+==== Reloading the JSON files with the virtual column name ====
+
+First, we will drop the old structure with the `json` column
+<unit>
+<code bash>
+tabul data drop --no-strict-selection user@sqlite
+</code>
+</unit>
+
+To reload the JSON files:
+  * with the extra column ''name'' and the [[docs:resource:logical_name|file logical name]]
+  * with a column ''phones'' containing the ''JSON document''
+the syntax of the [[docs:tabul:data:replace|tabul data replace]] would be:
+<unit>
+<code bash>
+tabul data replace --source-attribute columnName=phone --virtual-column name=logical_name json/phone/*@howto  user@sqlite
+</code>
+where:
+  * ''%%--source-attribute columnName=phones%%'' will set the [[docs:resource:json#attribute|JSON attribute columnName]] to ''phone''
+  * ''%%--virtual-column name=logical_name%%'' will add the [[docs:resource:virtual_column|virtual column]] names ''name'' with the [[docs:resource:logical_name|logical name attribute]]  of the source
+  * ''json/phone/*@howto'' is the [[docs:flow:data_selector|source data selector]]
+  * ''phones@sqlite'' is the [[docs:flow:template_data_uri|target uri]]
+
+Output:
+<console>
+Transfer results
+input                          target        latency   record_count   error_code   error_message
+----------------------------   -----------   -------   ------------   ----------   -------------
+json/phone/Arnold.json@howto   user@sqlite   0.59s                1                
+json/phone/Bob.json@howto      user@sqlite   0.9s                 1                
+json/phone/Dale.json@howto     user@sqlite   0.9s                 1                
+json/phone/Daniel.json@howto   user@sqlite   0.9s                 1                
+json/phone/Don.json@howto      user@sqlite   0.11s                1
+</console>
+</unit>
+
+
+
+The JSON data loaded has now the ''name'' column as identifier.
+<unit>
+<code bash>
+tabul data print user@sqlite
+</code>
+<console>
+
+user@sqlite
+phone                                             name
+-----------------------------------------------   ------
+["704-555-0150","202-555-0150"]                   Arnold
+["323-423-2238","747-444-3222","475-202-7142"]    Bob
+["731-414-7236","256-233-3557","409-645-3618"]    Dale
+["425-898-3481","360-637-7972", "205-533-8271"]   Daniel
+["470-293-7517"]                                  Don
+
+</console>
+</unit>
+
+==== Performing JSON SQL statement ====
+
+Inspired from the [[https://www.sqlite.org/json1.html#examples_using_json_each_and_json_tree_|SQLite examples of the JSON documentation - section 4.3.1]], we will now run the below SQL with JSON function.
+
+<unit>
+<file sql sqlite/user_phone_json.sql>
+-- https://www.sqlite.org/json1.html#examples_using_json_each_and_json_tree_
+SELECT DISTINCT user.name
+FROM user, json_each(user.phone)
+WHERE json_each.value LIKE '704-%';
+
+</file>cat
+</unit>
+
+To see the result of this [[docs:resource:sql_select|SQL query]], we will use the [[docs:tabul:data:print|print command]] and see that ''Arnold'' is the user that have a phone number that starts with ''704''.
+
+<unit>
+<code bash>
+tabul data print '(sqlite/user_phone_json.sql@howto)@sqlite'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+<console>
+
+(sqlite/user_phone_json.sql@howto)@sqlite
+name
+------
+Arnold
+
+</console>
+</unit>
+
+==== Next ====
+
+  * If you want to explore the JSON SQL function of SQLite, you can read the [[https://www.sqlite.org/json1.html|Sqlite JSON documentation]].
+  * A JSON file containing an JSON object can also be loaded with its first properties representing columns. To do that, you need to set the [[docs:resource:json#attributes|structure attribute]] to ''properties''.

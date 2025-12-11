@@ -1,9 +1,17 @@
-====== Variables ======
+---json
+{
+    "aliases": [
+        { "path": ":docs:conf:variable" }
+    ],
+    "page_id": "v30lma93q6qbikqzefk50"
+}
+---
+====== Attribute ======
 
 
 ===== About =====
-''attribute'' are key pair values that are used to:
-  * configure the behavior of tabulify (known as parameter)
+''attributes'' are [[:docs:resource:metadata|metadata]] key pair values that are used:
+  * to configure the behavior of tabulify (known as parameter)
   * or as [[template|template variable]] 
 
 
@@ -11,20 +19,57 @@
 
 
 ===== Type =====
-There is 2 kinds of attributes:
-  * [[parameter|parameters]]: fixed value
-  * derived: value that is:
-      * computed 
-      * or retrieved from a [[:docs:system:system|system]]
+There is 3 kinds of attributes:
+  * [[parameter|parameters]]: fixed value that you can set
+  * ''literal'': literal value retrieved from a [[:docs:system:system|system]] (Example: creation date, ...)
+  * ''computed'': value derived through computation (Example: [[:docs:resource:count|count]], digest, ...)
 
-===== Case Independent sensitivity =====
+
+===== Value =====
+
+The value of an attribute may be:
+  * [[:docs:tabul:vault:encrypt|encrypted]]
+  * an [[docs:conf:global_env|environment variable]]
+  * or a literal (ie not derived, the raw value)
+===== Key Casing =====
+
+==== Case Input: Independent sensitivity ====
 
 Attribute names are ''case independent'' meaning that all these names are equivalent
   * ''UserCount / userCount'' - Camel Case
   * ''user_count / USER_COUNT'' - Snake Case
   * ''user-count / USER-COUNT'' - Kebab/Hyphen Case
 
+But the following are not:
+  * ''dataset'' and ''dataSet''
+  * ''uSerCount'' and ''userCount'' 
 
-Note: we detect the word parts with the letter casing (uppercasing) so the following name are not equivalent:
-  * ''uSerCount'' will normalized to the parts `u`, `ser`, `count`
-  * ''userCount'' will normalized to the parts `user`, `count`
+Why ? We parse the attribute name into words using as separators: 
+  * uppercase
+  * spaces, 
+  * underscores
+  * and any non alphanumeric character
+
+Therefore:
+  * ''dataset'' is 1 word: ''dataset''
+  * ''dataSet'''is 2 words:  ''data'' and ''set''
+  * ''userCount'' is 2 words: ''user'' and ''count''
+  * ''uSerCount'' is 3 words: ''u'', ''ser'' and ''count'' 
+
+
+
+==== Casing output ====
+
+Casing is a matter of:
+  * visual taste
+  * convention
+  * specification and [[:docs:flow:target|target system]]  (ie SQL does not allow a `-` minus in a name if not quoted)
+
+
+We try to follow the following conventions when printing or serializing:
+
+  * [[:docs:op:print|Print]] Value: UPPER_SNAKE_CASE (mostly to show that they can be set via [[:docs:conf:os|os environment variable]]
+  * [[:docs:op:print|Print]] Header / [[:docs:resource:column|Column]] Name: ''lower_snake_case'' because 
+    * lowercase is the standard state on a keyboard (one key press won, is one key press less)
+    * and we don't like shouting
+  * [[:docs:common:yaml|Yaml]] file: kebab-case (ie hyphen)

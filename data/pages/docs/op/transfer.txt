@@ -1,7 +1,13 @@
-====== Data Operation - Transfer ======
+---json
+{
+    "page_id": "bu892v7h08d3oihj6bn2t"
+}
+---
+====== Step Operation - Transfer ======
 
 ===== About =====
-''transfer'' is a [[op|data operation]] that executes all this [[docs:resource:resource|data resources]] operations:
+''transfer'' is a [[:docs:flow:intermediate|intermediate operation]] that executes all this [[docs:resource:resource|data resources]] operations:
+  * [[docs:op:concat|concat]]
   * [[copy|copy]] (Default)
   * [[download|download]], [[upload|upload, load]]
   * [[move|move]], [[rename|rename]]
@@ -16,8 +22,8 @@ In general, if you need to ''move'' or ''process'' data, you will ''transfer'' i
 
 
 The ''data transfer'' action permits you to
-  * [[download|download]] a [[docs:resource:table|Sql table]] into a [[docs:resource:tabular_file|file]] ([[docs:resource:csv|CSV]], [[docs:resource:excel|Excel file]], ...)
-  * [[howto:database:tabli_load_csv|load a local CSV file into a relational table]]
+  * [[download|download]] a [[docs:resource:sql_table|Sql table]] into a [[docs:resource:tabular_file|file]] ([[docs:resource:csv|CSV]], [[docs:resource:excel|Excel file]], ...)
+  * [[howto:csv:database_load|load a local CSV file into a relational table]]
   * [[copy|copy]] a local file to a [[docs:system:ssh|sftp server]]
   * and more
 
@@ -26,28 +32,30 @@ The ''data transfer'' action permits you to
 
 
 
-===== Usage =====
+===== Example =====
 
-<tabs enclosed-tabs>
 
-<panel selected>
-        <label>Flow</label>
+
+
+In a [[:docs:flow:pipeline|Pipeline]]
 <code yaml>
 pipeline:
 # ...
   - name: "Store"
     operation: transfer
     args:
-      target-uri: 'build/${logicalName}.csv@cd'
+      target-data-uri: '${logicalName}.csv@tmp'
       transfer-operation: insert
       target-operation: replace
+      ...
 </code>
-    </panel>
-    <panel>
-        <label>Tabli Data Transfer Command</label>
-The ''transfer'' operation is performed by the [[docs:tabli:data:transfer|tabli data transfer]] command
-    </panel>
-</tabs>
+
+===== Cli =====
+
+
+
+The ''transfer'' operation is performed by the [[docs:tabul:data:transfer|tabul data transfer]] command
+
 
 
 
@@ -60,59 +68,130 @@ The ''transfer'' operation is performed by the [[docs:tabli:data:transfer|tabli 
 
 
 ^ Name ^ Default ^ Description ^
-| ''target-uri'' | - | The [[docs:resource:target_uri|target uri]] (Mandatory) |
-| ''target-operation'' | - | A [[#resource-operation|resource operation]] that will happens on the target before the transfer |
-| ''source-operation'' | - | A [[#resource-operation|resource operation]] that will happens on the source after the transfer |
-^ Flow Property ^^^
-| [[..:flow:granularity|step-granularity]] | ''resource'' (default) or ''record'' | The operation will be done for the whole resource or record by record |
-| ''output'' | ''target'' | The output \\ - ''targets'', the target resources  \\ - ''sources'', the sources resources are passed \\ - ''results'', the [[#result|results]] of the transfer step is passed |
+| ''target-data-uri'' | - | A [[docs:flow:template_data_uri|template data uri]] (Mandatory) |
+| ''target-name-sanitization'' | true | If true, the target name is sanitized to comply with the naming convention of the target system.\\ Example: for sql, the name `foo-bar` would become `foo_bar` |
+| ''target-operation'' | - | A [[#resource operation|resource operation]] that will happens on the target before the transfer |
+| ''source-operation'' | - | A [[#resource operation|resource operation]] that will happens on the source after the transfer |
+^ Pipeline Properties ^^^
+| ''output-type'' | ''target'' | The [[:docs:flow:output|output]] \\ - ''targets'', the target resources  \\ - ''inputs'', the inputs resources are passed \\ - ''results'', the [[#results|results]] of the transfer step is passed |
+| [[:docs:flow:processing-type|processing-type]] | ''batch'' if the target is not a [[docs:flow:template_string|pattern]]\\ ''stream'' otherwise | The type of processing |
 ^ [[#Cross Transfer|Cross Transfer Properties]] ^^^
 | ''source-fetch-size'' | ''10000'' | The number of record from the [[docs:flow:source|source]] for one fetch (ie network message size from the source system) |
 | ''buffer-size'' | 2 x ''target-worker'' x ''fetch-size'' | The maximum number of record from stored in transit between the source and the target |
-| ''target-batch-size'' | ''10000'' | The number of record send to target system at once (ie network message size to the target system) |
+| ''target-batch-size'' | ''1000'' | The number of record send to the target system at once in a [[#batch mode|batch]] (ie network message size to the target system) |
 | ''target-commit-frequency'' | <math>2^{31}</math> (Infinite) | The number of batch sends that will trigger a commit to the target system |
 | ''target-worker'' | 1 | The number of thread against the target system that will send batches |
-| ''with-bind-variables'' | true | If the target system is a [[docs:system:database|sql database]], SQL bind variables will be used |
+| ''with-parameters'' | true | If the target system is a [[docs:system:database:database|sql database]], [[:docs:system:database:sql_parameterized_statement|SQL bind variables]] will be used |
 | ''metrics-data-uri'' | | A [[docs:resource:data_uri|data uri]] where the [[#metrics|transfer metrics]] will be saved |
 ^ Transfer Properties ^^^
-| ''transfer-operation'' | ''copy'' for a [[docs:system:file|file system]] \\ ''insert'' otherwise | A [[#transfer-operation|transfer operation]] (copy, insert, upsert, update, ...) |
-| ''transfer-mapping-method'' | ''name'' | how the source and target columns are mapped (by ''name'', ''position'' or ''map'') |
-| ''transfer-column-mapping'' |  | if the mapping method is ''map'', you can define a map of source target column name |
+| ''transfer-operation'' | ''copy'' for a [[docs:system:file|file system]] \\ ''insert'' otherwise | A [[#transfer operation|transfer operation]] (copy, insert, upsert, update, ...) |
+| ''transfer-upsert-type'' | ''merge'' | The [[#transfer upsert type|transfer upsert type]] (merge, insert-update, update-insert, ...) |
+| [[#transfer mapping method|transfer-mapping-method]] | ''position'' if the target has no structure \\ ''name'' otherwise | how the source and target columns are mapped (by ''name'', ''position'', ''map-by-name'' or ''map-by-position'') |
+| ''transfer-mapping-columns'' |  | the map of source target column when the mapping method is ''map-by-name'' or ''map-by-position''|
+| ''transfer-mapping-strict'' | true | if true, the transfer will fail if a source column cannot be mapped to a target column with the mapping method ''name'' or ''position'' |
 
 ==== Transfer Operation  ====
 
 The ''transfer'' operation supports the following values for the ''transfer-operation'' argument.
 
-^ Name ^ Alias ^ Require Same \\ Source/Target \\ Structure and Data ^ Local Equivalent Metadata Operation ^
-| [[copy|copy]] | | Yes | - |
-| [[move|move]] | | Yes | [[rename|rename]] |
-| [[insert|insert]] | [[insert|append]] | No | - |
-| [[upsert|upsert]] | | No | - |
-| [[update|update]] | | No | - |
-| [[delete|delete]] | | No | - |
+=== Basic Operations ===
 
+^ Name ^ Source/Target with \\ Same  Structure \\ Same Data ^ Additional Constraint ^
+| [[copy|copy]] | Yes | target does not exist \\ or is empty |
+| [[insert|insert]] | No | - |
+| [[upsert|upsert]] | No | - |
+| [[update|update]] | No | - |
+| [[delete|delete]] | No | - |
+
+=== Alias Operations  ===
+
+We support also aliases operation. They are operation derived from the basic one.
+
+^ Name ^ Alias ^ 
+| [[concat|concat]] | alias of [[insert|insert]] with only one target (ie  a [[docs:flow:template_data_uri|target-data-uri]] without [[docs:flow:template_string|target pattern]]) |
+| [[move|move]] | alias of [[copy|copy]] with source drop | 
+| [[rename|rename]] | alias of [[move|move]] on the same connection (Metadata Operation) |
+| [[replace|replace]] | alias of [[copy|copy]] with target drop |
+
+
+==== Default Transfer Operation ====
 
 The default transfer operation is [[docs:system:system|system dependent]]:
   * [[copy|copy]] is the default for a [[docs:system:file|file system]]
-  * [[insert|insert]] is the default for a [[docs:system:database|database system]] (If the target does not exist, it's always by default created)
+  * [[insert|insert]] is the default for a [[docs:system:database:database|database system]] (If the target does not exist, it's always by default created)
 
+==== Transfer mapping method ====
+
+The `transfer-mapping-method` argument defines how the source columns are mapped to the target columns.
+
+There are 4 values:
+  * ''name'', the column name of the source should match a column name of the target
+    * by default, if a column of the source is not found in the target, the execution will stop
+    * if you want a lose mapping without any error, you can set the `transfer-mapping-strict` attribute to `false`. The source column will then not be added to the transfer.
+  * ''position'', the column position of the source will match the column position of the target
+    * by default, if the number of column in the source does not match the number of column in the target, the execution will stop
+    * if you want a lose mapping without any error, you can set the `transfer-strict-mapping` attribute to `false`.
+  * ''map-by-name'', the argument `transfer-mapping-columns` should contains a map of column name where 
+    * the keys are the source column names
+    * the values are the target column names
+  * ''map-by-position'', the argument `transfer-mapping-columns` should contains a map of column position where:
+    * the keys are the source column positions
+    * the values are the target column positions
 ==== Resource Operation ====
 
 The following values may be used for the ''target-operation'' and ''source-operation'' arguments.
 
-^ Value ^ Description ^
-| ''truncate'' | Truncate the resource |
-| ''drop'' | Drop the resource |
-| ''replace'' | Replace the resource |
-| ''keep'' | Does not modify the actual resource (ie does not replace the target if it exists) |
+^ Value ^ Description ^ Operation Equivalence ^
+| ''[[:docs:op:truncate|Truncate]]'' | Truncate the resource | |
+| [[:docs:op:drop|Drop]] | Drop the resource | On the source, [[:docs:op:move|move]] \\ On the target, [[:docs:op:replace|replace]] |
 
-==== Result ====
-If you set the ''output'' arguments to ''result'', a ''result data path'' will be returned (in place of targets) and it will contain the following columns:
-  * ''source'': the [[docs:flow:source|source]] [[docs:resource:data_uri|data-uri]]
-  * ''target'': the [[docs:flow:target|target]] [[docs:resource:data_uri|data-uri]]
-  * ''latency'': the latency in ms
-  * ''count'': the [[docs:resource:count|count]] of [[docs:resource:record|record]] transfered.
-  * ''error'' and ''message'': an error and a message if any errors has occured.
+
+==== Transfer Upsert Type ====
+
+
+We support the ''upsert'' operation via 3 methods
+
+^ Type ^ Batch Mode ^ Definition ^
+| ''merge'' | Yes | The ''merge'' represents an unique statement (generally a ''merge'' but if not supported, it may be an ''insert on conflict'') |
+| ''insert'' | Yes | When the target has no unique constraint, an ''insert'' is performed |
+| ''insert-update'' | No | An ''insert'' is executed, on error an ''update'' is performed |
+| ''update-insert'' | No | An ''update'' is executed, on error an ''insert'' is performed |
+
+
+Note that a [[#target-batch-size|batch mode]] cannot be applied to a ''insert-update'' or ''update-insert'' because we need to get the result of the first operation (''update'' or ''insert'') to apply the second conditionally.
+
+
+If the ''merge'' statement is not implemented by the database or the driver, we switch to:
+  * ''insert-update'' if the target resource is empty
+  * ''update-insert'' if the target resource is ''not'' empty
+
+==== Target Batch Size ====
+
+
+
+The ''target-batch-size'' defines the size of a [[#batch mode|batch]].
+
+
+
+
+===== Batch mode ======
+
+
+If the target system supports [[https://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html#supportsBatchUpdates--|batch update]], we don't send each SQL statement one by one but grouped in a unit called a ''batch''.
+
+This mode is supported only when 
+  * ''with-parameters'' is set to ''true''
+  * when the transfer operation is performed in one statement (not with [[#transfer_upsert_type|upsert type]] of a ''insert/update'' or ''update/insert'' mode)
+===== Reporting =====
+
+==== Results ====
+If you set the ''output'' arguments to ''results'', a ''result data path'' will be returned (in place of targets) and it will contain the following columns:
+  * ''input'': the input
+  * ''target'': the target
+  * ''latency'': the latency in [[:docs:common:duration|duration]]
+  * ''record_count'': the count of [[:docs:resource:record|records]] transfered
+  * ''error_code'': the error code / exit status if any
+  * ''error_message'': the error message if any
 
 ==== Metrics ====
 

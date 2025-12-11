@@ -1,0 +1,25 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:project:project" }
+    ],
+    "description": "What's an App?",
+    "page_id": "v6j9zgup4fnkkvuj3fsjg",
+    "template": "holy"
+}
+---
+====== Tabulify - App ======
+
+
+===== About  =====
+A ''app'' is a directory where the [[docs:conf:tabul.yml|configuration vault]] is located.
+
+When present, the [[:docs:connection:connection#default|default connection]] is the [[docs:connection:app|app connection (ie app home)]]
+
+It groups the following artifactory:
+  * [[docs:resource:resource|resource]] ([[docs:resource:file|file]], [[docs:resource:runtime]], ...)
+  * [[docs:flow:pipeline|pipeline]] - data processing pipeline
+
+
+
+Typically, ''Tabulify'' apps are stored in a version control system such as Git and are hooked to a Continuous Integration system that deploy to [[:docs:common:environment|target environment]] such as production or test.

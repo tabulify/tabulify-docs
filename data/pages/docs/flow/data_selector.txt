@@ -1,0 +1,124 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:data_selector" }
+    ],
+    "page_id": "8lzga27ij3wsrwrhjf0e2"
+}
+---
+====== Data Resource - Data Selector ======
+
+===== About =====
+A ''data selector'' is a [[..:resource:data_uri|data uri]] expression that permits to select:
+  * [[..:resource:content|data resources]] (file, table,...)
+  * or [[..:resource:container|container resources]] (directory, schema, ...)
+
+<note>
+If you are new to the concept of data selector, we encourage you to take a look at this page: [[howto:getting_started:4_select_data_resources]]
+</note>
+
+
+
+===== Syntax =====
+
+This syntax select [[docs:resource:resource|data resources]] listed in the [[docs:connection:connection|connection]]
+
+<code bash>
+globPath[@connection]
+</code>
+where:
+  * ''connection'' is the [[docs:connection:name|name of a connection]]
+  * ''globPath'' is a path composed  of [[docs:common:globbing|glob pattern]] separated by a [[#separator_syntax_support|path separator]]
+
+<note tip>
+You can reference each wildcard character in a [[template_data_uri|target data uri]] to define the target resources.
+</note>
+
+
+
+
+
+==== File System ====
+
+For a [[docs:system:file|file system]], the following special character are supported in the path:
+  * ''/'' for the separator
+  * ''.'' to design the current working directory
+  * ''..'' to design the parent directory of the current working directory
+
+Example:
+  * Absolute
+<code bash>
+# Linux
+/globPatternForDirectory/globPatternForFile@fileSystemConnection
+# Windows
+C:\globPatternForDirectory\globPatternForFile@fileSystemConnection
+</code>
+  * Relative
+<code bash>
+# Linux (and Windows)
+../globPatternForDirectory/globPatternForFile@fileSystemConnection
+# Windows form works also but is not recommended
+..\globPatternForDirectory\globPatternForFile@fileSystemConnection
+</code>
+
+
+
+==== Sql Database ====
+
+For a [[docs:system:database:database|sql database]], the following characters are supported in the path:
+  * ''.'', for the path name separator
+  * ''/'' to design the current schema
+  * ''%%//%%'' to design the parent (schema, catalog)
+
+<code bash>
+# an sql object pattern
+[catalogueGlobPattern][.schemaNamePattern.]objectNamePattern@database
+# a sql schema pattern
+//.schemaNamePattern
+# a sql catalog pattern
+//.//.schemaNamePattern
+</code>
+
+==== Http (Web) ====
+For a [[docs:system:http|web system]], ''Tabulify'' supports passing directly an [[..:resource:uri|URI/URL]] as a data selector.
+
+<note important>
+Only in [[docs:common:bash|bash based terminal]], see [[docs:common:bash#why_do_we_recommend_bash|why]]
+</note>
+
+
+<unit>
+<code bash>
+tabul data info "https://en.wikipedia.org/w/api.php?action=query&titles=SQL&format=xml&prop=description"
+</code>
+<console>
+Information about the data resource (api.php@https-en.wikipedia.org\w)
+attribute          value                                                                                              description
+----------------   ------------------------------------------------------------------------------------------------   ----------------------------------------------------------------------
+CHARACTER_SET      UTF-8                                                                                              The character set of the file
+COLUMN_NAME        xml                                                                                                The name of the column when the text content is returned on one column
+END_OF_RECORD                                                                                                        The End Of Record string sequence
+URI                https://en.wikipedia.org/w/api.php?prop=description&format=xml&action=query&titles=SQL             The URI of the file
+ABSOLUTE_PATH      /w/api.php                                                                                         The absolute path on the data system
+ACCESS_TIME                                                                                                           The access time (access time)
+COMMENT                                                                                                               A comment
+CONNECTION         https-en.wikipedia.org\w                                                                           The connection name
+COUNT              1                                                                                                  The number of records
+CREATION_TIME                                                                                                         The creation time (birth time)
+DATA_URI           api.php@https-en.wikipedia.org\w                                                                   The data uri
+KIND               xml                                                                                                The kind of media
+LOGICAL_NAME       api                                                                                                The logical name
+MD5                3547b7e2532d9d3faab43788fa3b16e0                                                                   The Md5 hash
+MEDIA_SUBTYPE      xml                                                                                                The media subType
+MEDIA_TYPE         text/xml                                                                                           The media type
+NAME               api.php                                                                                            The name of the data resource
+PARENT                                                                                                                The parent
+PATH               api.php                                                                                            The relative path to the default connection path
+SHA384             821189e9ced47527c2811626813b417adf4152fd02bec10c2a36f95ea9e8d158653e80216edb1b890cef49c449e3a9e0   The Sha384 hash
+SHA384_INTEGRITY   sha384-ghGJ6c7UdSfCgRYmgTtBet9BUv0CvsEMKjb5Xqno0VhlPoAhbtsbiQzvScRJ46ng                            The sha384 value used in the html integrity attribute
+SIZE               -1                                                                                                 The number of byte
+TABULAR_TYPE       data                                                                                               The tabular type
+UPDATE_TIME                                                                                                           The last update time (modify time)
+</console>
+</unit>
+

@@ -1,0 +1,112 @@
+---json
+{
+    "page_id": "6wabtvr6er8bb9ubapjdr"
+}
+---
+====== Tabul - Connection Type - Data Type Listing ======
+
+
+===== About =====
+''type'' is a command of the [[docs:tabul:connection:start|connection module]] that shows the [[docs:data_type:data_type|data types]] supported by a [[:docs:connection:connection|connection]].
+
+
+
+
+===== Columns =====
+
+This command may output any of following columns for each data type
+
+^ Name ^ Description ^ 
+^ Common ^^
+| ''name'' | Type name |
+| ''aliases'' | A list of name aliases |
+| ''ansi-type'' | The [[:docs:data_type:data_type#ansi type|ansi data type]] |
+| ''max-precision'' | The [[:docs:data_type:data_type#maximum precision|maximum precision (length for character type)]] |
+| ''class'' | The java class of the value |
+| ''supported'' | True if the type is fully [[:docs:data_type:data_type#supported|supported]] (default to string if not) |
+| ''description'' | A description |
+| ''jdbc-code'' | The [[:docs:data_type:data_type#jdbc_code|jdbc code]] |
+| ''jdbc-name'' | The jdbc name |
+| ''parameters'' | The possible parameters used in a type statement \\ Example for a ''char'': `[(M)] [CHARACTER SET charset_name] [COLLATE collation_name]`) |
+^ Numbers only ^^
+| ''min-scale'' | The minimum scale (minimum number of fractional digit for a [[:docs:data_type:numeric_decimal|decimal/numeric]]) |
+| ''max-scale'' | The maximum scale (maximum number of fractional digit for a [[:docs:data_type:numeric_decimal|decimal/numeric]]) |
+| ''auto-increment'' | True\\ * if this type accepts an auto-increment parameter \\ * or if this is an auto-increment type |
+| ''unsigned'' | True if this a positive only [[:docs:data_type:integer|integer]] (ie not signed) |
+| ''fixed-precision-scale'' | True if this type can be a money value (ie [[https://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html#getTypeInfo--|FIXED_PREC_SCALE value of getTypeInfo]]) |
+===== Syntax =====
+<unit>
+<code bash>
+tabul connection type --help
+</code>
+<console>
+Tabul connection type
+=====================
+
+Print the supported data type for a connection
+
+
+
+Examples
+--------
+
+ 1 - To output type information about the connection `name`:
+
+
+    tabul connection type name
+
+
+ 2 - To output type information about all the connection with `sql` in their name:tabul connection type *sql*
+
+
+
+
+Syntax
+------
+
+
+    tabul connection type [options|flags] <(ConnectionNamePattern)...>
+
+
+where:
+
+
+  Arguments:
+
+    <(ConnectionNamePattern)...>                            one or more connection name (in glob format)
+
+
+  Options:
+
+    --all-columns                                           If this flag is present, all type columns are shown
+
+    --supported-only                                        If this flag is present, the known but not-supported type name are also shown
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        If there is no connection found, no errors will be emitted
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

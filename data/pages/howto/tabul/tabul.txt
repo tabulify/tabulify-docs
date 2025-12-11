@@ -1,0 +1,35 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:tabli:tabli" },
+        { "path": ":howto:tabul:tabli" }
+    ],
+    "canonical": ":howto:tabul",
+    "description": "This sections regroups all howto's dedicated to the tabul command line",
+    "page_id": "lidl06dpsbmlpa9naen99"
+}
+---
+
+====== HowTo - Tabul ======
+
+{{ :howto:tabul:undraw_apps.svg?600&ratio=16:9 |}}
+
+===== About =====
+This [[..:howto|How-to]] section contains ''How-to's'' that are specific to the [[docs:tabul:tabul|Tabul command]] and ''Tabulify'' concepts in general.
+
+
+<iterator>
+    <data>select where is_home = 0  and path glob ':howto:tabul*' order by path asc </data>
+<grid spacing="m-3">
+        <fragment>
+        <box>
+            <card clickable>
+            <page-image path="$path" ratio="16:9" color="#336699"/>
+            === $title ===
+
+            $description [[$path| ]]
+            </card>
+        </box>
+        </fragment>
+</grid>
+</iterator>

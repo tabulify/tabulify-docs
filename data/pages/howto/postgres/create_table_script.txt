@@ -1,0 +1,117 @@
+---json
+{
+    "description": "This Howto will show you how to create a SQL table with a SQL file that contains a ''CREATE'' SQL statement",
+    "low_quality_page": "false",
+    "name": "Create a table From SQL",
+    "page_id": "2y8to1aqf22td1go8fy0d"
+}
+---
+
+====== Tabulify - How to create a table with a CREATE Sql statement  file ======
+
+
+
+===== About =====
+This [[..:howto|Howto]] will show you how to create a [[docs:resource:sql_table|SQL table]] with a <icon name="carbon:SQL"/> [[:docs:resource:sql_ddl|SQL DDL file]] that contains a ''CREATE'' SQL statement with the [[docs:tabul:data:create|Tabul table create command]].
+
+===== Steps =====
+==== Start Postgres ====
+
+
+The next steps will be using the [[howto:postgres:howto_connection_service|postgres howto connection]].
+
+  * You need to [[howto:postgres:howto_connection_service#docker|start the postgres docker image]].
+<unit>
+<code bash>
+tabul service start postgres
+</code>
+<console>
+1 service was started
+Name       Type
+--------   ------
+postgres   docker
+</console>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] your connection to check that the database is up.
+
+<unit>
+<code bash>
+tabul connection ping postgres
+</code>
+<console>
+The connection (postgres) has been pinged successfully
+</console>
+</unit>
+
+==== The CREATE table statement ====
+
+<unit display="none">
+Delete the target destination
+<code bash>
+tabul data drop --no-strict-selection *@postgres
+</code>
+</unit>
+
+
+We will execute the below [[docs:resource:sql_ddl|SQL Script]] that is located in the [[docs:connection:howto|howto connection]].
+<unit>
+<file sql create_foo.sql>
+-- Create the foo table statement
+
+create table foo (
+  bar integer
+)
+
+</file>
+</unit>
+
+==== The data create command ====
+
+With the [[docs:tabul:data:create|tabul data create]] command, if you use a [[docs:flow:runtime_selector|runtime selector]] as first argument, the selected [[docs:resource:runtime|runtime ]] are executed.
+
+To execute the previous SQL script, the below the command should be executed:
+<unit>
+<code bash>
+tabul data create '(create_foo.sql@howto)@postgres'
+# The quotes are mandatory because parenthesis have a meaning in Bash (ie they start a subshell)
+</code>
+where:
+  * ''data create'' is the [[docs:tabul:data:create|data create]] command
+  * ''(create_foo.sql@howto)@postgres'' is a [[docs:flow:runtime_selector|runtime selector]] that select the ''create_foo.sql'' in the [[docs:connection:howto|howto]] connection and executes it in the [[howto_connection_service|postgres connection]]
+<console>
+List of runtime executed
+runtime_data_uri                  exit_code   count   latency   data_uri                                                        error_message
+-------------------------------   ---------   -----   -------   -------------------------------------------------------------   -------------
+(create_foo.sql@howto)@postgres           0       1   0.23s     execute/20251110-204521-829-pipe-anonymous/create_foo.log@tmp
+</console>
+</unit>
+
+
+
+==== Check the metadata ====
+
+Check the metadata with the [[docs:tabul:data:describe|tabul data describe]] command
+<unit>
+<code bash>
+tabul data describe foo@postgres
+</code>
+<console>
+Structure of the resource foo@postgres
+position   name   type      precision   scale   primary_key   nullable   autoincrement   comment
+--------   ----   -------   ---------   -----   -----------   --------   -------------   -------
+1          bar    integer   10          0                     x
+</console>
+</unit>
+
+
+
+==== Next ====
+
+<note tip width="50%">
+You can also create a table and its dependencies (foreign tables) at once with the [[docs:tabul:data:create|tabul data create command]].
+\\
+\\
+
+[[create_table_with_dependencies|How to copy a star/snowflake schema ?]]
+
+</note>

@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "z85bpp1uznmw9iqoryino"
+}
+---
 ====== Connection - Name attribute ======
 
 ===== Name =====
@@ -8,8 +13,8 @@ A ''connection name'' is a mandatory [[attribute|connection attribute]] as it's 
 
 This name is used in:
   * [[docs:resource:data_uri|data uri]].
-  * [[docs:resource:selector|data resource selector]]
-  * [[docs:resource:target_uri|target uri]]
+  * [[docs:flow:selector|data resource selector]]
+  * [[docs:flow:template_data_uri|target uri]]
 
 ===== Naming Convention =====
 
@@ -19,4 +24,4 @@ Characters not allowed:
 ===== Management =====
 ==== See ====
 
-The connection name can be seen with the [[docs:tabli:connection:list|connection list command]]
+The connection name can be seen with the [[docs:tabul:connection:list|connection list command]]

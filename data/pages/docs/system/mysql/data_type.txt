@@ -1,0 +1,132 @@
+---json
+{
+    "page_id": "ubof92jvtu7il6x05we4s"
+}
+---
+====== MySQL Data Type Support ======
+
+===== About =====
+This page regroups information about [[:docs:data_type:data_type|data type]] support for [[mysql|MySQL]] in Tabulify.
+
+
+===== List =====
+
+Below is the list of [[:docs:data_type:data_type|data type]] of the [[:howto:mysql:howto_connection|mysql howto connection]]
+printed with the [[:docs:tabul:connection:type|connection type]] command.
+
+<unit display=none>
+<code bash>
+tabul service start mysql
+</code>
+</unit>
+<unit display=none>
+<code bash>
+tabul service ping mysql
+</code>
+</unit>
+<unit>
+<code bash>
+tabul connection type mysql
+</code>
+<console height="300" scroll="toggle">
+Known Types for the connection (mysql)
+name                        aliases                           ansi_type                max_precision   supported   description
+-------------------------   -------------------------------   ----------------------   -------------   ---------   ------------------------------------------------------------------------------------
+bigint                      bigint signed                     bigint                   19              ✓           Eight-byte integer
+bigint unsigned                                               bigint                   20              ✓           Eight-byte integer
+binary                                                        binary                   255                         Binary data (“byte array”)
+bit                                                           bit                      1               ✓           Fixed-length bit string
+blob                                                          long varbinary           65535                       Variable-length binary data (“byte array”)
+boolean                     bool                              boolean                  3               ✓           Logical Boolean (true/false)
+char                                                          character                255             ✓           Fixed-length blank padded character string
+date                                                          date                     10              ✓           Calendar date (year, month, day)
+datetime                                                      timestamp                6               ✓           Date and time without time zone
+decimal                     dec, fixed, numeric               decimal                  65              ✓           Exact numeric of selectable precision
+double precision            double, real                      double precision         22              ✓           Double precision floating-point number (8 bytes)
+double precision unsigned   double unsigned                   double precision         22              ✓           Double precision unsigned - floating-point number (8 bytes)
+enum                                                          character                65535           ✓           String value chosen from a list of permitted values
+float                                                         float                    12              ✓           Flexible Precision floating-point number
+integer                     int, int signed, integer signed   integer                  10              ✓           Four-byte integer
+integer unsigned            int unsigned                      integer                  10              ✓           Four-byte integer unsigned
+json                                                          json                     1073741824      ✓           Textual JSON data
+long varbinary                                                long varbinary           16777215                    Variable-length binary data (“byte array”)
+longblob                                                      long varbinary           2147483647                  Variable-length binary data (“byte array”)
+longtext                                                      long character varying   2147483647      ✓           Very long variable-length character string
+mediumblob                                                    long varbinary           16777215                    Variable-length binary data (“byte array”)
+mediumint                                                     mediumint                7               ✓           Three-byte integer
+mediumint unsigned                                            mediumint                8               ✓           Three-byte integer
+mediumtext                  long varchar                      long character varying   16777215        ✓           Very long variable-length character string
+set                                                           character                64              ✓           String value with zero or more values chosen from a list of defined permitted values
+smallint                    smallint signed                   smallint                 5               ✓           Two-byte integer
+smallint unsigned                                             smallint                 5               ✓           Two-byte integer
+text                                                          long character varying   65535           ✓           Very long variable-length character string
+time                                                          time                     16              ✓           Time of day without time zone
+timestamp                                                     timestamp                6               ✓           Date and time without time zone
+tinyblob                                                      varbinary                255                         Variable-length binary data (“byte array”)
+tinyint                                                       tinyint                  3               ✓           One-byte integer (0-255)
+tinyint unsigned                                              tinyint                  3               ✓           One-byte integer (0-255)
+tinytext                                                      character varying        255             ✓           Variable-length character string
+varbinary                                                     varbinary                65535                       Variable-length binary data (“byte array”)
+varchar                                                       character varying        21844           ✓           Variable-length character string
+vector                                                        long varbinary           65532                       Variable-length binary data (“byte array”)
+year                                                          date                     4               ✓           1-byte type used to represent year values
+</console>
+</unit>
+
+
+===== Note =====
+
+==== Text Data Type ====
+See [[docs:system:mysql:text|]]
+
+==== Integer Data Type ====
+
+We support all [[https://dev.mysql.com/doc/refman/8.4/en/integer-types.html|integer types]] included the extra non standard [[https://dev.mysql.com/doc/refman/8.4/en/integer-types.html|mediumint type]].
+
+==== Floating Point Number ====
+
+
+
+We follow MySQL that treats ''REAL'' as a synonym for ''DOUBLE PRECISION'' (a nonstandard variation on the SQL standard).
+If you use the [[https://dev.mysql.com/doc/refman/8.4/en/sql-mode.html#sqlmode_real_as_float|REAL_AS_FLOAT]] SQL mode, the tabulify behavior is unknown. It will still work with raw [[:docs:resource:sql_file|sql script]].
+
+==== No Time Zone ====
+
+
+Time zone data type does exist as MySQL [[https://dev.mysql.com/doc/refman/8.4/en/datetime.html|converts TIMESTAMP values from the current time zone to UTC for storage, and back from UTC to the current time zone for retrieval]].
+
+In case of cross transfer, the time zone datatype are mapped to their counterpart without time zone to create a non-existing table:
+  * ''timestamp with timezone'' to ''timestamp'' utc
+  * ''time with timezone'' to ''time'' utc
+
+
+==== Date and Time ====
+
+We support all [[https://dev.mysql.com/doc/refman/8.4/en/date-and-time-types.html|date time type]]:
+  * the SQL standard:
+    * ''DATE'',
+    * ''TIME'',
+    * ''TIMESTAMP''
+  * and the non-standard
+    * ''DATETIME''
+    * and ''YEAR''.
+
+In a cross transfer from a source table with a SQL timestamp column, if the MySql table does not exist, the ''TIMESTAMP'' data type is chosen, not ''DATETIME''.
+
+More on general time support can be seen on this [[docs:data_type:date_time|page]].
+==== JSON ====
+
+We support the [[https://dev.mysql.com/doc/refman/8.4/en/json.html|JSON]] type.
+
+==== XML ====
+
+''MySQL'' does not have any native support for ''XML'' data type, we map this type to the ''MySQL'' [[text#text|text (ie clob)]] format.
+
+If you know the ''XML'' size, you can choose another [[text#text|Text data type]]
+
+You can then use any [[https://dev.mysql.com/doc/refman/8.4/en/xml-functions.html|XML function]].
+
+
+===== Default Type =====
+
+If in a [[:docs:resource:manifest|resource manifest]], no type is specified and that the target resource does not exists. the default type used is ''varchar''

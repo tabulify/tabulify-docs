@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "g457trg7c4glsreercwlu"
+}
+---
 ====== HowTo's  Connections ======
 
 
@@ -9,33 +14,48 @@
 
 ===== List =====
 
-  * [[docs:system:sqlite:howto|sqlite]] and ''sqlite-target'' are [[docs:system:sqlite:sqlite|sqlite]] connection
-  * [[docs:system:sqlite:howto|oracle]] is an [[docs:system:oracle:oracle|oracle database]]
-  * ''sqlserver'' is an [[docs:system:sqlserver|sqlserver database]]
-  * ''mysql'' is a [[docs:system:mysql:mysql|mysql database]]
-  * [[docs:system:postgres:howto|postgres]] is a [[docs:system:postgres:postgres|postgres database]]
-
 After a [[howto:getting_started:1_install|fresh installation]], you should see them by listing the [[connection|connection]].
 
+  * [[howto:sqlite:howto_connection|sqlite]] and ''sqlite-target'' are [[docs:system:sqlite:sqlite|sqlite]] connection
+  * [[howto:oracle:howto_connection|oracle]] is an [[docs:system:oracle:oracle|oracle database]]
+  * [[howto:sqlserver:howto_connection|sqlserver]] is an [[docs:system:sqlserver:sqlserver|sqlserver database]]
+  * [[howto:mysql:howto_connection|mysql]] is a [[docs:system:mysql:mysql|mysql database]]
+  * [[howto:postgres:howto_connection_service|postgres]] is a [[docs:system:postgres:postgres|postgres database]]
+  * [[howto:email:howto_connection_service|smtp]] is a [[:docs:system:smtp|smtp server]]
+
+<unit display="none">
+Init env
+<code bash>
+tabul data drop --no-strict-selection .tabul/.tabul.yml@home
+</code>
+</unit>
 <unit>
-<code dos>
-tabli connection list *
+<code bash>
+tabul connection list
 </code>
 <console>
-Name            Url                                                                       
--------------   -----------------------------------------------------------------------   
-cd              file:///C:/Users/gerardnico/                                              
-entity          file:///D:/code/bytle-mono/db-gen-entities/src/main/resources/entity/     
-howto           file:///D:/code/bytle-mono/db-website/src/doc/howto/                      
-memory          mem                                                                       
-mysql           jdbc:mysql://[host]:[port]/[database]                                     
-oracle          jdbc:oracle:thin:@localhost:1521:xe                                       
-postgres        jdbc:postgresql://localhost:5432/postgres                                 
-sqlite          jdbc:sqlite:///C:/Users/gerardnico/AppData/Local/tabli/sqlite.db          
-sqlite_target   jdbc:sqlite:///C:/Users/gerardnico/AppData/Local/tabli/sqlite_target.db   
-sqlserver       jdbc:sqlserver://localhost;databaseName=AdventureWorks;                   
-temp            file:///C:/Users/GERARD~1/AppData/Local/Temp/                             
-tpcds           tpcds                                                                     
-tpcds_query     file:///D:/code/bytle-mono/db-jdbc/src/main/sql/tpcds/
+name            uri
+-------------   ------------------------------------------------------------------------
+cd              file:///home/tabulify/
+data-home       file:///home/admin/.local/share/tabul/
+desktop         file:///home/tabulify/Desktop
+entity          file:///opt/tabulify/resources/entity/
+home            file:///home/tabulify/
+howto           file:///opt/tabulify/resources/howto/
+log             file:///home/tabulify/.tabul/logs
+memory          mem:/
+mysql           jdbc:mysql://localhost:3306/howto
+noop            noop
+oracle          jdbc:oracle:thin:@localhost:1521/freepdb1
+postgres        jdbc:postgresql://localhost:5432/postgres
+smtp            smtp://localhost:1025
+sqlite          jdbc:sqlite:////home/tabulify/.tabul/sqlite.sqlite3
+sqlite_target   jdbc:sqlite:////home/tabulify/.tabul/sqlite_target.sqlite3
+sqlserver       jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true
+tmp             file:///mnt/wslg/runtime-dir/tabul
+tpcds           tpcds
+tpcds_query     file:///opt/tabulify/resources/tpcds_query/
 </console>
 </unit>
+
+

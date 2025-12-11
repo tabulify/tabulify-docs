@@ -1,36 +1,43 @@
-====== Learning Tabulify - Step 10 - How to compare data resources ? ======
+---json
+{
+    "name": "10 Data Diff",
+    "page_id": "repj70wjne9kncbcqm21l"
+}
+---
+====== Learning Tabulify - Step 10 - Data Diff, a step by step ======
 
 
 
-===== Comparison =====
-''Data Diff'' is the corner stone of every development because it validates the processing of data.
+===== About =====
+''Data Diff'' is the cornerstone of every development because it validates the processing of data.
 
 
 ''Tabulify'' ships with a [[docs:op:diff|Data diff operation]] that allows you to compare:
   * the [[docs:resource:content|data content]]
   * and the [[docs:resource:structure|data structure]]
 
-The [[docs:op:diff|diff operation (comparaison)]] is implemented with the [[docs:tabli:data:diff|data diff command]].
+The [[docs:op:diff|diff operation (comparison)]] is implemented with the [[docs:tabul:data:diff|data diff command]].
 
 ===== Data to compare =====
 
-For the sake of simplicty, we will compare two [[docs:resource:csv|csv data resource]] but you may compare any [[docs:resource:content|content data resource]] such as a [[docs:resource:table|SQL table]] or [[docs:resource:select|SQL query]]
+For the sake of simplicity, we will compare two [[docs:resource:csv|csv data resources]] but you may compare any [[docs:resource:content|content data resources]] such as a [[docs:resource:sql_table|SQL table]] or [[docs:resource:sql_select|SQL query]]
 
 
-  * The ''source'' data resource (also known as the ''left'' resource)
+  * The ''source'' data resource (also known as the ''original'', ''from'' or ''left'' resource)
 <unit>
-<file csv characters.csv>
-Last Name,First Name,Birth Date,Wikipedia Page
+<file csv diff/characters_original.csv>
+last_name,first_name,birth_date,wikipedia_page
 Schwarzenegger,Arnold,1947-07-30,https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
 Norman,Don,1935-12-25,https://en.wikipedia.org/wiki/Don_Norman
 Harbison Carnagey,Dale,1888-11-24,https://en.wikipedia.org/wiki/Dale_Carnegie
 Kahneman,Daniel,1934-03-05,https://en.wikipedia.org/wiki/Daniel_Kahneman
+Pittman,Bob,1953-12-28,https://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)
 
 </file>
 </unit>
-  * The ''target'' data resource (also known as the ''right'' resource)
+  * The ''target'' data resource (also known as the ''new'', ''to'' or ''right'' resource)
 <unit>
-<file csv characters_target.csv>
+<file csv diff/characters_new.csv>
 Last Name,First Name,Birth Date,Wikipedia Page
 Schwarzenegger,Arnold,1947-07-30,https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
 Norman,Don,1935-12-23,https://en.wikipedia.org/wiki/Don_Norman
@@ -40,121 +47,141 @@ Kahneman,Daniel,1934-03-05,https://en.wikipedia.org/wiki/Daniel_Kahneman
 </unit>
 
 
-The fact that a record is missing can be easily spotted but there is a more subtle difference.
+The fact that a record is missing can be easily spotted but there is a more subtle differences.
 
-===== The comparison report =====
 
-All comparison can be executed with the [[docs:tabli:data:diff|data compare command]] by giving as argument the [[docs:flow:source|source]] and [[docs:flow:target|target]] data resource.
+===== Failure Behavior =====
 
-<unit>
-<code bash>
-tabli data diff characters.csv@howto characters_target.csv@howto
-</code>
-<console>
-Comparison Report
-Source                 Target                        Equals   DiffCount   RecordCount
---------------------   ---------------------------   ------   ---------   -----------
-characters.csv@howto   characters_target.csv@howto   false            3             4
-</console>
-</unit>
+By default, a diff that detects differences will fail (ie return a bad exit code).
+  * The `--no-fail` option changes this behavior.
+  * You don't need to set it normally but as we monitor our documentation for failure, we don't want to fail
 
-The default report is to show a high level that lists the source and target resources and the result of the comparison:
-  * ''Equals'': Does the [[docs:flow:source|source]] and [[docs:flow:target|target]] are equals
-  * ''DiffCount'': How many records are differents
-  * ''RecordCount'': How many records were compared.
-
-There is a total of ''4'' records that were compared and ''3'' were differents. It doesn't seem quite right, let's take a look at it by asking a comparison report at the record level to see the difference in details.
-
-===== The record comparison report =====
-
-To get a comparison on the record level, you set the ''report-level'' option to the ''record'' value.
+===== The Summary report =====
+All diff can be executed with the [[docs:tabul:data:diff|data diff command]] by giving as argument the [[docs:flow:source|source]] and [[docs:flow:target|target]] data resource.
 
 <unit>
 <code bash>
-tabli data diff --report-level record characters.csv@howto characters_target.csv@howto
+tabul data diff \
+  --no-fail \
+  diff/characters_original.csv@howto diff/characters_new.csv@howto
 </code>
 <console>
-Comparison result between source (characters.csv@howto) and target (characters_target.csv@howto).
-Values that are not equals are encapsulated with the characters `***`.
-comp_id   comp_origin   comp_comment                                                     comp_diff_id   comp_origin_id   Last Name                 First Name     Birth Date         Wikipedia Page
--------   -----------   --------------------------------------------------------------   ------------   --------------   -----------------------   ------------   ----------------   ---------------------------------------------------
-1                                                                                                       1                Schwarzenegger            Arnold         1947-07-30         https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
-2         Source        Value Diff (Birth Date)                                          1              2                Norman                    Don            ***1935-12-25***   https://en.wikipedia.org/wiki/Don_Norman
-3         Target        Value Diff (Birth Date)                                          1              2                Norman                    Don            ***1935-12-23***   https://en.wikipedia.org/wiki/Don_Norman
-4         Source        Value Diff (Last Name, First Name, Birth Date, Wikipedia Page)   2              3                ***Harbison Carnagey***   ***Dale***     ***1888-11-24***   ***https://en.wikipedia.org/wiki/Dale_Carnegie***
-5         Target        Value Diff (Last Name, First Name, Birth Date, Wikipedia Page)   2              3                ***Kahneman***            ***Daniel***   ***1934-03-05***   ***https://en.wikipedia.org/wiki/Daniel_Kahneman***
-6         Source        Record not found in target                                       3              4                Kahneman                  Daniel         1934-03-05         https://en.wikipedia.org/wiki/Daniel_Kahneman
+Diff Summary Report
+The data resources are not equals.
+from                                 to                              equals   record_count   change_count
+----------------------------------   -----------------------------   ------   ------------   ------------
+diff/characters_original.csv@howto   diff/characters_new.csv@howto                       5              6
 </console>
 </unit>
 
-==== Data Comparison Report explained ====
+The default report is to show a high level report that lists the ''source'' and ''target'' resources and the result of the comparison:
+  * ''equals'': Does the resources are equals
+  * ''record_count'': How many records were read from the ''from'' resource.
+  * ''change_count'': How many records changes were detected
 
-=== Columns ===
 
-The report shows ''3'' columns that starts with the prefix ''comp'':
-  * ''comp_id'' is a record sequence to be able to locate the record
-  * ''comp_origin'' gives the origin of the record.
-      * ''Source'' means that record comes from the [[docs:flow:source|source]]
-      * ''Target'' means that record comes from the [[docs:flow:target|target]]
-      * Blank means that the record is the same in the [[docs:flow:source|source]] and in the [[docs:flow:target|target]]
-  * ''comp_comment'' is a short explanation of the difference if any.
-  * ''comp_diff_id'' is the id of a difference. The last number on the report would show the total number of difference found.
-  * ''comp_record_id'' is the record number (ie row id, line id). This column is present only if a unique colum cannot be defined.
+There is a total of:
+  * ''5'' records compared
+  * ''6'' records changes were detected.
 
-All the columns afterwards are column names from the [[docs:flow:source|source]].
+It doesn't seem quite right, let's take a look at it by asking a unified report to see the difference in details.
 
-=== Values ===
+===== The Unified report =====
 
-  * The value that differs are encapsulated with three stars ''%%***%%''
-  * The two records (''source'' and ''target'') are inserted when there is a difference.
+To get a diff at the [[:docs:resource:record|record]] level, you set the ''report-type'' option to the ''unified'' value.
 
-==== Report Analysis ====
-
-In this report, we can see that on the ''record_id'' ''3'', the target record ''Kahneman'' was compared to the source record ''Harbison Carnagey''.
-
-This is not right because the source has also a ''Kahneman'' record and they should have been compared together.
-
-This is because the comparison was executed by ''record id'' and not by ''last name''. The next step will show you how to define the unique column used to drive the comparison.
-
-===== Data Comparison Report with Unique Column Definition =====
-
-To improve our comparison, we will define the unique column of our data resource with the ''%%--unique-column%%'' column option.
 <unit>
 <code bash>
-tabli data diff --report-level record --unique-column "Last Name" characters.csv@howto characters_target.csv@howto
+tabul data diff \
+    --no-fail \
+    --report-type unified \
+    diff/characters_original.csv@howto diff/characters_new.csv@howto
 </code>
-<console>
-Comparison result between source (characters.csv@howto) and target (characters_target.csv@howto).
-Values that are not equals are encapsulated with the characters `***`.
-comp_id   comp_origin   comp_comment                 comp_diff_id   Last Name           First Name   Birth Date         Wikipedia Page
--------   -----------   --------------------------   ------------   -----------------   ----------   ----------------   ---------------------------------------------------
-1                                                                   Schwarzenegger      Arnold       1947-07-30         https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
-2         Source        Value Diff (Birth Date)      1              Norman              Don          ***1935-12-25***   https://en.wikipedia.org/wiki/Don_Norman
-3         Target        Value Diff (Birth Date)      1              Norman              Don          ***1935-12-23***   https://en.wikipedia.org/wiki/Don_Norman
-4         Source        Record not found in target   2              Harbison Carnagey   Dale         1888-11-24         https://en.wikipedia.org/wiki/Dale_Carnegie
-5                                                                   Kahneman            Daniel       1934-03-05         https://en.wikipedia.org/wiki/Daniel_Kahneman
+<console ansi>
+Unified Diff Report between the resources (diff/characters_original.csv@howto) and (diff/characters_new.csv@howto).
+ - [31mred[0m   for deleted
+ - [32mgreen[0m for added
+ - [34mblue[0m  for type change (example: number as varchar)
+The data resources are not equals.
+diff_status   last_name           first_name   birth_date   wikipedia_page
+-----------   -----------------   ----------   ----------   --------------------------------------------------------------
+=             Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+[32m+             [0m[32mNorman              [0m[32mDon          [0m[32m1935-12-23   [0m[32mhttps://en.wikipedia.org/wiki/Don_Norman[0m
+[32m+             [0m[32mKahneman            [0m[32mDaniel       [0m[32m1934-03-05   [0m[32mhttps://en.wikipedia.org/wiki/Daniel_Kahneman[0m
+[31m-             [0m[31mNorman              [0m[31mDon          [0m[31m1935-12-25   [0m[31mhttps://en.wikipedia.org/wiki/Don_Norman[0m
+[31m-             [0m[31mHarbison Carnagey   [0m[31mDale         [0m[31m1888-11-24   [0m[31mhttps://en.wikipedia.org/wiki/Dale_Carnegie[0m
+[31m-             [0m[31mKahneman            [0m[31mDaniel       [0m[31m1934-03-05   [0m[31mhttps://en.wikipedia.org/wiki/Daniel_Kahneman[0m
+[31m-             [0m[31mPittman             [0m[31mBob          [0m[31m1953-12-28   [0m[31mhttps://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)[0m
 </console>
 </unit>
 
-This time the comparison has:
-  * not compared the source record ''Harbison Carnagey'' with the target record ''Kahneman''
-  * compared the source record ''Kahneman'' with the target record ''Kahneman''
 
-We can see that:
-  * we have ''2'' difference via the value in the ''comp_diff_id'' column.
-  * the first difference is on the ''norman'' record where the ''birth date'' differs.
-  * the record ''Harbison Carnagey'' was not found in the target.
+This report will shows you how to get from:
+  * the ''original'', ''from'', ''left'', ''source'' resource
+  * to the ''new'',  ''to'', ''right'', ''target'' resource
+
+
+It tells us that  we need to:
+  * add ''2'' rows
+  * and delete ''4'' rows
+from the ''original'' resource to obtain the ''new'' resource
+
+It's a total of ''6'' changes as seen previously in the ''summary report''.
+
+But why does the diff did not compare the ''Norman'' record to each other ?
+
+This is because their is no known identifier for the record, therefore the diff was executed by ''record hash'' and not by ''last name''.
+
+The next step will show you how to define the unique columns to drive a diff comparison.
+
+===== The Unified Report with Driver Columns Definition =====
+
+To improve our comparison, we will define the unique column of our data resource with the ''%%--driver-columns%%'' option.
+<unit>
+<code bash>
+tabul data diff \
+   --no-fail \
+   --report-type unified \
+   --driver-columns "Last Name" \
+   diff/characters_original.csv@howto diff/characters_new.csv@howto
+</code>
+<console ansi>
+Unified Diff Report between the resources (diff/characters_original.csv@howto) and (diff/characters_new.csv@howto).
+ - [31mred[0m   for deleted
+ - [32mgreen[0m for added
+ - [34mblue[0m  for type change (example: number as varchar)
+The data resources are not equals.
+diff_status   last_name           first_name   birth_date   wikipedia_page
+-----------   -----------------   ----------   ----------   --------------------------------------------------------------
+=             Schwarzenegger      Arnold       1947-07-30   https://en.wikipedia.org/wiki/Arnold_Schwarzenegger
+[32m+1            [0mNorman              Don          [32m1935-12-23   [0mhttps://en.wikipedia.org/wiki/Don_Norman
+[31m-1            [0mNorman              Don          [31m1935-12-25   [0mhttps://en.wikipedia.org/wiki/Don_Norman
+[31m-             [0m[31mHarbison Carnagey   [0m[31mDale         [0m[31m1888-11-24   [0m[31mhttps://en.wikipedia.org/wiki/Dale_Carnegie[0m
+=             Kahneman            Daniel       1934-03-05   https://en.wikipedia.org/wiki/Daniel_Kahneman
+[31m-             [0m[31mPittman             [0m[31mBob          [0m[31m1953-12-28   [0m[31mhttps://en.wikipedia.org/wiki/Robert_Pittman_(media_executive)[0m
+</console>
+</unit>
+
+This time, the unified report tell us that we need to:
+  * update the ''birth date'' of the ''Norman'' record (''+1,-1'', in the ''1'' change)
+  * delete the records
+    * ''Harbison Carnagey''
+    * and ''Pittman''
+from the ''original'' resource to obtain the ''new'' resource
+
+
 
 ===== Conclusion =====
 
-This page end the learning guide of ''Tabulify'' at the command line with ''Tabli'' where we have learned to perform data operation one command at a time.
+This page ends the learning guide of ''Tabulify'' at the command line with ''Tabul'' where we have learned to perform data operation one command at a time.
 
 <box display="none">
 ''Tabulify'' supports also the creation of workflows with the ''pipeline'' scripting language where you bind all this operations in pipelines.
 
-To learn more about the ''pipeline'' scripting language, we have create the ''pipeline learning guide'' where you will learn how to create a datawarehouse and analyse weblog event of a website.
+To learn more about the ''pipeline'' scripting language, we have create the ''pipeline learning guide'' where you will learn how to create a data warehouse and analyse weblog event of a website.
 
 <btn>
 Flow Learning Guide - How to analyze weblog ?
 </btn>
 </box>
+

@@ -1,0 +1,22 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:op:docs:op:distinct" }
+    ],
+    "page_id": "cqphc19f61wuwgxa9erkr"
+}
+---
+====== Distinct ======
+
+
+===== About =====
+
+''distinct'' is an [[docs:op:op|data operation]] that will filter out duplicate data resources.
+
+
+===== Example of Usage =====
+
+When you [[:docs:op:concat|concantenate]], the target resource stays the same and you may want to filter them out of the [[:docs:flow:pipeline|pipeline]],
+===== Arguments =====
+
+No arguments.

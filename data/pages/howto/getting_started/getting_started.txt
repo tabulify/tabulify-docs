@@ -1,6 +1,7 @@
 ---json
 {
-    "canonical": "getting_started"
+    "canonical": ":getting_started",
+    "page_id": "y0r3vvl29x2zpi6rhw5cq"
 }
 ---
 
@@ -11,8 +12,7 @@
 
 <box width=600 >
 
-The ''tabulify'' platform is a platform specialized in ''business and financial analytics data processing''. 
-''tabulify'' is a data processing system that is piloted by the command line [[docs:tabli:tabli|tabli]].
+The ''tabulify'' platform is a ''data processing'' specialized in ''data delivery'' that is piloted by the command line [[docs:tabul:tabul|tabul]].
 
 \\
 
@@ -24,8 +24,7 @@ This ''learn'' section is a step-by-step that will:
 \\
 
 <card align="center" width="300px">
-Ready to get started ?
-Learn ''tabulify'' in just 10 steps.
+Learn ''tabulify'' in just 10 steps, in less than a couple of minutes
 \\
 \\
 <btn>

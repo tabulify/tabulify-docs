@@ -1,0 +1,32 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:app:relative-connection" },
+        { "path": ":docs:app:structure" }
+    ],
+    "page_id": "85flmharjq2xmacoo572e"
+}
+---
+====== Directory structure  ======
+
+
+===== About =====
+''Tabulify'' does not enforce any directory structure.
+
+Inside an app directory, you can define the structure that fits your needs.
+
+For instance:
+  * a pipeline directory
+  * a data directory
+  * ..
+
+===== Tip: Alias Connection to create a structure =====
+
+To reference subdirectories directories, you can create specific directory connection relative to the [[:docs:connection:app|app home]] with an [[:docs:connection:alias|alias connection]].
+
+Example of a pipeline connection in the [[docs:conf:tabul.yml|configuration vault]] for a ''pipeline'' subdirectory in the [[:docs:connection:app|app connection]]
+<code yml>
+connections:
+  pipeline:
+   uri: alias:pipeline@app
+</code>

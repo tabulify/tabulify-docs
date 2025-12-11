@@ -1,33 +1,73 @@
+---json
+{
+    "page_id": "0xj7xu3xdj7mvqmt3rovo"
+}
+---
 ====== Expression Generator ======
 
 
 ===== About =====
-A ''expression generator'' is a [[column|column data generator]] that can [[generator|generate]] data created from:
-  * other columns (known as ''parent columns'') 
+A ''expression data-supplier'' is a [[data-supplier|column data supplier]] that can generate data created from:
+  * other columns (known as ''parent columns'')
   * by giving an ''expression (or formula)''.
-===== Howto =====
-<related pattern="howto:*" />
 
 
+===== Example =====
+
+  * [[:howto:generator:expression]]
 ===== Syntax =====
 
 <code yaml>
 columns:
-  - name: columnName
-    DataGenerator:
+  - name: column_name
+    data-supplier:
       type: expression
-      ColumnParents: 
-           - columnParentName1 # variable x
-           - columnParentName2 # variable y
-           - ...... # variable "z", "a", "b", "c", "d","e","f"
-      expression: "javascriptExpression"  # See below for example
+      arguments:
+          # The name of a column used in the expression
+          column-variable: columnVariableName # becomes in the expression, the variable columnvariablename 
+          # A list of column name used in the expression
+          column-variables:
+              - columnVariableName1 # becomes in the expression, the variable columnvariablename1 
+              - columnVariableName2 # becomes in the expression, the variable columnvariablename2
+              - ...... 
+          # The expression
+          expression: "javascriptExpression"  
+</code>
+
+==== Arguments ====
+
+
+The [[:docs:conf:parameter|arguments]] of the [[:docs:generator:data-supplier|data supplier node]] are:
+
+^ Name ^ Description ^
+| ''column-variable'' | A column name used in the expression as variable |
+| ''column-variables'' | A list of column names used in the expression as variables |
+| ''expression'' | The [[#expression]] |
+
+===== What are Expressions ?=====
+
+Expressions are Javascript expressions.
+
+
+Tabulify pass the data as native javascript [[docs:data_type:data_type|data type]] in a variable with the name of the column in lowercase.
+You don't need to instantiate the variables, Tabulify do.
+
+
+
+Note:
+  * For [[docs:data_type:date_time|date/timestamp/time data type]], we create a [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date|Date]] as this is the only temporal data type of javascript.
+  * For all numbers (Double, Integer, ...) , we create a [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number|Number]] as this is also the only number data type of javascript.
+
+Example for ''2009/10/01'' and the column name ''date'' or ''DATE'', Tabulify would create the `date` variable like this:
+<code javascript>
+date = new Date("2009","10","01")
+</code>
+And if you want the month, you expression would use [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getMonth|getMonth]] :
+<code javascript>
+date.getMonth()+1
 </code>
 
 
-
-^ Mandatory Key ^  Description ^
-| ''ColumnParents'' | The column generator used in the expression | 
-| ''expression'' | The expression in javascript where the parents columns maps by order to the following variables "x", "y", "z", "a", "b", "c", "d","e", "f" |
 
 ===== How to hide intermediate columns ?=====
 
@@ -39,49 +79,23 @@ Example:
 - name: columnToHide
   Hidden: true  # The column will not be added to the output.
   Description: An hidden column
-  DataGenerator:
+  data-supplier:
     type: entity
 </code>
 
 
-===== Snippet of expression =====
-This section is showing snippet of expression (Javascript).
 
-==== Time ====
 
-  * Month where ''x'' represents the ''date'' value of the first parent columns
-<code javascript>
-x.getMonth()+1 // Month
-</code>
-  * Month names. The below snippet use a ''date'' column as parent and lookup an array to get the month name.
-<code javascript>
-var monthNames = ['Jan', 'Feb', 'Maa', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec']; 
-monthNames[x.getMonth()]
-</code>
-  * Year number
-<code javascript>
-x.getFullYear()
-</code>
-==== Email ====
-Email String concatenation where:
-      * ''x'' would be a name from the first parent column
-      * ''y'' would be a company name from the second parent column 
-      * ''z'' would be a TLD domain extension (''.com'', ...)
-<code javascript>
-x+'@'+y+'.'+z
-</code>
+
 
 ===== Data Type =====
 
-The below data type are supported:
+The below [[docs:data_type:data_type|data type]] are supported:
 
-^ Data Type ^
-| Integer |
-| Float |
-| Double | 
-| Numeric | 
-| Decimal |
-| Date |
-| Timestamp |
-| Varchar |
+^ Data Type ^ Java script Equivalent ^
+| [[:docs:data_type:integer|Integer]] | [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number|Number]] |
+| [[:docs:data_type:double_real_float|Double/Float]] | [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number|Number]] |
+| [[:docs:data_type:numeric_decimal|Numeric/Decimal]] | [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number|Number]] |
+| [[:docs:data_type:date_time|Date/Timestamp]] | [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date|Date]] |
+| [[..:data_type:character|Varchar/Char]] | [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String|String]] |
 

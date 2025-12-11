@@ -1,6 +1,36 @@
+---json
+{
+    "page_id": "viiarivlf5r1urad2skvg"
+}
+---
 ====== Thymeleaf Templating engine ======
 
 
 
+===== About =====
+
+The [[https://www.thymeleaf.org/|Thymeleaf]] engine is a supported [[docs:templating:engine|template engine]] in the [[:docs:op:template|template operation]].
+
+[[https://www.thymeleaf.org/|Thymeleaf]] integrates in template trying to preserve the structure so that they can still be parsed by your editor.
+
+===== Example =====
 
 
+This HTML template is still a valid html document.
+
+<code html>
+<table>
+  <thead>
+    <tr>
+      <th th:text="#{msgs.headers.name}">Name</th>
+      <th th:text="#{msgs.headers.price}">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="prod: ${allProducts}">
+      <td th:text="${prod.name}">Oranges</td>
+      <td th:text="${#numbers.formatDecimal(prod.price, 1, 2)}">0.99</td>
+    </tr>
+  </tbody>
+</table>
+</code>

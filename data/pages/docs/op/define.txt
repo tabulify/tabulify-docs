@@ -1,100 +1,58 @@
+---json
+{
+    "page_id": "rdsmd9ruqzgoaxl9wefva"
+}
+---
 ====== Data Operation - Define ======
 
 
 ===== Define =====
-''define'' is an [[op|operation]] that defines a [[docs:resource:resource|data resource]].
+''define'' is a [[:docs:flow:supplier|supplier]] [[op|operation]] that defines one or more inline [[docs:resource:resource|data resources]]
+in a [[docs:flow:pipeline|pipeline file]].
 
 
-A [[select|select operation]] may not return any [[docs:resource:resource|data resources]] but the ''define'' operation returns always the data resource that it defines.
-
-This operation is used:
-  * to define inline data resource in a [[docs:flow:pipeline|pipeline file]]
-  * before a [[create|create]] or [[fill|fill]] operation that will create data resource
+Note that a [[select|select operation]] may not return any [[docs:resource:resource|data resources]] but the ''define'' operation must return always the data resource that it defines.
 
 
+This is a first step of a [[:docs:flow:pipeline|pipeline]] (known as the [[docs:flow:supplier|supplier step]]) because it supplies [[docs:resource:resource|data resources]] to the [[:docs:flow:intermediate|others operations (known as intermediate)]] in the pipeline.
 
+===== Example =====
 
-
+  * [[howto:pipeline:define]]
 
 ===== Arguments =====
-The ''define'' operations accept the following arguments.
+The ''define'' operation accepts the following [[:docs:flow:argument|arguments]].
+
+^ Arguments ^ Default ^ Definition ^
+| ''data-resource'' | | One [[#data resource definition]] |
+| ''data-resources'' | | A list of [[#data resource definition]]   |
+| ''processing-type'' | ''batch'' | The [[:docs:flow:processing-type|processing type]] (''batch'' or ''stream'')  |
+
+
+==== Data resource Definition ====
+
+The following argument defines one data resource and can be set:
+  * once in the `data-resource` argument
+  * multiple time in the `data-resources` argument
+
+You can define a data resource by:
+  * `data-uri`
+  * or by `data` (inline rows)
+but not both
 
 ^ Arguments ^ Mandatory ^ Definition ^
+^ One resource definition by Data Uri ^^^
 | ''data-uri'' | only if ''data'' is not defined | The [[docs:resource:data_uri|data uri]] is the location of the resource |
+| ''media-type'' |  | The [[docs:resource:media-type|media type]] of the data uri resource |
+^ One resource definition by Data ^^^
 | ''data'' | only if ''data-uri'' is not defined | The ''data'' as a list of [[docs:resource:record|records]] (the data are in the inline) |
-| ''data-definition'' | no | The [[docs:resource:data-definition|data definition]] |
-| ''data-resources'' | | to define more than one data resource (a list of inline data resources) |
-
-===== Usage =====
-This operation is only available as [[docs:flow:step|step]] in a [[docs:flow:pipeline|pipeline pipeline]] (ie not in a [[docs:tabli:data:start|tabli data command]])
+^ The optional data attributes ^^^
+| ''data-def'' | no | The data attributes in a [[docs:resource:data-definition|data definition format]] |
 
 
-This is a first step (known as the [[docs:flow:supplier|supplier step]]) because it supplies [[docs:resource:resource|data resources]] to the others operations in the pipeline.
+==== Processing Type ====
+
+  * In a ''batch'' [[:docs:flow:processing-type|processing type]], the data resources are sent in the pipeline only once.
+  * In a ''stream'' [[:docs:flow:stream_pipeline|stream processing type]], the same data resources are rebuild at poll time and resend.
 
 
-==== Single Data Resource ====
-
-Example: A ''color'' data resource with two columns and 3 records.
-
-<unit>
-<file yaml pipeline/define_single.yml>
-pipeline:
-  - name: "Define"
-    comment: "This operation define the tabular data resource named 'colors' with two columns"
-    operation: "define"
-    args:
-      data-resource:
-        data-definition:
-          logicalName: "colors"
-          columns: ["id","color"]
-        data:
-          - ["1", "blue"]
-          - ["2", "red"]
-          - ["3", "yellow"]
-  - name: "Print"
-    comment: "Print the colors resource"
-    operation: "print"
-
-</file>
-If you [[docs:tabli:flow:execute|execute this pipeline]]
-<code bash>
-tabli flow execute pipeline/define_single.yml@howto
-</code>
-you will get the data of the ''colors'' data resource [[docs:tabli:data:print|printed]] in a tabular format.
-<console>
-id   color
---   ------
-1    blue
-2    red
-3    yellow
-</console>
-</unit>
-==== Multiple Inline Data Resources ====
-
-Two inline data resources ''colors'' and ''characters''
-<code yaml>
-pipeline:
-  - name: 'Define'
-    operation: 'define'
-    args:
-      data-resources:
-        - data-definition:
-            logicalName: "colors"
-            columns: ["id","color"]
-          data:
-            - ["1", "blue"]
-            - ["2", "red"]
-            - ["3", "yellow"]
-        - data-definition:
-            logicalName: "characters"
-            columns:
-              - name: "id"
-                type: integer
-              - name: "name"
-              - name: "last_name"
-          data:
-            - [1, "Arnold","Schwarzy"]
-            - [2, "Don","Norman"]
-            - [3, "Dale","Carnegie"]
-            - [4, "Daniel","Kahneman"]
-</code>

@@ -1,0 +1,144 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:templating:create_json_from_tabular_data" }
+    ],
+    "description": "This howto will show you how to create a  JSON file\nfrom tabular data with the template operation and a JSON template",
+    "low_quality_page": "false",
+    "page_id": "sn8nysvwhcy6we0r2a2ec"
+}
+---
+====== Tabulify HowTo - How to create JSON file(s) from Tabular data with a JSON template ======
+
+===== A propos =====
+This [[howto:howto|howto]] will show you:
+  * how to create a <icon name="carbon:json" /> [[docs:resource:json|JSON data resource]]
+  * from [[docs:resource:tabular|tabular data]]
+  * with the [[docs:op:template|template operation]]
+  * and the [[docs:templating:json|JSON template]]
+
+
+===== Steps =====
+
+<unit display="none">
+<code bash>
+tabul data drop --no-strict-selection books.json@tmp
+</code>
+</unit>
+
+==== The tabular source data ====
+In this [[howto:howto|howto]], we will use as source ''books catalog data'' that are contained in
+  * the ''books.csv'' [[docs:resource:csv|csv file]]
+  * stored in the [[docs:connection:howto|howto directory connection]]
+
+<note>
+You can also used any other [[docs:resource:tabular|tabular data resources]].
+</note>
+
+With the [[docs:tabul:data:print|data print]] command, we can see the content.
+<unit>
+<code bash>
+tabul data print books.csv@howto
+</code>
+<console>
+books.csv@howto
+asin            description                                   price   group
+-------------   -------------------------------------------   -----   ----------
+B007US9NA8      The New Encyclopedia of Modern Bodybuilding   27.18   Sports
+1439199191      How To Win Friends And Influence People       27.18   Psychology
+9780465050659   The Design of Everyday Things                  9.99   Design
+9780465050659   The Design of Everyday Things                  9.99   Psychology
+B00555X8OA      Thinking, Fast and Slow                        8.85   Decision
+B00555X8OA      Thinking, Fast and Slow                        8.85   Psychology
+</console>
+</unit>
+
+==== The JSON template ====
+
+The [[docs:templating:json|JSON template]] is a [[docs:templating:templating|template]] that represents the structure of the [[docs:resource:json|JSON resource]] that should be created that contains variables in the form ''${name}'' where ''name'' should match the column name of the source.
+
+<unit>
+<file javascript books_template.json>
+{
+  "${group}": {
+    "${asin}": {
+      "price": "${price}",
+      "description": "${description}"
+    }
+  }
+}
+
+</file>
+</unit>
+where:
+  * the variable ''%%${group}%%'' matches the ''group'' column of the ''books.csv'' source
+  * the variable ''%%${asin}%%'' matches the ''asin'' column of the ''books.csv'' source
+  * the variable ''%%${price}%%'' matches the ''price'' column of the ''books.csv'' source
+  * the variable ''%%${description}%%'' matches the ''description'' column of the ''books.csv'' source
+
+==== The template operation ====
+
+=== Tabul Data Template Command ===
+
+By running the below [[docs:tabul:data:template|tabul data template operation]], we will:
+  * create a ''books.json'' [[docs:resource:json|json file]]
+  * into the [[docs:connection:tmp|temp connection directory]]
+  * that has been created:
+      * from the ''books_template.json'' [[docs:templating:json|JSON template]] located in the [[docs:connection:howto|howto directory]]
+      * and the [[docs:flow:source|source]] [[docs:resource:csv|csv file]] ''books.csv'' located in the [[docs:connection:howto|howto directory]]
+<unit>
+<code bash>
+tabul data template --template-selectors books_template.json@howto books.csv@howto books.json@tmp
+</code>
+<console>
+Transfer results
+input                                  target           latency   record_count   error_code   error_message
+------------------------------------   --------------   -------   ------------   ----------   -------------
+favorite_books_books_template@memory   books.json@tmp   0.13s                1
+</console>
+</unit>
+
+==== The JSON file created ====
+With the [[docs:tabul:data:print|data print command]], you can see the [[docs:resource:json|json file content]] created.
+<unit>
+<code bash>
+# type text because by default, a json file is seen as one JSON document, one record, one line
+tabul data print --type text books.json@tmp
+</code>
+<console javascript>
+{
+  "Sports": {
+    "B007US9NA8": {
+      "price": "27.18",
+      "description": "The New Encyclopedia of Modern Bodybuilding"
+    }
+  },
+  "Psychology": {
+    "1439199191": {
+      "price": "27.18",
+      "description": "How To Win Friends And Influence People"
+    },
+    "9780465050659": {
+      "price": "9.99",
+      "description": "The Design of Everyday Things"
+    },
+    "B00555X8OA": {
+      "price": "8.85",
+      "description": "Thinking, Fast and Slow"
+    }
+  },
+  "Design": {
+    "9780465050659": {
+      "price": "9.99",
+      "description": "The Design of Everyday Things"
+    }
+  },
+  "Decision": {
+    "B00555X8OA": {
+      "price": "8.85",
+      "description": "Thinking, Fast and Slow"
+    }
+  }
+}
+</console>
+</unit>

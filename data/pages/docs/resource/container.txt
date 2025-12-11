@@ -1,14 +1,19 @@
+---json
+{
+    "page_id": "7jwjhk705w99aklkmlkqq"
+}
+---
 ====== Data Resource - Container Resource ======
 
 
 ===== About =====
 A ''container resource'' is a [[resource|resource]] that contains other resources:
-  * [[content|data resource]] ([[script|script resource]] included)
+  * [[content|data resource]] ([[runtime|script resource]] included)
   * or another ''container resource''
 
-[[schema|sql schema]] or a [[directory|directory]] are ''container resources''
+[[sql_schema|sql schema]] or a [[directory|directory]] are ''container resources''
 
 
 
 ===== Selection =====
-A ''container resource'' is selected with a [[data_selector|data selector]].
+A ''container resource'' is selected with a [[..:flow:data_selector|data selector]].

@@ -1,8 +1,14 @@
+---json
+{
+    "canonical": ":installation",
+    "page_id": "iza4mojm4bolfpv7mwm7c"
+}
+---
 ====== Learning Tabulify - Step 1 - Installation ======
 
 
-===== Tabli =====
-To learn ''Tabulify'', you need to install the [[docs:tabli:tabli|Tabli command line tool]]. 
+===== Tabul =====
+To learn ''Tabulify'', you need to install the [[docs:tabul:tabul|Tabul command line tool]].
 
 This pages will guide you through the installation steps.
 
@@ -33,10 +39,10 @@ If this is not the case, you can download it and install it at the [[https://www
 ==== Installation Directory ====
 
 
-Create a directory called the [[docs:tabli:home|Tabulify Home]] where you will unzip the content of the installation file. <inote>A path without space is recommended</inote>
+Create a directory called the [[docs:tabul:home|Tabulify Home]] where you will unzip the content of the installation file. <inote>A path without space is recommended</inote>
 
   * Windows
-<code dos>
+<code bash>
 :: Below c:\tabulify is the Tabulify Home.
 mkdir c:\tabulify
 </code>
@@ -56,11 +62,11 @@ You need to [[https://tabulify.com/tabulify.zip]] download the zipped file for y
 
 
 ==== Unzip ====
-Unzip the downloaded file into the [[docs:tabli:home|Tabulify Home]]
+Unzip the downloaded file into the [[docs:tabul:home|Tabulify Home]]
 
 At the command line:
-  * Windows 
-<code dos>
+  * Windows
+<code bash>
 unzip tabulify.zip -d c:\tabulify
 </code>
   * Linux
@@ -69,36 +75,34 @@ unzip tabulify.zip -d /opt/tabulify
 </code>
 ==== Symlink ====
 
-  * Optionally, create a symlink into your bin directory to be able to call [[docs:tabli:tabli|Tabulify]] from everywhere.
-<code dos>
-mklink c:\tabulify\tabli.cmd %USERPROFILE%\bin\tabli.cmd
+  * Optionally, create a symlink into your bin directory to be able to call [[docs:tabul:tabul|Tabulify]] from everywhere.
+<code bash>
+mklink c:\tabulify\tabul.cmd %USERPROFILE%\bin\tabul.cmd
 </code>
   * This local ''bin'' directory should be added to the ''PATH'' environment variable.
-<code dos>
+<code bash>
 setx PATH=%PATH%,%USERPROFILE%\bin
 </code>
 
-===== Tabli =====
-If you can call the ''tabli'' command line, your installation is validated.
+===== Tabul =====
+If you can call the ''tabul'' command line, your installation is validated.
 
-[[docs:tabli:tabli|Tabli]] is the command line tool of ''Tabulify'' and is composed of [[docs:tabli:module|module]] that regroups [[docs:tabli:command|command]] where each command can be customized with ''argument'' and [[docs:tabli:option|options]].
+[[docs:tabul:tabul|Tabul]] is the command line tool of ''Tabulify'' and is composed of [[docs:tabul:module|module]] that regroups [[docs:tabul:command|command]] where each command can be customized with ''argument'' and [[docs:tabul:option|options]].
 
   * Open a console
-  * Call [[docs:tabli:tabli|tabli]] with the ''help'' option
+  * Call [[docs:tabul:tabul|tabul]] with the ''help'' option
 <unit>
-<code dos>
-tabli --help
-:: or if you didn't have the directory in your PATH environment variable
-:: TABULIFY_HOME\tabli.cmd --help
-:: in our installation documentation
-:: c:\tabulify\tabli.cmd
+<code bash>
+tabul --help
+# or if you didn't have the directory in your PATH environment variable
+# TABULIFY_HOME\bin\tabul --help
 </code>
-  * The [[docs:tabli:help|help]] should shows up.
+  * The [[docs:tabul:help|help]] should shows up.
 <console>
-Tabli
+Tabul
 =====
 
-Tabli, the tabulify command line data processing tool
+Tabul, the tabulify command line data processing tool
 
 
 
@@ -108,7 +112,7 @@ Example
  1 - To load a csv file into the sqlite database, you would type:
 
 
-    tabli data transfer data.csv @sqlite
+    tabul data transfer data.csv @sqlite
 
 
 
@@ -117,7 +121,7 @@ Syntax
 ------
 
 
-    tabli <command> [-h,--help]
+    tabul <command> [-h,--help]
 
 
 where:
@@ -125,25 +129,35 @@ where:
 
   Commands:
 
-    conf          Management and configuration of the tabli environment.
+    app             Management apps
 
-    connection    Management and configuration of the connections to systems.
+    connection      Management and configuration of the connections to systems.
 
-    data          Data operations against data resources (table, file, ...).
+    data            Data operations against data resources (table, file, ...).
 
-    vault         Encrypt and decrypt sensitive information
+    env             Management and configuration of the tabul execution environment
+
+    flow            Execute Flows
+
+    service         Start and stop services
+
+    vault           Encrypt and decrypt sensitive information
+
+    version         Show build and version information
 
 
   Option:
 
-    -h,--help     Print this help
+    -h,--help       Print this help
+
+    -v,--version    Print version information
 </console>
 </unit>
 
 ===== Terminal =====
 
 
-''Tabulify'' supports a lot of command line in the [[docs:tabli:data:start|tabli data module]] and having a good terminal that simplify our task is important.
+''Tabulify'' supports a lot of command line in the [[docs:tabul:data:start|tabul data module]] and having a good terminal that simplify our task is important.
 
 We recommend therefore a terminal that supports bash.
 

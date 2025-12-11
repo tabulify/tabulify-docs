@@ -1,0 +1,200 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:generator:fill_schema" },
+        { "path": ":howto:schema:fill_schema" }
+    ],
+    "description": "This how-to will show you how to use the tabul fill command to  fill all the tables of a schema with generated data.",
+    "low_quality_page": "false",
+    "page_id": "i8wii619uui2h456ddwwf"
+}
+---
+====== Tabulify - How to fill a database relational schema with generated data and Tabul ======
+
+
+===== About =====
+This [[..:howto|how-to]] will show you how to use the [[docs:tabul:data:fill|tabul fill]] command to <icon name="mdi:format-color-fill"/> [[docs:op:fill|fill]] all the [[docs:resource:sql_table|tables]] of a [[docs:resource:sql_schema|schema]] with generated data.
+
+
+===== Steps =====
+==== Prerequisites ====
+
+You should have ''Tabulify'' installed on your computer.
+
+<btn>
+[[howto:getting_started:1_install]]
+</btn>
+
+==== Creation of the schema ====
+
+
+You could:
+  * follow this howto:  [[howto:sql_schema:create_table_with_dependencies|How to copy a schema]]
+  * or execute the following statements:
+<unit>
+<code bash >
+# drop all tables in sqlite
+tabul data drop --no-strict-selection *@sqlite
+# Create the store_sales star schema (ie the store_sales and its dependencies tables)
+tabul data create --with-dependencies store_sales@tpcds 'tpc_${input_logicalName}@sqlite'
+# in bash, you need to escape the $ with \ sign or quote the argument so that it's not seen as a bash variable
+</code>
+</unit>
+
+==== Schema Listing ====
+
+You should now see in the [[howto:sqlite:howto_connection|Sqlite HowTo connection]] the following tables.
+
+<unit>
+<code bash>
+tabul data list --with-dependencies tpc_store_sales@sqlite
+</code>
+<console>
+path                         media_type
+--------------------------   ----------
+tpc_customer                 table
+tpc_customer_address         table
+tpc_customer_demographics    table
+tpc_date_dim                 table
+tpc_household_demographics   table
+tpc_income_band              table
+tpc_item                     table
+tpc_promotion                table
+tpc_store                    table
+tpc_store_sales              table
+tpc_time_dim                 table
+</console>
+</unit>
+
+==== Schema Filling  ====
+
+Let's fill the table with the [[:docs:tabul:data:fill|tabul data fill]] command that applies the [[:docs:op:fill|fill operation]].
+<unit>
+<code bash>
+tabul data fill --with-dependencies tpc_store_sales@sqlite
+</code>
+<console>
+Transfer results
+input                               target                              latency   record_count   error_code   error_message
+---------------------------------   ---------------------------------   -------   ------------   ----------   -------------
+tpc_customer@memgen                 tpc_customer@sqlite                 0.18s              100
+tpc_customer_address@memgen         tpc_customer_address@sqlite         0.23s              100
+tpc_customer_demographics@memgen    tpc_customer_demographics@sqlite    0.39s              100
+tpc_date_dim@memgen                 tpc_date_dim@sqlite                 0.48s              100
+tpc_household_demographics@memgen   tpc_household_demographics@sqlite   0.12s              100
+tpc_income_band@memgen              tpc_income_band@sqlite              0.10s              100
+tpc_item@memgen                     tpc_item@sqlite                     0.40s              100
+tpc_promotion@memgen                tpc_promotion@sqlite                0.20s              100
+tpc_store@memgen                    tpc_store@sqlite                    0.34s              100
+tpc_store_sales@memgen              tpc_store_sales@sqlite              0.23s              100
+tpc_time_dim@memgen                 tpc_time_dim@sqlite                 0.15s              100
+</console>
+</unit>
+
+==== Looking at the result ====
+
+The [[:docs:op:fill|fill operation]] will by default enforce:
+  * [[:docs:resource:fkey|foreign key constraint]]
+  * and [[docs:data_type:data_type|data type constraint]]
+
+<unit >
+<code bash>
+tabul data head --limit 10 date_dim@sqlite
+</code>
+<console>
+
+</console>
+</unit>
+
+
+
+==== Controlling the generated data with Generator ====
+
+A [[docs:resource:generator|generator]] is a [[docs:resource:file|file]] that contains the data generation definition.
+
+For each column, a [[docs:generator:data-supplier|column data generator]] is defined that control the data generated.
+
+The below [[docs:resource:generator|generator]] generates one year of data with two columns:
+  * ''d_date'' that has a [[docs:generator:sequence|date sequence generator]] to generate ''date'' data from ''2001-01-01'' and upwards
+  * ''dyear'' that has a [[docs:generator:expression|expression generator]] that extracts the ''year'' of the ''d_date'' column.
+
+<unit>
+<file yaml date_dim_2001--generator.yml>
+kind: generator
+spec:
+  LogicalName: date_dim
+  Columns:
+    - name: d_date
+      type: date
+      comment: A column with a sequence generator that generates a date sequence from 2001-01-01 and after
+      data-supplier:
+        type: sequence
+        arguments:
+          start: 2001-01-01
+          step: 1
+    - name: d_year
+      type: integer
+      precision: 4
+      comment: A column with a expression generator that extracts the year from the date column
+      data-supplier:
+        type: expression
+        arguments:
+          column-variable: d_date
+          expression: "d_date.getFullYear()"
+
+</file>
+</unit>
+
+This [[docs:resource:generator|generator]] is also a [[docs:resource:content|content resource]] and therefore you can use it as any [[docs:resource:tabular|tabular resource]] and take a look at the data generated
+
+<unit>
+<code bash>
+tabul data head date_dim_2001--generator.yml@howto
+</code>
+<console>
+The first 10 rows of the data resource (date_dim_2001@memgen):
+d_date       d_year
+----------   ------
+2001-01-01     2001
+2001-01-02     2001
+2001-01-03     2001
+2001-01-04     2001
+2001-01-05     2001
+2001-01-06     2001
+2001-01-07     2001
+2001-01-08     2001
+2001-01-09     2001
+2001-01-10     2001
+</console>
+</unit>
+
+==== Fill with generators ====
+
+After having created a generator for the ''date_dim'' [[docs:resource:sql_table|table]], we can pass it to the [[docs:tabul:data:fill|data fill command]] with the ''--generator-selector'' option to make the data generation more controlled.
+<unit >
+<code bash>
+tabul data fill --generator-selector date_dim_2001--generator.yml@howto   *@sqlite
+</code>
+<note>
+As the option ''generator-selector'' is a [[docs:flow:selector|resource selector]], you can create a [[docs:resource:generator|generator]] for each table where you want to customize the generated data and select them with the [[docs:common:globbing|glob pattern]].
+</note>
+Output:
+<console>
+Transfer results
+input                               target                              latency   record_count   error_code   error_message
+---------------------------------   ---------------------------------   -------   ------------   ----------   -------------
+tpc_customer@memgen                 tpc_customer@sqlite                 0.18s              100
+tpc_customer_address@memgen         tpc_customer_address@sqlite         0.22s              100
+tpc_customer_demographics@memgen    tpc_customer_demographics@sqlite    0.35s              100
+tpc_date_dim@memgen                 tpc_date_dim@sqlite                 0.42s              100
+tpc_household_demographics@memgen   tpc_household_demographics@sqlite   0.9s               100
+tpc_income_band@memgen              tpc_income_band@sqlite              0.9s               100
+tpc_item@memgen                     tpc_item@sqlite                     0.25s              100
+tpc_promotion@memgen                tpc_promotion@sqlite                0.19s              100
+tpc_store@memgen                    tpc_store@sqlite                    0.29s              100
+tpc_store_sales@memgen              tpc_store_sales@sqlite              0.23s              100
+tpc_time_dim@memgen                 tpc_time_dim@sqlite                 0.11s              100
+</console>
+</unit>
+
+

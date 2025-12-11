@@ -1,0 +1,20 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:global" }
+    ],
+    "page_id": "pmfhxrhijd9ed7ng28ynn"
+}
+---
+====== Tabul - Global Options ======
+
+
+===== Global =====
+''global options'' are [[option|options]] that are available for all [[command|command]].
+
+
+===== List =====
+  * ''%%--passphrase%%'' to set the [[docs:common:passphrase|passphrase]]
+  * ''%%--log-level%%'' to set the [[:docs:common:log|log level]]
+  * ''%%--output-uri%%'', ''%%--output-transfer-operation%%'',''%%--output-operation%%'' to store the [[output|output in a data resource]]
+  * ''%%--conf%%'' to set the path to the [[docs:conf:tabul.yml|configuration vault]]

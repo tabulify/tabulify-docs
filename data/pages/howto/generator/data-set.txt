@@ -1,0 +1,167 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:generator:dataset" }
+    ],
+    "page_id": "k57166jzaaj85t6rnd7z3"
+}
+---
+====== How to generate data with a  data set? ======
+
+
+
+===== About =====
+This howto will show you how to generate data with an [[:docs:generator:data-set|data set generator]].
+
+In these examples, we use a predefined csv [[:docs:generator:entity|entity file]] but you could any [[:docs:resource:resource|data resource]] such as :
+  * a [[docs:resource:sql_table|sql table]]
+  * a [[docs:resource:sql_select|sql query]]
+
+This [[:docs:resource:generator|generator resource]] uses
+  * the `firstname` entity [[:docs:resource:csv|csv]] file
+  * to fill a `firstname` column
+
+
+
+===== Example =====
+
+==== Basic ====
+
+In this basic example, the data set is located by the [[:docs:resource:data_uri|data URI]] value.
+
+This value ''firstname/firstname_fr.csv@entity'' locates:
+  * the ''firstname_fr.csv'' file
+  * stored in the [[:docs:connection:built-in|entity]] directory
+  * under the ''firstname/'' directory
+
+The content of the data set is
+<unit>
+<code bash>
+tabul data head firstname/firstname_fr.csv@entity
+</code>
+<console>
+The first 10 rows of the data resource (firstname/firstname_fr.csv@entity):
+firstname   gender   probability
+---------   ------   --------------------------
+Aadam       M        3.14396359513727576E-7
+Aadel       M        6.52081338250694231E-7
+Aadil       M        0.000002142552968537995330
+Aahil       M        2.44530501844010337E-7
+Aakash      M        3.02752049902108036E-7
+Aalia       F        4.77416694076401133E-7
+Aaliya      F        0.000002422016399216864286
+Aaliyah     F        0.000028086074783226330085
+Aalya       F        0.000001490471630287301099
+Aalyah      F        0.000002585036733779537844
+</console>
+</unit>
+
+Using this dataset, we can generate generates 10 `firstnames` with this [[:docs:resource:generator|generator file]].
+<unit>
+<file yaml generator/dataset-basic--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 10
+  Columns:
+    - name: firstname
+      Type: varchar
+      data-supplier:
+        type: data-set
+        arguments:
+          dataUri: firstname/firstname_fr.csv@entity
+          column: firstname # for demo purpose as this is the default value
+
+</file>
+  * You can see the output with [[:docs:tabul:data:print|tabul print]]
+<code bash>
+tabul data print generator/dataset-basic--generator.yml@howto
+</code>
+<console>
+firstname
+------------
+Lëana
+Yelenna
+Éliam
+Aïley
+Tinhinan
+Jaufret
+Mehmetali
+Vyns
+Ycham
+Jale
+</console>
+</unit>
+
+==== Meta Column Dependency ====
+
+A `firstname` depends on the `gender`. Each entity may have one or more meta columns such as `gender`.
+
+To express this dependency, you can use the ''meta_columns'' attribute to map:
+  * a local column (ie from the generator)
+  * to a entity column (ie from the data set)
+
+<unit>
+<file yaml generator/dataset-meta-columns--generator.yml>
+kind: generator
+spec:
+  maxRecordCount: 30
+  columns:
+    - name: gender
+      type: varchar
+      data-supplier:
+        type: histogram
+        arguments:
+          buckets:
+            M: 1.0
+            F: 2.0
+    - name: firstname
+      type: varchar
+      data-supplier:
+        type: data-set
+        arguments:
+          dataUri: firstname/firstname_fr.csv@entity
+          column: firstname # for demo purpose as this is the default value
+          metaColumns:
+            gender: gender
+
+</file>
+  * You can see the output with [[:docs:tabul:data:print|tabul print]]
+<code bash>
+tabul data print generator/dataset-meta-columns--generator.yml@howto
+</code>
+<console height="300px" scroll="toggle">
+gender   firstname
+------   ----------------
+M        Louis-gabriel
+F        Amany
+M        Guerino
+M        Loucian
+F        Soufia
+F        Ieva
+M        Lowen
+F        Kellycia
+M        Elya
+F        Maïlyn
+F        Sarina
+F        Janel
+F        Andy
+F        Romaysa
+F        Bélinda
+M        Mayel
+F        Menekse
+F        Silja
+F        Anne-elise
+F        Shaé
+F        Houyem
+F        Razanne
+F        Aysel
+M        Remuald
+M        Tajeddine
+F        Tyhana
+F        Elorie
+F        Mehdia
+F        Marie-thereze
+F        Eugénie
+</console>
+</unit>
+

@@ -1,4 +1,9 @@
-====== Tabulify - Step ======
+---json
+{
+    "page_id": "ski60kkfeeokgfymk2b36"
+}
+---
+====== Pipeline Step ======
 
 
 ===== Step =====
@@ -7,22 +12,33 @@ A ''step'' (''operation step'') is an element of a [[docs:flow:pipeline|pipeline
 
 ===== Syntax =====
 
-The syntax of a step is the following:
+The syntax of steps in a [[docs:flow:pipeline|pipeline manifest]] is the following:
 <code yaml>
-pipeline:
-    - name: "name" # The name of a step is the identifier and should not contains any space
-      comment: "A long or short command/description of the step"
-      op: "operationName" # the name of the operation to perform
-      args: # The arguments to pass to the operation
-          arg1:  value1 # the first argument
-          arg2:  value2 # the second argument
-          ....
-          argN:  valueN # the Nieme argument
+kind: pipeline
+spec:
+  # a list of steps
+  steps:
+        # the name of the operation to perform
+      - operation: "firstSupplierOperationName"
+        # The arguments to pass to the operation
+        args:
+            arg1:  value1 # the first argument
+            arg2:  value2 # the second argument
+            ....
+            argN:  valueN # the Nieme argument
+        # An optional name (identifier that should not contains any space)
+        # Default to step + id in the list
+        name: "name"
+        # An optional comment
+        comment: "A long or short command/description of the step"
+      - operation: "secondIntermediateOperationName"
+        ....
 </code>
 
 
-===== Optional Post Operation =====
+===== Type =====
 
-A step can apply other optional [[docs:op:op|data operation]] on its [[docs:flow:source|source data resources]] after
-  * successful
-  * or failed execution
+There is 2 type of steps:
+  * [[docs:flow:supplier|supplier step]] - the first step in a pipeline that supplies the pipeline in data resources
+  * [[docs:flow:intermediate|intermediate step]] - the next steps in a pipeline that transform the data resources stream
+

@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "dxwn5226yealmadfsi7jr"
+}
+---
 ====== Desktop (User Desktop directory) Connection ======
 
 
@@ -11,23 +16,35 @@
 
 
 ===== Info =====
-With the [[docs:tabli:connection:info|connection info]] command
+With the [[docs:tabul:connection:info|connection info]] command
 <unit>
 <code bash>
-tabli connection info desktop
+tabul connection info desktop
 </code>
 <console>
 Information about the connection (desktop)
-Attribute              Value                                                 Description                                                            
---------------------   ---------------------------------------------------   --------------------------------------------------------------------   
-Comment                The user desktop directory of the local file system   A connection description                                               
-MaxConcurrentThread    1                                                     The maximum number of threads that can be created against the system   
-MaxNameInPath          2147483647                                            The maximum number of names in a path                                  
-Name                   desktop                                               The name of the connection                                             
-TabBooleanDataType     Native                                                Boolean data type used to store boolean values                         
-TabDateDataType        Native                                                Date data type used to store date values                               
-TabTimeDataType        Native                                                Time format data type to store time values                             
-TabTimestampDataType   Native                                                Timestamp data type used to store timestamp values                     
-Url                    file:///C:/Users/gerardnico/Desktop/                  The url of the connection
+Attribute                    Value                                                 Description
+--------------------------   ---------------------------------------------------   --------------------------------------------------------------------
+BOOLEAN_DATA_TYPE            Native                                                Boolean data type used to store boolean values
+CHAR_DEFAULT_PRECISION       1                                                     Default CHAR precision
+COMMENT                      The user desktop directory of the local file system   A connection description
+DATE_DATA_TYPE               NATIVE                                                Date data type used to store date values
+HOST                                                                               Host Server
+MAX_CONCURRENT_THREAD                                                              The maximum number of threads that can be created against the system
+MAX_NAME_IN_PATH                                                                   The maximum number of names in a path
+NAME                         desktop                                               The name of the connection
+NATIVES                                                                            Native Driver attributes (jdbc properties, ...)
+NCHAR_DEFAULT_PRECISION      1                                                     Default NCHAR precision
+NVARCHAR_DEFAULT_PRECISION   0                                                     Default NVARCHAR precision
+ORIGIN                       BUILT_IN                                              The origin of the connection
+PASSWORD                                                                           The user password
+PORT                                                                               Host Port
+TABULAR_FILE_TYPE            text/csv                                              The default media type when downloading tabular data
+TIMESTAMP_DATA_TYPE          NATIVE                                                Timestamp data type used to store timestamp values
+TIME_DATA_TYPE               NATIVE                                                Time format data type to store time values
+URI                          file:///home/tabulify/Desktop                         The uri of the connection
+USER                                                                               The user name
+VARCHAR_DEFAULT_PRECISION    0                                                     Default VARCHAR precision
+WORKING_PATH                 /home/tabulify/Desktop                                The working path (Schema for database, directory for file system)
 </console>
 </unit>

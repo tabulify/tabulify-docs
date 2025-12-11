@@ -1,0 +1,216 @@
+---json
+{
+    "page_id": "s5zlcva0oowpxipznq60s"
+}
+---
+====== How to install the World MySQL Sample Schema ======
+
+
+
+===== About =====
+
+This `howto` will show you how to install the [[https://dev.mysql.com/doc/world-setup/en/|world sample schema]] of <icon name="logos:mysql"/> [[:docs:system:mysql:mysql|MySQL]].
+
+
+===== Note =====
+
+The installation is done with the [[:docs:resource:sql_file|sql script]] ''world.sql''
+
+
+This script is idempotent because it will:
+  * drop the ''world'' [[:docs:resource:sql_schema|schema]] (known also as a [[https://dev.mysql.com/doc/refman/8.4/en/create-database.html|database]] in the MySQL glossary) if exists 
+  * and create it  
+
+
+===== Unzip Steps =====
+
+==== Start MySQL====
+
+
+The next steps will be using the [[howto_connection|mysql howto connection]].
+
+  * We [[howto_connection#start_the_mysql_service|start the mysql docker image]].
+<unit>
+<code bash>
+tabul service start mysql
+</code>
+</unit>
+  * [[docs:tabul:connection:ping|Ping]] the connection to check that the database is up.
+<unit>
+<code bash>
+tabul connection ping mysql
+</code>
+<console>
+
+
+
+
+The connection (mysql) has been pinged successfully
+
+
+
+
+</console>
+</unit>
+
+==== Unzip it ====
+
+The script is located in the [[https://downloads.mysql.com/docs/world-db.tar.gz|world-db.tar.gz]] [[:docs:resource:archive|archive]]
+
+We can download it and unzip it with the [[:docs:tabul:data:unzip|unzip command]].
+<unit>
+<code bash>
+tabul data unzip https://downloads.mysql.com/docs/world-db.tar.gz
+</code>
+<console>
+target_data_uri          entry_path           entry_media_type   entry_size   entry_update_time
+----------------------   ------------------   ----------------   ----------   ---------------------
+world-db/world.sql@tmp   world-db/world.sql   application/sql        398629   2025-10-31 23:05:45.0
+</console>
+</unit>
+
+
+The ''world.sql'' file was downloaded and extracted at the ''world-db/world.sql@tmp'' [[:docs:resource:data_uri|data uri]] ie:
+  * in the [[:docs:connection:tmp|tmp directory]]
+  * in the path ''world-db/world.sql''
+
+==== Execute it ====
+
+We can make the [[:docs:resource:sql_file|sql script]] ''world-db/world.sql@tmp'' executable by adding the execution connection 
+  * and therefore creating a [[:docs:resource:runtime|runtime data uri]] 
+  * known as a [[:docs:resource:sql_request|sql request]].
+
+
+The [[:docs:resource:runtime|runtime data uri]] against the [[:howto:mysql:howto_connection|mysql howto connection]] is:
+<code>
+(world-db/world.sql@tmp)@mysql
+</code>
+
+
+
+We execute it with the [[:docs:tabul:data:execute|execute command]]
+<unit>
+<code bash>
+tabul data execute --target-data-uri world.csv@tmp '(world-db/world.sql@tmp)@mysql'
+# The quotes are mandatory in bash because parenthesis are a bash token (ie subshell) 
+# --target-data-uri defines where the results output is stored, we will check them in the next step
+</code>
+<console>
+List of runtime executed
+runtime_data_uri                 exit_code   count   latency   data_uri        error_message
+------------------------------   ---------   -----   -------   -------------   -------------
+(world-db/world.sql@tmp)@mysql           0    5346   4.964s    world.csv@tmp
+</console>
+</unit>
+
+==== Check the execution results ====
+
+
+The results were stored in the `world.csv@tmp` that you can inspect with the [[:docs:tabul:data:print|print]], [[:docs:tabul:data:tail|tail]] or [[:docs:tabul:data:head|head]] command
+
+Example:
+<unit>
+<code bash>
+tabul data head world.csv@tmp
+# if you want the full results
+# tabul data print world.csv@tmp
+</code>
+<console>
+
+
+The first 10 rows of the data resource (world.csv@tmp):
+id   count   statement                                            line   error_code   error_message
+--   -----   --------------------------------------------------   ----   ----------   -------------
+1    0       /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER   7      0            
+2    0       /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTE   8      0            
+3    0       /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION   9      0            
+4    0       /*!50503 SET NAMES utf8mb4 */                        10     0            
+5    0       /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */           11     0            
+6    0       /*!40103 SET TIME_ZONE='+00:00' */                   12     0            
+7    0       /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, U   13     0            
+8    0       /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY   14     0            
+9    0       /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='N   15     0            
+10   0       /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES   16     0
+
+
+</console>
+</unit>
+
+==== List the world tables ====
+
+To list all tables in the ''world'' [[:docs:resource:sql_schema|schema]] with the [[:docs:resource:count|count]], you can use this [[:docs:common:globbing|glob]] [[:docs:flow:data_selector|data selector]] with the [[:docs:tabul:data:list|data list command]]
+
+<unit>
+<code bash>
+tabul data list -a count world.*@mysql
+</code>
+<console>
+path                    media_type   count
+---------------------   ----------   -----
+world.city              table         4079
+world.country           table          239
+world.countrylanguage   table          984
+</console>
+</unit>
+===== Archive Entry steps =====
+
+
+==== All-in-One Magic command ====
+ 
+You can also execute all the above steps in only one command.
+
+<unit>
+<code bash>
+tabul data execute '((archive/world-sql--archive-entry.yml@howto)@tmp)@mysql'
+</code>
+<console >
+List of runtime executed
+runtime_data_uri                 exit_code   count   latency   data_uri                                                         error_message
+------------------------------   ---------   -----   -------   --------------------------------------------------------------   -------------
+(world-db/world.sql@tmp)@mysql           0    5346   4.684s    execute/20251110-204116-815-pipe-tabul-data-exec/world.log@tmp
+</console>
+</unit>
+
+
+==== How does it works? ====
+
+
+Because a [[:docs:resource:runtime|runtime]] can also be an [[:docs:resource:runtime#executable|executable]], 
+we can also use an [[:docs:resource:archive-entry|archive entry]] as executable.
+
+We have created this [[:docs:resource:archive-entry|archive entry]] that represents the file ''world-db/world.sql'' in the archive.
+<unit>
+<code bash>
+tabul data cat archive/world-sql--archive-entry.yml@howto
+</code>
+<console yaml>
+
+kind: archive-entry
+spec:
+  # The data uri of the archive
+  data-uri: https://downloads.mysql.com/docs/world-db.tar.gz
+  data-def:
+    # The path of the file in the archive
+    entry-path: world-db/world.sql
+
+</console>
+</unit>
+
+
+
+The URI used in the command uses it:
+<code bash>
+((archive/world-sql--archive-entry.yml@howto)@tmp)@mysql
+</code>
+It tells tabulify to:
+  * takes the [[:docs:resource:archive-entry#manifest|archive entry manifest]] ''archive/world-sql--archive-entry.yml'' located in the [[:docs:connection:howto|howto directory]]
+  * execute the [[:docs:resource:archive-entry#manifest|archive entry manifest]] against the [[:docs:connection:tmp|temporary directory (tmp)]] (ie extract the sql file)
+  * execute the extracted ''world.sql'' [[:docs:resource:sql_file|sql file]] against [[:howto:mysql:howto_connection|the mysql howto connection]]
+
+
+
+
+
+===== Next =====
+
+You may try to install all other schema listed in the [[https://dev.mysql.com/doc/index-other.html|MySQL download page]] with the same procedure.

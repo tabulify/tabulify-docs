@@ -3,7 +3,7 @@
     "description": "A system connection is a set of properties that defines a connection to a system.",
     "low_quality_page": "false",
     "page_id": "urykgvyu794pc7noibkm6",
-    "title": "What is a connection"
+    "template": "holy"
 }
 ---
 ====== Connection ======
@@ -14,19 +14,19 @@ A <icon name="mdi:connection" /> ''connection'' (or ''system connection'')  is a
 
 
 ===== Attribute  =====
-A connection has two mandatory [[attribute|attributes]]:  
+A connection has two mandatory [[attribute|attributes]]:
   * [[name|name]] - a unique identifier
-  * [[uri|url]] - a connection string that defined the [[docs:system:system|system]] 
+  * [[uri|uri]] - a connection string that defined the [[docs:system:system|system location]]
 
 ===== Type =====
   * [[built-in|built-in]]: connection that are always available
   * [[howtos|how-to's]]: connection created at installation used in the ''How-to's''
 
 ===== Creation =====
-''connection'' can be created with the [[docs:tabli:connection:start|connection module]] or by manually editing the [[..:conf:file|connection vault]].
+''connection'' can be created with the [[docs:tabul:connection:start|connection module]] or by manually editing the [[..:conf:tabul.yml|connection vault]].
 ===== Default =====
 The default connection is:
-  * [[:docs:connection:project|project home directory]] in a [[:docs:project:project|project execution]]
+  * [[docs:connection:app|app home directory]] in a [[docs:app:app|app execution]]
   * otherwise the [[cd|current directory]] connection.
 
 

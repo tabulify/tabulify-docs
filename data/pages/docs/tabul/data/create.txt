@@ -1,0 +1,118 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:create" }
+    ],
+    "page_id": "ic0gjdvkb1fthx7bfl5in"
+}
+---
+====== Tabul - Data Create command ======
+
+===== About =====
+''data create'' is a [[docs:tabul:command|command]] of the [[start|data operations module]] that implements the [[:docs:op:create|create operation]].
+
+It will create one or more [[docs:resource:resource|data resources]]. (ie  it creates an empty data resource and its [[docs:resource:metadata|metadata]])
+
+
+<note>
+This command does not create any data. It creates only the [[docs:resource:metadata|metadata]].
+</note>
+
+===== Usage =====
+
+
+
+If the [[docs:flow:template_data_uri|target data uri]] is:
+  * specified. If the target is:
+    * a [[docs:resource:sql_view|view]], a [[docs:resource:sql_select|sql select query]] has source is expected
+    * otherwise the [[docs:resource:metadata|metadata definition]] of the [[docs:op:select|selected data resources]] is copied
+  * not specified,
+      * if the [[docs:flow:data_selector|data selector]] is a [[docs:flow:runtime_selector|runtime selector]], the [[docs:resource:runtime|script]] (DDL, ..) is executed
+      * otherwise the ''data resource'' specified by the ''data selector'' is created.
+
+
+
+===== Other commands that creates data resources =====
+
+  * By default, a [[transfer|transfer command]] will create the [[docs:flow:target|target data resource]] from the source if it does not exist
+  * The [[template|template command]] can also create data resources.
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul data create --help
+</code>
+<console>
+Tabul data create
+=================
+
+Create a data resource(s) (table, file, ..) from:
+  * the metadata of another data resource
+  * a script (DDL)
+
+If the `target uri` is:
+  * not specified, if the `data selector` is:
+       * a script selector, the selected resources is executed
+       * otherwise, a data resource is created (with the `data selector` as `data uri`)
+  * specified. If the target:        * is a view, a sql select query has source is expected       * otherwise, the metadata of the selected resources is copied
+
+
+
+Syntax
+------
+
+
+    tabul data create [options|flags] <source-selector...> <target-data-uri>
+
+
+where:
+
+
+  Arguments:
+
+    <source-selector...>                                    A data selectors that select one or more data resources (Example: `*--datadef.yml@connection`)
+
+    <target-data-uri>                                       A target data Uri that defines the connection and optionally the table name. If the target is not specified, the selected data resource must be of type SCRIPTS and will just run.
+
+
+  Data Definition Options:
+
+    -sa,--source-attribute <attributeName=value>            Set a source attribute
+
+    -ta,--target-attribute <attributeName=value>            Set a target attribute
+
+
+  Selection Options:
+
+    --strict-selection                                      If set the selection will return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                 Create also the table dependencies (ie the foreign data resources will also be created).
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

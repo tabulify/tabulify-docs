@@ -1,31 +1,36 @@
+---json
+{
+    "page_id": "oslgccizxfsgj28jrbqba"
+}
+---
 ====== Why do we recommend bash ?  ======
 
 
 ===== A propos =====
-''Tabulify'' recommends to use a bash based terminal because bash supports to pass simply a URL as parameter whereas Windows ''CMD'' or ''Powershell'' do not. 
+''Tabulify'' recommends to use a bash based terminal because bash supports to pass simply a URL as parameter whereas Windows ''CMD'' or ''Powershell'' do not.
 
 The Windows ''CMD'' or ''Powershell'' shell see the ''&'' ampersand character of an URL as a special terminal character known as a control operator and split the URL.
 
 ===== Example =====
 
 For instance, if you want to copy:
-  * the content of the following URL [[https://en.wikipedia.org/w/api.php?action=query&titles=SQL|https://en.wikipedia.org/w/api.php?action=query&titles=SQL]] 
+  * the content of the following URL [[https://en.wikipedia.org/w/api.php?action=query&titles=SQL|https://en.wikipedia.org/w/api.php?action=query&titles=SQL]]
   * in a CMD/DOS/Powershell terminal
-  * with the [[docs:tabli:data:copy|data copy command]] 
-<code dos>
-tabli data copy "https://en.wikipedia.org/w/api.php?action=query&titles=SQL" sql.xml
+  * with the [[docs:tabul:data:copy|data copy command]]
+<code bash>
+tabul data copy "https://en.wikipedia.org/w/api.php?action=query&titles=SQL" sql.xml
 </code>
-Because of the ''ampersand'', you will get the following error. 
+Because of the ''ampersand'', you will get the following error.
 <console>
 =query was unexpected at this time.
 </console>
 
 <note>
-  * On ''Windows shell'', the ampersand must be then escaped 
+  * On ''Windows shell'', the ampersand must be then escaped
   * While the same command line in a ''Bash'' would just run (because Bash creates token (word) of each argument and does not process them any further)
 </note>
 
 
 ===== How to get Bash  ? =====
 
-If you does not have bash, we have created [[howto:tabli:bash|a step-by-step tutorial on how to install it]]. 
+If you does not have bash, we have created [[howto:tabul:bash|a step-by-step tutorial on how to install it]].

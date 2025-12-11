@@ -1,0 +1,28 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:connection:sd" }
+    ],
+    "page_id": "ja2nmr4spy2fnm25hvmn6"
+}
+---
+====== System Connection - Md (Manifest Directory) ======
+
+
+===== About =====
+
+The ''md'' [[connection|connection]] is a [[built-in|built-in connection]] that points to the [[docs:resource:directory|directory]] of the [[:docs:common:manifest|manifest]].
+
+
+You use them in a [[docs:resource:data_uri|data-uri]] to locate data resource that are sibling of the manifest.
+
+===== Example =====
+
+In a [[:docs:resource:manifest|resource]] manifest, if your ''books.csv'' [[docs:resource:csv|csv file]] is in the same directory, you would use ''books.csv@md'' as [[:docs:resource:data_uri|data uri]]
+
+Example:
+<code yaml>
+kind: csv
+spec:
+  data-uri: books.csv@md
+</code>

@@ -1,17 +1,22 @@
+---json
+{
+    "page_id": "ibq7b8wi5lvuh2ffoo365"
+}
+---
 ====== SSH (SFTP, SCP) System ======
 
 
 ===== About =====
-''SSH''  is a [[system|system]] driven by the ''Secure Shell protocol (SSH)'' and offers:
+''SSH''  is a [[docs:system:file|file system]] driven by the ''Secure Shell protocol (SSH)'' and offers:
   * a remote [[docs:system:file|file system]] via the ''Secure File Transfer Protocol (SFTP)''
-  * and [[docs:resource:script|code execution]]
+  * and [[docs:resource:runtime|code execution]]
 
 The ''Secure Shell protocol (SSH)'' means that the network communication is completely encrypted and secure.
 
 
 
 ===== URL =====
-When [[docs:tabli:connection:add|adding a ''SSH, SFTP'' connection]], you need to give the following URL:
+When [[docs:tabul:connection:add|adding a ''SSH, SFTP'' connection]], you need to give the following URL:
 <code>
 ssh://hostname[: port][ /absolutePath ]
 </code>

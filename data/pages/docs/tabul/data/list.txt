@@ -1,0 +1,115 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:list" }
+    ],
+    "page_id": "dkb9zmieb3bzgbbqauiax"
+}
+---
+====== Tabul - Data List Command ======
+
+===== About =====
+''data list'' is a [[docs:tabul:command|command]] of the [[docs:tabul:data:start|data module]] that lists the [[docs:resource:resource|data resources]] and their [[docs:resource:attribute|attributes]] in a [[docs:resource:tabular|tabular format]].
+
+<note>
+The ''data list'' is a super command that extends the [[wp>Ls|shell ls command]] to support not only the listing of [[docs:resource:file|files]] but also of [[docs:resource:sql_table|tables]] (and by extension all other [[docs:resource:resource|data resources]])
+</note>
+
+
+===== Syntax =====
+The important notions for this command are:
+  * the [[docs:flow:data_selector|data selector]] that helps you select [[docs:resource:resource|data resources]]
+  * the [[docs:resource:attribute|resource attributes]] that you can add to the output with the ''%%--attribute%%'' option.
+
+<unit>
+<code bash>
+tabul data list --help
+</code>
+<console>
+Tabul data list
+===============
+
+Print a list of data resources (files, tables, ...)
+
+
+
+Examples
+--------
+
+ 1 - List all the current files
+
+
+    tabul data list *
+
+
+ 2 - List all the tables of the current schema of the `sqlite` connection
+
+
+    tabul data list *@sqlite
+
+
+ 3 - List all the tables that begins with `D` of the `sqlite` connection
+
+
+    tabul data list D*@sqlite
+
+
+
+
+Syntax
+------
+
+
+    tabul data list [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                      One or more name data resource selectors (ie pattern[@connection])
+
+
+  Data Definition Options:
+
+    -a,--attribute <attributeName>                          Add one or more data resource attribute
+
+
+  Selection Options:
+
+    --strict-selection                                      If set the selection will return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                 If set, the dependencies will be also selected
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>
+
+
+

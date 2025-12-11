@@ -1,0 +1,34 @@
+---json
+{
+    "page_id": "5qi48e1to4mboyu00cf6c"
+}
+---
+====== How to define the value data type in a Yaml file? ======
+
+
+===== About =====
+
+
+In [[docs:common:yaml|Yaml]], you indicates the [[data_type|data type]] in the way you write the value:
+
+
+<code yaml>
+values:
+  - world # varchar
+  - "1" # the quotes indicates a varchar
+  - '1' # the quotes indicates a varchar
+  - 1 # integer
+  - 1.0 # double, float, not a numeric/decimal
+  - 2020-10-01 01:00:00 # timestamp/datetime
+  - 2020-10-01 # date
+  - 10:12:20 # time
+  - true # boolean
+  - false # boolean
+</code>
+
+===== Decimal/Numeric Support =====
+
+''Yaml'' by default do not support ''decimal''/''numeric'' but we transform them from ''string'', ''integer'' or ''double/float''
+<code yaml>
+expected-decimal-value: "123.45" # string but we convert
+</code>

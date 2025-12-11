@@ -1,0 +1,179 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:sql_select:execute_query" },
+        { "path": ":howto:sqlite:execute_query" }
+    ],
+    "description": "This howto will show you to execute and shows the result of a SQL Select Query against the tpcds data",
+    "name": "SQL SELECT query",
+    "page_id": "dbj2xsbmhfu56qbw9urom"
+}
+---
+
+====== SQL - How to execute and shows the result of a SQL SELECT Query ======
+
+
+===== About =====
+
+
+[[docs:system:tpcds|{{ :howto:database:tpc.svg?200|}}]]
+
+[[docs:system:tpcds|Tpcds]] offers 100 [[docs:resource:sql_select|SELECT queries]]. We will load the  [[docs:system:tpcds|tpcds data]] and execute the [[docs:resource:sql_select|select query]] ''number 11''.
+
+
+===== Steps =====
+
+==== Query file location ====
+
+The file containing this query is located below the [[docs:connection:tpcds_query|tpcds-query connection]].
+
+To get the absolute path and other information, you can use the [[docs:tabul:data:info|data info]]. Example:
+
+<unit>
+<code bash>
+tabul data info sqlite/query_11.sql@tpcds_query
+</code>
+<console>
+Information about the data resource (sqlite/query_11.sql@tpcds_query)
+attribute          value                                                                                              description
+----------------   ------------------------------------------------------------------------------------------------   ----------------------------------------------------------------------
+CHARACTER_SET      UTF-8                                                                                              The character set of the file
+COLUMN_NAME        sql                                                                                                The name of the column when the text content is returned on one column
+END_OF_RECORD      ;\r, ;\r\n, ;\n, /\r, /\r\n, /\n, \rgo\r, \r\ngo\r\n, \ngo\n, \rGO\r, \r\nGO\r\n, \nGO\n           The End Of Record string sequence
+PARSING_MODE       SQL                                                                                                How to parse the SQL files
+URI                file:///opt/tabulify/resources/tpcds_query/sqlite/query_11.sql                                     The URI of the file
+ABSOLUTE_PATH      /opt/tabulify/resources/tpcds_query/sqlite/query_11.sql                                            The absolute path on the data system
+ACCESS_TIME        2025-10-20 08:45:30.895436546                                                                      The access time (access time)
+COMMENT                                                                                                               A comment
+CONNECTION         tpcds_query                                                                                        The connection name
+COUNT              1                                                                                                  The number of records
+CREATION_TIME      2025-10-10 19:00:36.974447177                                                                      The creation time (birth time)
+DATA_URI           sqlite/query_11.sql@tpcds_query                                                                    The data uri
+KIND               sql                                                                                                The kind of media
+LOGICAL_NAME       query_11                                                                                           The logical name
+MD5                25d9c65fe0726c0d7b6e23655379e00d                                                                   The Md5 hash
+MEDIA_SUBTYPE      sql                                                                                                The media subType
+MEDIA_TYPE         text/sql                                                                                           The media type
+NAME               query_11.sql                                                                                       The name of the data resource
+PARENT             sqlite                                                                                             The parent
+PATH               sqlite/query_11.sql                                                                                The relative path to the default connection path
+SHA384             ab8b87103f126f50388a56d6da667840599b7aaadef0a6fbb1340f3764ffb2169d1e4f8ff471c3ebcbe4a4b944970e83   The Sha384 hash
+SHA384_INTEGRITY   sha384-q4uHED8Sb1A4ilbW2mZ4QFmbeqre8Kb7sTQPN2T/shadHk+P9HHD68vkpLlElw6D                            The sha384 value used in the html integrity attribute
+SIZE               2819                                                                                               The number of byte
+TABULAR_TYPE       data                                                                                               The tabular type
+UPDATE_TIME        2025-10-10 19:00:36.974447177                                                                      The last update time (modify time)
+</console>
+</unit>
+
+
+
+This query shows customers that have generated growing sales from one year to another in the ''s'' and ''w'' sales type. Below is an excerpt.
+
+<unit>
+<code bash>
+tabul data head --type text --limit 20 sqlite/query_11.sql@tpcds_query
+</code>
+<console>
+The first 20 rows of the data resource (sqlite/query_11.sql@tpcds_query):
+lines
+-------------------------------------------------------------
+
+with year_total as (
+ select c_customer_id customer_id
+       ,c_first_name customer_first_name
+       ,c_last_name customer_last_name
+       ,c_preferred_cust_flag customer_preferred_cust_flag
+       ,c_birth_country customer_birth_country
+       ,c_login customer_login
+       ,c_email_address customer_email_address
+       ,d_year dyear
+       ,sum(ss_ext_list_price-ss_ext_discount_amt) year_total
+       ,'s' sale_type
+ from customer
+     ,store_sales
+     ,date_dim
+ where c_customer_sk = ss_customer_sk
+   and ss_sold_date_sk = d_date_sk
+ group by c_customer_id
+         ,c_first_name
+         ,c_last_name
+</console>
+</unit>
+
+==== Loading the sales data ====
+
+To prevent any conflict, you can execute the below command to drop all tables from the [[docs:connection:howtos|sqlite howto connection]]
+<unit>
+<code bash>
+tabul data drop --no-strict-selection *@sqlite
+# not strict will not fail the command if there is no tables to drop
+</code>
+</unit>
+Loading the data with the [[docs:tabul:data:transfer|transfer command]]. The ''query_11'' is a sales query, we are then loading the ''sales'' data and their [[docs:resource:dependency|dependencies]]
+<unit>
+<code bash>
+tabul data transfer --with-dependencies *sales@tpcds @sqlite
+</code>
+where:
+  * ''*sales@tpcds'' is a [[docs:flow:data_selector|data selector]] that:
+      * selects all tables that finish with the word sales (ie ''*sales'')
+      * in the [[docs:system:tpcds|TPC-DS]] connection (ie ''tpcds'')
+  * ''%%--with-dependencies%%'' add the dependencies of the selection.
+  * ''@sqlite'' defines the target connection (the [[docs:connection:howtos|sqlite howto connection]])
+<console>
+Transfer results
+input                          target                          latency   record_count   error_code   error_message
+----------------------------   -----------------------------   -------   ------------   ----------   -------------
+call_center@tpcds              call_center@sqlite              0.54s                2
+catalog_page@tpcds             catalog_page@sqlite             0.215s           11718
+catalog_sales@tpcds            catalog_sales@sqlite            6.85s            89807
+customer@tpcds                 customer@sqlite                 0.52s             1000
+customer_address@tpcds         customer_address@sqlite         0.38s             1000
+customer_demographics@tpcds    customer_demographics@sqlite    17.523s        1920800
+date_dim@tpcds                 date_dim@sqlite                 3.251s           73049
+household_demographics@tpcds   household_demographics@sqlite   0.61s             7200
+income_band@tpcds              income_band@sqlite              0.19s               20
+item@tpcds                     item@sqlite                     0.169s            2000
+promotion@tpcds                promotion@sqlite                0.18s                3
+ship_mode@tpcds                ship_mode@sqlite                0.22s               20
+store@tpcds                    store@sqlite                    0.18s                2
+store_sales@tpcds              store_sales@sqlite              5.337s          120527
+time_dim@tpcds                 time_dim@sqlite                 0.927s           86400
+warehouse@tpcds                warehouse@sqlite                0.84s                1
+web_page@tpcds                 web_page@sqlite                 0.17s                2
+web_sales@tpcds                web_sales@sqlite                0.816s           11876
+web_site@tpcds                 web_site@sqlite                 0.17s                2
+</console>
+</unit>
+==== Executing the query ====
+
+A [[docs:resource:sql_select|SQL Select Query]] is selected via a [[docs:flow:runtime_selector|runtime selector]] where:
+  * the first part is a [[docs:flow:data_selector|data selector]] that locates one or more files that contains the ''query''
+  * and the second part is the [[docs:connection:connection|connection]] where the query should run.
+
+In the below ''executable selector''
+<file>
+(sqlite/query_11.sql@tpcds_query)@sqlite
+</file>
+  * ''sqlite/query_11.sql@tpcds_query'' is a [[docs:flow:data_selector|data selector]] that select the file ''query_11.sql'' in the sub-directory ''sqlite'' of the [[docs:connection:tpcds_query|tpcds-queries]] connection.
+  * ''sqlite'' is the connection where the ''query'' is executed.
+
+A ''query data uri'' can be used with all [[docs:tabul:data:start|command]] and is executed at runtime.
+
+Example with the [[docs:tabul:data:print|data print]] command.
+<unit>
+<code bash db_query_execute.cmd>
+tabul data print '(sqlite/query_11.sql@tpcds_query)@sqlite'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+(sqlite/query_11.sql@tpcds_query)@sqlite
+customer_id        customer_first_name   customer_last_name   customer_email_address
+----------------   -------------------   ------------------   ----------------------------------
+AAAAAAAABMDAAAAA   Jose                  Guzman               Jose.Guzman@stJp.edu
+AAAAAAAAFLAAAAAA   Joseph                Riley                Joseph.Riley@znxF.com
+AAAAAAAAJGBAAAAA   Bonnie                Harrison             Bonnie.Harrison@AKYSOPlHEYkd.com
+AAAAAAAAKMDAAAAA   Alexander             White                Alexander.White@7v2XsptkFrc50K.org
+AAAAAAAAOFCAAAAA   Timothy               Grogan               Timothy.Grogan@pn3NH2BDng.org
+</console>
+</unit>

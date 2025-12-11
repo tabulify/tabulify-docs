@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "z5evgxmmso9fig01j99ct"
+}
+---
 ====== Tabulify - Log Level ======
 
 
@@ -19,7 +24,7 @@
 ==== Default ====
 By default, the log level is the ''info'' level.
 
-''log level'' is a [[docs:conf:global|global attribute]] that sets the [[docs:common:log|log]] level.
+''log level'' is a [[docs:conf:global_env|global attribute]] that sets the [[docs:common:log|log]] level.
 
 
 
@@ -28,18 +33,18 @@ By default, the log level is the ''info'' level.
 
 You can change the log level:
 
-  * via the ''log-level'' [[docs:tabli:option|option]].
+  * via the ''log-level'' [[docs:tabul:option|option]].
 <code bash>
-tabli data list --log-level tip
+tabul data list --log-level tip
 </code>
-  * via the [[docs:conf:vault|the configuration vault]]
+  * via the [[docs:conf:tabul.yml|the configuration vault]]
 <code yaml>
-globals:
+env:
   log-level: tip
 </code>
   * via the ''log-level'' [[docs:conf:os|os environment variable]].
 <code bash>
-export TABLI_LOG_LEVEL=tip
+export TABUL_LOG_LEVEL=tip
 </code>
 
 

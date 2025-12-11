@@ -1,0 +1,30 @@
+---json
+{
+    "page_id": "iqriisk775e86rkxb0hbt"
+}
+---
+====== Tabular Type ======
+
+
+===== About =====
+''Tabular type'' is a [[attribute|resource attribute]] that permits to define the [[:docs:resource:tabular|tabular]] [[#type]]
+
+
+===== Type =====
+
+The ''tabular type'' has 2 possible values:
+  * ''command'': information about the result of a command execution (ie an exit status column is returned in the data)
+  * ''data'': all other type
+
+===== Example =====
+
+
+^ Resource ^ Tabular Type ^ Description ^
+| [[:docs:resource:sql_select|SQL select]] | ''data''  | A result set is returned |
+| [[:docs:resource:sql_ddl|SQL DDL]] | ''command'' | An exit status is returned |
+| [[:docs:resource:sql_dml|SQL Insert]] | ''command'' | An exit status is returned if there is no returning clause |
+| [[:docs:resource:csv|CSV]] | ''data''  | Lines of data is returned |
+| [[:docs:resource:runtime|Runtime Executable]] | ''command''  | An exit status is returned \\ but it may be changed to ''data''  |
+===== Usage =====
+
+It's used in the [[:docs:op:execute|execute operation]] to define the [[:docs:op:execute#execution mode|default execution mode]]

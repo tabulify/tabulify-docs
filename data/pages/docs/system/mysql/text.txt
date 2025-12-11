@@ -1,0 +1,77 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:system:mysql:datatype" }
+    ],
+    "page_id": "ceosuk4eji8z78yhd5c3y"
+}
+---
+====== MySql - Text Data Type ======
+
+
+===== About =====
+
+This page talks about ''character'' [[data_type|data type support for MySQL]] 
+
+===== Note =====
+
+==== No national data type ====
+MySql encodes all string (([[https://dev.mysql.com/doc/refman/5.7/en/string-type-syntax.html|MySql String]])) in unicode, therefore there is no national data type and we translate them:
+  * ''NVARCHAR'' as ''VARCHAR''
+  * ''NCHAR'' as ''CHAR''
+
+
+==== Varchar Default precision of 2000  ====
+
+We set the [[:docs:connection:attribute#VARCHAR DEFAULT PRECISION|VARCHAR_DEFAULT_PRECISION]]  to ''2000'' by default to avoid the `Row size too large` error.
+
+
+Example, 4 [[docs:data_type:data_type|varchar]] with the maximum allowed of `21844` by `varchar` will yield this error:
+```sql
+create table `howto`.`characters` (
+`last_name` varchar(21844),
+`first_name` varchar(21844),
+`birth_date` varchar(21844),
+`wikipedia_page` varchar(21844)
+ )
+```
+```
+Row size too large: The maximum row size for the used table type,
+not counting BLOBs, is 65535.
+This includes storage overhead, check the manual.
+You have to change some columns to TEXT or BLOBs
+```
+
+<note width="800" align="center">
+=== Why does MySql as a max size? ===
+
+ Because:
+  * MySQL stores the entire row data together in fixed-size pages
+  * All VARCHAR columns are counted toward this limit based on their maximum declared size
+
+This applies to both MyISAM and InnoDB storage engines
+
+Note that [[#TEXT|TEXT]] and ''BLOB'' columns don't count toward the row size limit because MySQL stores them separately from the main table data.
+</note>
+
+
+
+
+==== Text ====
+
+MySQL uses ''TEXT'' types for storing large character data.
+
+^ CLOB column ^ Maximum length in characters ^ Byte Length ^ Formula ^
+| ''TINYTEXT'' | ''255'' | ''8'' | `(2**8 - 1)` |
+| ''TEXT'' | ''65,535'' or ''64kb'' | ''16'' | `(2**16 - 1)` |
+| ''MEDIUMTEXT'' | ''16,777,215'' or ''16MB'' | ''24'' | `(2**24 - 1)` |
+| ''LONGTEXT'' | ''4,294,967,295'' or ''4GB'' | ''32'' | `(2**32 - 1)` |
+
+
+''TEXT'' is the default for [[data type#xml|XML column]].
+
+==== Clob not supported ====
+
+MySQL does not have any standard [[:docs:data_type:character|CLOB]] type. It uses [[#TEXT]] types for storing large character data.
+
+In a cross transfer, when a ''CLOB'' data type is found on the source database, the ''MEDIUMTEXT'' data type is chosen by default if the MySQL target table does not exist.

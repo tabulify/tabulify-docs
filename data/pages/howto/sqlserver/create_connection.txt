@@ -1,0 +1,113 @@
+---json
+{
+    "page_id": "ef5ibxh79arplhq4hozrb"
+}
+---
+====== How to create an Microsoft SqlServer connection? ======
+
+
+===== About =====
+This howto shows you how to create a [[:docs:connection:connection|connection]] to an <icon name="logos:microsoft-icon" width=16 /> [[:docs:system:sqlserver:sqlserver|sqlserver database]].
+
+===== Attributes =====
+
+
+An sqlserver connection supports :
+  * all [[:docs:connection:attribute|common connection attributes]]
+    * [[:docs:connection:uri|Uri]],
+    * user,
+    * [[:docs:connection:password|password]]
+    * ...
+  * and all [[docs:system:database:connection_attributes|relational connection attributes]]
+    * Driver (Jdbc Class)
+    * ...
+
+===== Example =====
+
+Here are the attributes of the [[howto:sqlserver:howto_connection|howto connection]]
+<unit>
+<code bash display="none">
+tabul data print --type text .tabul/.tabul.yml@home | yq '.spec.connections.sqlserver'
+</code>
+<console yaml>
+comment: The default sqlserver connection
+driver: com.microsoft.sqlserver.jdbc.SQLServerDriver
+password: TheSecret1!
+uri: jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true
+user: sa
+</console>
+</unit>
+
+
+
+
+
+===== How to create =====
+
+You can  create an ''sqlserver'' connection:
+  * by directly modifying the [[#Configuration vault]]
+  * or by using the [[#tabul command]]
+
+<note>
+=== Secret ===
+In this howto, the password is expected to be stored in the ''MY_MYSQL_PASSWORD'' [[:docs:conf:os|OS environment variable]] but there is more way to provide secrets.
+
+To know how to pass and handle secrets, read more at [[:docs:conf:secret]]
+</note>
+==== Configuration Vault ====
+
+
+In a [[docs:conf:tabul.yml|Configuration Vault]], to define a sqlserver [[docs:connection:connection|connection]] with the name ''sqlserverOne'', you would write:
+\\
+
+<code yaml>
+connections:
+   sqlserverOne:
+     uri: jdbc:sqlserver://localhost:1433;databaseName=AdventureWorks
+     # driver is optional
+     driver: com.microsoft.sqlserver.jdbc.SQLServerDriver
+     user: loginUser
+     password: ${MY_MYSQL_PASSWORD}
+     natives:
+       # https://learn.microsoft.com/en-us/sql/connect/jdbc/setting-the-connection-properties?view=sql-server-ver17#properties
+       applicationName: tabulify
+</code>
+
+
+
+==== Tabul Command ====
+
+With the [[docs:tabul:connection:add|tabul add command of the connection module]], you can add a sqlserver connection with the name ''sqlserverConnectionName'':
+
+<unit display="none">
+<code bash>
+tabul connection delete --not-strict "sqlserverConnectionName"
+</code>
+</unit>
+
+<tabs>
+   <panel selected>
+      <label>Bash</label>
+<unit>
+<code bash>
+tabul connection add "sqlserverConnectionName" \
+    "jdbc:sqlserver://localhost:1433;databaseName=AdventureWorks" \
+    --user login \
+    --password '${MY_MYSQL_PASSWORD}'
+</code>
+<console>
+</console>
+</unit>
+   </panel>
+
+  <panel>
+    <label>Windows CMD console</label>
+<code bash>
+tabul connection add "sqlserverConnectionName" "jdbc:sqlserver://localhost:1433;databaseName=AdventureWorks" ^
+    --user login ^
+    --password '${MY_MYSQL_PASSWORD}'
+</code>
+   </panel>
+</tabs>
+
+

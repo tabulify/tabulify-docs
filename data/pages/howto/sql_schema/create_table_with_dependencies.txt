@@ -1,0 +1,110 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:sqlite:tabul_create_table_with_dependencies" }
+    ],
+    "canonical": ":howto:database:table_create_with_dependencies",
+    "description": "This howto will show you how to copy the data definition of all SQL tables from a star\/snowflake schema.",
+    "name": "Duplicate a schema ",
+    "page_id": "9ufbppuf8y3ivtqt863n1"
+}
+---
+
+====== Tabul - How to copy the data definition of all tables from a star/snowflake schema ======
+
+
+===== About =====
+This [[..:howto|Howto]] will show you how to copy the [[docs:resource:structure|data definition]] of all [[docs:resource:sql_table|SQL tables]] from a <icon name="twemoji:snowflake"/> star/snowflake schema by using the [[docs:tabul:data:create|Tabul data create command]].
+
+
+<note important>
+This command does not copy the data. It just [[docs:op:create|creates]] the structure (ie it performs a SQL ''CREATE'' statement). If you want to copy the data, use the [[docs:tabul:data:transfer|tabul data transfer command]] instead.
+</note>
+
+
+===== Steps =====
+==== Prerequisites ====
+You should have ''Tabulify'' installed on your computer. [[howto:getting_started:1_install]]
+
+==== Select the fact table ====
+
+The trick to copy a star/snowflake schema is:
+  * to give the fact table (ie the table at the center of the star/snowflake schema) to the [[docs:tabul:data:create|Tabul table create command]]
+  * and to ask to create it with its dependencies.
+
+
+==== Create the fact table with its dependencies   ====
+
+<unit display="none">
+Delete the target destination
+<code bash>
+tabul data drop --no-strict-selection *@sqlite
+</code>
+</unit>
+
+
+The below command will [[docs:op:create|create]]:
+  * the table ''store_sales'' from the [[docs:system:tpcds|tpcds]] system. This is the fact table of the tpcds store schema.
+  * with all its dependencies (all the foreign tables)
+  * into the [[docs:connection:default|Sqlite Howto connection]] with the prefix ''tpc_'' using the [[docs:resource:logical_name|logical name]] of the source
+
+  * with the [[docs:tabul:data:create|tabul data create]] command.
+<unit>
+<code bash>
+tabul data create --with-dependencies store_sales@tpcds 'tpc_${input_logicalName}@sqlite'
+# in bash, you need to escape the $ with \ sign or quote the argument so that it's not seen as a bash variable
+</code>
+<console>
+
+Results of the create operation
+input                          target
+----------------------------   ---------------------------------
+date_dim@tpcds                 tpc_date_dim@sqlite
+household_demographics@tpcds   tpc_household_demographics@sqlite
+item@tpcds                     tpc_item@sqlite
+income_band@tpcds              tpc_income_band@sqlite
+customer_demographics@tpcds    tpc_customer_demographics@sqlite
+customer_address@tpcds         tpc_customer_address@sqlite
+store_sales@tpcds              tpc_store_sales@sqlite
+customer@tpcds                 tpc_customer@sqlite
+promotion@tpcds                tpc_promotion@sqlite
+time_dim@tpcds                 tpc_time_dim@sqlite
+store@tpcds                    tpc_store@sqlite
+
+</console>
+</unit>
+
+==== List the created tables ====
+
+
+With the [[docs:tabul:data:list|tabul data list]] command, we can list the tables created with the ''tpc'' prefix.
+
+<unit>
+<code bash>
+tabul data list -a count tpc*@sqlite
+</code>
+<console>
+path                         media_type   count
+--------------------------   ----------   -----
+tpc_customer                 table            0
+tpc_customer_address         table            0
+tpc_customer_demographics    table            0
+tpc_date_dim                 table            0
+tpc_household_demographics   table            0
+tpc_income_band              table            0
+tpc_item                     table            0
+tpc_promotion                table            0
+tpc_store                    table            0
+tpc_store_sales              table            0
+tpc_time_dim                 table            0
+</console>
+</unit>
+
+==== Next ====
+
+You can fill them with generated data.
+
+
+[[howto:sql_schema:fill_schema|How to fill a schema with generated data]]
+
+

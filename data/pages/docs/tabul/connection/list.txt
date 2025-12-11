@@ -1,0 +1,91 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:connection:list" }
+    ],
+    "page_id": "2uirdimoamxkk2rrwg8x0"
+}
+---
+====== Tabul - Connection List Command ======
+
+
+===== About =====
+''list'' is an [[docs:tabul:command|command]] of the [[docs:tabul:connection:start|connection module]] that shows the [[docs:connection:connection|connections]] ([[docs:connection:built-in|built-in]] and of the [[docs:conf:tabul.yml|connection vault]]).
+
+
+<note>
+For examples on how to list connections, see [[howto:tabul:connection_list|How to list connections]]
+</note>
+
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul connection list --help
+</code>
+<console>
+Tabul connection list
+=====================
+
+List the connections attributes in a tabular format
+
+
+
+Example
+-------
+
+ 1 - List all connections that starts with `sql` and add the `name` and `user` connection attributes to the output
+
+
+    tabul connection list --attribute name --attribute user sql*
+
+
+
+
+Syntax
+------
+
+
+    tabul connection list [options|flags] <name-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <name-selector...>                                      One ore several glob pattern that select connections by name
+
+
+  Data Definition Options:
+
+    -a,--attribute <value>                                  A connection attribute to add to the output
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

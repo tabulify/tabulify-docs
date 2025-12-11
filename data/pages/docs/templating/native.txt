@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "m5nw3i452j6kgu7q11it3"
+}
+---
 ====== Tabulify - Native Templating engine ======
 
 
@@ -5,13 +10,15 @@
 
 The native templating engine is the internal [[engine|templating engine]] of Tabulify.
 
-===== Tree =====
 
-All [[engine|templating engines]] process the template as flat text file. For instance, if you want to create a [[json|json file]], they will not see the [[templating|template]] as a tree of JSON property but as flat file where you need to use a syntax loop to insert the properties. 
-
-''Tabulify'' support the notion of tree template and will preserve the tree structure while building the document. No additional syntax loop is then required in the template. The template is just plain JSON. More ... see [[json]]
 
 ===== Type =====
 The native template engine supports the following [[template#type|type]]
   * [[json|json]]
   * ''text''
+
+===== Tree Support =====
+
+All [[engine|templating engines]] process the template as flat text file. For instance, if you want to create a [[json|json file]], they will not see the [[templating|template]] as a tree of JSON property but as flat file where you need to use a syntax loop to insert the properties. 
+
+''Tabulify'' support the notion of tree template and will preserve the tree structure while building the document. No additional syntax loop is then required in the template. The template is just plain JSON. More ... see [[json]]

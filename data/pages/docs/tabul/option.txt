@@ -1,0 +1,62 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:option" }
+    ],
+    "page_id": "f83fbzsi0s8fxtxgy8tuv"
+}
+---
+====== Tabul - Options ======
+
+===== About =====
+An ''option'' is a property that set a ''value'' to a ''name''.
+
+An ''option'' is used to passed parameters to the [[docs:tabul:command|command]].
+
+
+
+
+===== Syntax =====
+[[docs:tabul:tabul|Tabulify]] supports two ''option'' format:
+  * a [[#long format|long]] where the full name of the option  is given
+  * and a [[#short format|short]] one where only **1** letter is given
+
+
+==== Long format ====
+
+The long ''option'' format start with ''%%--%%'' followed by the option name.
+
+Example: the option ''longOptionName'' will got the value ''value''
+<code bash>
+tabul module command --longOptionName value
+</code>
+
+==== Short format ====
+
+The short option format start with ''-'' followed by one letter.
+
+<code bash>
+tabul module command -l [value]
+</code>
+
+<note>
+If the option is a [[docs:tabul:flag|flag]], the value is ''true'' by default and is therefore not mandatory.
+</note>
+
+===== Example =====
+==== Long format ====
+
+<unit>
+<code bash>
+tabul --help
+</code>
+</unit>
+
+==== Short format ====
+
+<unit>
+<code bash>
+tabul -h
+</code>
+</unit>
+

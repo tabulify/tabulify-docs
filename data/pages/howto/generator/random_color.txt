@@ -2,8 +2,7 @@
 {
     "description": "This how-to shows you how to generate data from a list of values at random data with the column histogram generator.",
     "low_quality_page": "false",
-    "page_id": "79stz1t3n9kfnabmfb8dm",
-    "title": "How to get data from a list of values at random"
+    "page_id": "79stz1t3n9kfnabmfb8dm"
 }
 ---
 ====== Tabulify - How to get data from a list of values at random ======
@@ -20,8 +19,8 @@ Tip: The ''random column generator'' can also generate all primary data type (nu
 To generate data, you need to create a [[docs:resource:generator|generator file]] that will describe the data to be generated.
 
 The below [[docs:resource:generator|data resource generator]]:
-  * has the [[docs:resource:name|name]] ''histogram_random--datagen.yml''
-  * has the [[docs:resource:logicalname|simple name]] ''histogram_random''
+  * has the [[docs:resource:name|name]] ''histogram_random--generator.yml''
+  * has the [[docs:resource:logical_name|simple name]] ''histogram_random''
   * will generate ''30'' values (''MaxRecordCount'' count)
   * has a column named ''id'' that has [[docs:generator:sequence|sequence data generator]] that:
       * starts by default at the value ''1''
@@ -40,32 +39,36 @@ They defines the ''buckets'' as being:
   * with a factor of chance of value ''1''.
 </note>
 <unit>
-<file yaml histogram_random--datagen.yml>
-MaxRecordCount: 10
-Columns:
-  - name: id
-    type: integer
-    comment: A id column to see easily the number of values generated
-    DataGenerator:
-      type: sequence
-  - name: bucket_map
-    type: varchar
-    comment: A column with a random color generator and a map of values with the chance factor
-    DataGenerator:
-      type: histogram
-      Buckets:
-        blue: 1
-        red: 1
-        green: 1
-  - name: bucket_list
-    type: varchar
-    comment: A column with a random color generator and a list of values
-    DataGenerator:
-      type: histogram
-      Buckets:
-        - blue
-        - red
-        - green
+<file yaml histogram_random--generator.yml>
+kind: generator
+spec:
+  MaxRecordCount: 10
+  Columns:
+    - name: id
+      type: integer
+      comment: A id column to see easily the number of values generated
+      data-supplier:
+        type: sequence
+    - name: bucket_map
+      type: varchar
+      comment: A column with a random color generator and a map of values with the chance factor
+      data-supplier:
+        type: histogram
+        arguments:
+          Buckets:
+            blue: 1
+            red: 1
+            green: 1
+    - name: bucket_list
+      type: varchar
+      comment: A column with a random color generator and a list of values
+      data-supplier:
+        type: histogram
+        arguments:
+          Buckets:
+            - blue
+            - red
+            - green
 
 
 
@@ -73,10 +76,10 @@ Columns:
 </unit>
 ==== Printing the data ====
 
-With the [[docs:tabli:data:print|data print command]], we can print the ''30 values'' generated.
+With the [[docs:tabul:data:print|data print command]], we can print the ''30 values'' generated.
 <unit>
-<code dos>
-tabli data print histogram_random--datagen.yml@howto
+<code bash>
+tabul data print histogram_random--generator.yml@howto
 </code>
 <note tip>
 [[docs:connection:howto|howto]] is the connection that contains the files used in the [[..:howto|HowTo's]].
@@ -84,14 +87,14 @@ tabli data print histogram_random--datagen.yml@howto
 <console>
 id   bucket_map   bucket_list
 --   ----------   -----------
- 1   green        blue
- 2   red          blue
- 3   red          green
- 4   green        red
- 5   blue         red
- 6   red          red
- 7   green        blue
- 8   red          blue
+ 1   blue         green
+ 2   blue         green
+ 3   red          red
+ 4   blue         red
+ 5   green        blue
+ 6   green        red
+ 7   red          blue
+ 8   green        red
  9   green        blue
 10   green        green
 </console>

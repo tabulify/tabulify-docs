@@ -1,0 +1,172 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:script" }
+    ],
+    "page_id": "txy3nxmj1horoj8tgrry7"
+}
+---
+====== Data Resource - Runtime Data Resource ======
+
+
+===== About =====
+A ''runtime  data resource'' is a special type of data resource that represents:
+  * a [[docs:resource:resource|data resource]] known as the ''executable resource''
+  * that should be executed against a [[docs:connection:connection|connection]]
+
+
+
+
+They are called [[docs:resource:content#runtime|runtime]] [[resource|data resources]] because these data resources are created at and by the ''execution''.
+===== Example =====
+
+  * A `create.sql` [[:docs:resource:sql_ddl|DDL file]] located in the [[:docs:connection:cd|current directory]] that should be executed against [[:docs:system:sqlite:sqlite|sqlite]]
+<code>
+(create.sql@cd)@sqlite
+</code>
+  * A `script.sh` Shell [[:docs:resource:script|script]] located in the [[:docs:connection:cd|current directory]] that should be executed at the [[:docs:connection:tmp|temporary runtime directory]]
+<code>
+(script.sh@cd)@tmp
+</code>
+
+
+
+
+
+
+===== Type =====
+
+^ Execution Locality ^ Description ^ List ^ 
+| [[request|Remote request]] | Request/Response to a [[:docs:service:service|service]] | [[:docs:resource:sql_request|SQL Request]] - database request \\ [[:docs:system:http|HTTP request]] - web server request |
+| [[:docs:system:local|Local]] | Operating System Command | [[command#script|Script command]] - Textual computer language file \\ [[command#binary|Binary command]] - Language Interpreter, Compiled Machine code instructions |
+
+
+
+===== Data Uri =====
+
+==== Default Execution ====
+
+A executable is represented with the following [[:docs:resource:data_uri|data uri]]
+<code bash>
+(executablePath@executableConnection)@executionConnection
+</code>
+where:
+   * ''executablePath@executableConnection'' is the [[:docs:resource:data_uri|data uri]] of the ''executable resource''. ie:
+     * the resource containing the code
+     * or an executable binary
+   * ''executionConnection'' is the connection where the ''execution resource'' is executed.
+
+
+==== Nested Execution ====
+
+We even support deep nested execution resource when the execution of an executable returns a another executable.
+
+<code javascript>
+((executableResourcePath@executionResourceConnection)@executionResourceConnection)@executionConnection
+</code>
+
+For instance:
+  * Execution of a SQL file located in a online zip archive against MySQL: [[:howto:mysql:sample_schema|]]
+<code javascript>
+((archive/world-sql--archive-entry.yml@howto)@tmp)@mysql
+</code>
+  * [[docs:resource:sql_request|Execution of SQL scripts]] against ''@postgres''
+      * where the scripts are retrieved from a [[:docs:resource:sql_select|select statement]] where:
+        * the ''select'' is stored in the ''select_statement.sql'' [[docs:resource:sql_file|sql file]] located in the [[:docs:connection:cd|current directory]]
+        * executed against ''@sqlite''
+<code javascript>
+((select_statement.sql@cd)@sqlite)@postgres
+</code>
+
+
+
+
+
+
+
+===== Runtime Data Selectors =====
+''Runtime resources'' can be selected with a [[docs:flow:runtime_selector|executable selector]].
+
+===== Execution =====
+
+
+''runtime resources'' are automatically executed at access/runtime.
+
+For instance:
+  * a [[docs:resource:sql_select|sql select]] would be automatically executed and would return a result set.
+  * a [[:docs:resource:script|script]] would be automatically executed and return its standard output (as default)
+
+
+Every [[:docs:op:op|operation]] will execute them when accessing them
+  * [[:docs:op:print|print]]
+  * [[:docs:op:copy|copy]]
+  * ...
+
+ie:
+  * If you print it ''2'' times, you will execute it ''2'' times.
+  * If you print and copy it, you will execute it ''2'' times.
+
+
+
+
+
+Example of execution:
+  * with the [[:docs:tabul:data:print|print command]] for a [[:docs:resource:sql_select|SQL Query]]
+<code bash>
+tabul data print '(select.sql@cd)@sqlite'
+# The quotes are mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+  * with the [[:docs:tabul:data:copy|copy command]] for a series of [[:docs:resource:sql_dml|SQL DML statement]] where the execution result is stored in the ''result.log'' file in the [[:docs:connection:tmp|temporary directory]].
+<code bash>
+tabul data copy '(create_dml.sql@cd)@sqlite'  result.log@tmp
+# The quotes are mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+
+===== Execute Operation =====
+
+With the [[:docs:op:execute|execute operation]], you can perform execution in batch and get back the exit status.
+
+
+Example: 
+To execute:
+  * all [[:docs:resource:sql_file|sql files]] [[:howto:tabul:glob|beginning with query]] 
+  * located in the [[:docs:connection:cd|current directory (cd)]] 
+  * against the [[:howto:sqlite:howto_connection|sqlite howto connection]]
+you would execute this [[:docs:tabul:data:execute|tabul data execute command]]
+<code bash>
+tabul data execute '(query*.sql@cd)@sqlite'
+# The quotes are mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+
+===== Attributes =====
+
+==== Logical Name ====
+The default [[:docs:resource:logical_name|logical name]] is the logical name of the ''execution resource''.
+
+
+==== Executable ====
+
+The executable is the file found in the first part of the [[#data uri|runtime data uri]].
+
+For instance, in this [[#data uri|runtime data uri]]
+<code>
+(query.sql@cd)@sqlite
+</code>
+the executable is: ''query.sql@cd'' 
+
+''query.sql@cd''  defines:
+  * the ''query.sql'' [[:docs:resource:sql_file|sql file]]
+  * in the [[:docs:connection:cd|current directory (cd)]]
+as ''executable'' 
+  
+===== FAQ =====
+
+==== Does a runtime resource exists ====
+
+^ Runtime created from ^ Exists ^
+| A data uri | the ''executable'' exists |
+| Dynamically with a pipeline operation | true |
+
+
+
+

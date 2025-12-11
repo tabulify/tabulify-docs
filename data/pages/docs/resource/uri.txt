@@ -1,12 +1,22 @@
+---json
+{
+    "page_id": "xy4npah6hapcbt42kwsxa"
+}
+---
 ====== Resource - URI/URL ======
 
 
 ===== About =====
 
-A resource can be identified directly with an URI (URL) for instance on the [[docs:system:http|web]] or local file system.
+A resource can be identified directly with a URI (URL) for instance 
+  * on the [[docs:system:http|web]] 
+```
+https://example.com/path?property=value#fragment
+```
+  * or [[:docs:system:local|local file system]].
+```
+file:///tmp/books.csv
+```
 
-
-
-
-An URI can be passed directly as [[data_selector|data selector]].
+A URI is a special case of [[:docs:resource:data_uri|data uri]] and therefore can be passed directly as [[:docs:resource:data_uri|data uri]] ([[..:flow:data_selector|data selector]], ...)
 

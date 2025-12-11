@@ -1,0 +1,106 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:connection:add" }
+    ],
+    "page_id": "twlaaiva47je0xsy8txzg"
+}
+---
+====== Tabul - Add a Connection ======
+
+===== About =====
+The ''connection add'' operation will add a connection to the [[docs:conf:tabul.yml|connection vault]].
+
+<note tip>If the connection already exists, this operations will return an error whereas the [[upsert|upsert operation]] will not.</note>
+
+===== Example =====
+
+  * [[:howto:sqlite:create|]]
+  * [[:howto:oracle:create_connection]]
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul connection add --help
+</code>
+<console>
+Tabul connection add
+====================
+
+Add a connection
+
+
+
+Example
+-------
+
+ 1 - To add the connection `name` with the URI `uri`:
+
+
+    tabul connection add name uri
+
+
+
+
+Syntax
+------
+
+
+    tabul connection add [options|flags] <name> <uri>
+
+
+where:
+
+
+  Arguments:
+
+    <name>                                                  the connection name
+
+    <uri>                                                   The system connection string (a JDBC Uri for a database or a file system URI).
+
+
+  Data Definition Options:
+
+    -a,--attribute <key=value>                              A tabulify connection attribute
+
+
+  Connection Properties:
+
+    -a,--attribute <key=value>                              A tabulify connection attribute
+
+    -d,--driver <tld.package.driverClass>                   The jdbc driver (JDBC URL only)
+
+    --native-attribute <key=value>                          A native connection attribute (Example: JDBC driver property
+
+    -p,--password <password>                                The user password (Clear password is encrypted only if a passphrase is provided)
+
+    -u,--user <user>                                        The user name (ie the login name)
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                   The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                       The path to a configuration file
+
+    -ee,--exec-env <name>                                   The execution environment (prod or dev)
+
+    -h,--help                                               Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>            Set the log level
+
+    -ns,--not-strict                                        A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                  defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                  defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>    defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                           A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                             Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                            Print version information
+</console>
+</unit>

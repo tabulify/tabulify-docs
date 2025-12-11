@@ -1,0 +1,16 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:flow:flow" }
+    ],
+    "page_id": "1x5riu17ido52oq30dhae"
+}
+---
+====== Tabulify - Flow ======
+
+
+===== About =====
+In tabulify, data processing can be expressed in 2 [[:docs:common:yaml|yaml]] files:
+  * [[pipeline|pipeline]], a list of step
+  * [[docs:flow:flow|flow]], a list of pipeline
+

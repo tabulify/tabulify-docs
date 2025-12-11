@@ -1,3 +1,8 @@
+---json
+{
+    "page_id": "g3db24olqiouy5y2ysnfh"
+}
+---
 ====== Data Resource - Excel ======
 
 ===== About =====
@@ -9,14 +14,34 @@
 
 ===== Attributes =====
 
-An excel file has the following [[docs:resource:attribute|attributes]].
+An Excel file has the following [[docs:resource:attribute|attributes]].
 
 
 ^ Name ^ Default Value ^ Description ^
-| ''headerRowId'' | ''0'' | The row id where the header is located (''0'' means no header and ''1'' the first line) |
-| ''sheetName'' |  | The sheet name (Optional, first sheet by default) |
-| ''dateFormat'' | ''dd/mm/yyyy hh:mm:ss'' | The date format (ie Format Cells > Number > Custom)  |
+| ''HEADER_ROW_ID'' | ''0'' | The row id where the header is located (''0'' means no header and ''1'' the first line) |
+| ''SHEET_NAME'' |  | The sheet name (Optional, first sheet by default if not set) |
+| ''TIMESTAMP_FORMAT'' | ''yyyy-MM-dd HH:mm:ss'' | The [[docs:data_type:date_time|timestamp]] format (ie Format Cells > Number > Custom)  |
+| ''DATE_FORMAT'' | ''yyyy-MM-dd'' | The [[docs:data_type:date_time|date]] format (ie Format Cells > Number > Custom)  |
 
-In Excel, dates are numeric cell with an applied date format.
+In Excel, dates are numeric cell with an applied format, when we write:
+  * [[docs:data_type:date_time|date]]: we apply the ''DATE_FORMAT'' format
+  * [[docs:data_type:date_time|timestamp]]: we apply the ''TIMESTAMP_FORMAT'' format
+
+===== Type supported =====
+
+Excel files supports natively the following [[docs:data_type:data_type|SQL data type]]:
+
+    * [[:docs:data_type:double_real_float|Double]] (not [[:docs:data_type:integer|integer]])
+    * [[:docs:data_type:character|Varchar]]
+    * [[:docs:data_type:boolean|Boolean]]
+
+We returns
+    * a [[docs:data_type:date_time|Date]] if the format is at the day level (ie ''YYYY/MM/DD'')
+    * and [[docs:data_type:date_time|Timestamp]] otherwise
 
 
+We enforce the type on the whole column even if Excel supports the type by column.
+
+During a [[:docs:op:transfer|transfer]], we support all data type. Ie if the target column is:
+  * a `Integer`, the `Decimal` value will be transformed into a `Integer`
+  * a [[docs:data_type:date_time|Time]], the `Varchar` value `08:00` will be transformed in `Time`

@@ -1,0 +1,163 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:postgres:function_setof" },
+        { "path": ":howto:postgres:procedure_resultset" }
+    ],
+    "page_id": "c8nr4jpaxio0tuuebj4pu"
+}
+---
+====== How to return a result set from a stored function in Postgres? ======
+
+
+===== About =====
+This ''howto'' shows you how to return a [[:docs:resource:tabular|result set]] from a [[docs:resource:sql_function|SQL function]] in [[:howto:postgres:postgres|Postgres]].
+
+You can therefore create dynamically a [[:docs:resource:sql_select|SQL Query]] statement
+
+
+This example has been adapted from the [[https://jdbc.postgresql.org/documentation/callproc/#obtaining-a-resultset-from-a-stored-functionn|official documentation - Obtaining a ResultSet from a stored function]] to add a argument.
+
+
+===== Steps =====
+
+==== The SQL Function Statement ====
+
+The [[:docs:system:database:sql_statement|SQL statement]] that create the [[docs:resource:sql_function|sql function]] is:
+
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode postgres/setof-create-func.sql@howto
+</code>
+<console sql >
+CREATE OR REPLACE FUNCTION setoffunc(int) RETURNS SETOF int AS
+$$
+SELECT 1 + $1
+UNION
+SELECT 2 + $1;
+$$ LANGUAGE sql
+</console>
+</unit>
+
+The ''SETOF'' modifier indicates that the function will return a set of items, rather than a single item.
+More information at: [[https://www.postgresql.org/docs/current/xfunc-sql.html#XFUNC-SQL-FUNCTIONS-RETURNING-SET|Function as Returning Sets]]
+
+==== The SQL Function Creation ====
+We [[docs:resource:runtime#execution|execute]] it by [[:docs:tabul:data:print|printing]] it:
+<unit>
+<code bash>
+tabul data print '(postgres/setof-create-func.sql@howto)@postgres'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+(postgres/setof-create-func.sql@howto)@postgres
+id   count   statement                                            line   error_code   error_message
+--   -----   --------------------------------------------------   ----   ----------   -------------
+ 1       0   CREATE OR REPLACE FUNCTION setoffunc(int) RETURNS       1            0
+</console>
+</unit>
+
+
+
+
+
+==== Execution ====
+
+=== With a literal SQL Query statement ===
+
+The [[:docs:resource:sql_select|SQL Query]] to execute the ''SETOF'' [[docs:resource:sql_function|sql function]] is:
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode postgres/setof-select.sql@howto
+</code>
+<console sql >
+SELECT *
+FROM setoffunc(1)
+</console>
+</unit>
+
+
+
+
+We will [[docs:resource:runtime#execution|execute]] this statement by [[:docs:tabul:data:print|printing]] it
+
+<unit>
+<code bash>
+tabul data print '(postgres/setof-select.sql@howto)@postgres'
+# The quotes are only mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+
+Output:
+<console>
+(postgres/setof-select.sql@howto)@postgres
+setoffunc
+---------
+        2
+        3
+</console>
+</unit>
+
+=== With a parametrized SQL Query statement ===
+The ''SQL query'' [[:docs:system:database:sql_parameterized_statement|parametrized]] to execute the ''SETOF'' [[docs:resource:sql_function|sql function]] is:
+<unit>
+<code bash>
+tabul data print --type text --pipe-mode postgres/setof-select-parametrized.sql@howto
+</code>
+<console sql >
+SELECT *
+FROM setoffunc(?)
+</console>
+</unit>
+
+To make this [[:docs:system:database:sql_statement|statement]] [[docs:resource:runtime|executable]], we need to create a [[:docs:resource:sql_request#manifest|sql request manifest]] so that we can define the [[:docs:system:database:sql_parameterized_statement#parameters|parameters]]
+
+
+<unit>
+<file yml postgres/setof-select-parametrized--sql-request.yml>
+kind: sql-request
+spec:
+  # the executable data uri
+  # * takes the file (setof-select-parametrized)
+  # * located in the same directory as this manifest (md)
+  # * and execute it against (postgres)
+  data-uri: (setof-select-parametrized.sql@md)@postgres
+  # the data definition
+  data-def:
+    parameters:
+      # the parameter for the placeholder
+      - value: 2 # the value passed to the upper function
+        direction: in # set the value
+        type: integer # the type of the value
+
+</file>
+</unit>
+
+
+
+
+
+We will [[docs:resource:runtime#execution|execute]] this manifest by [[:docs:tabul:data:print|printing]] it
+
+<unit>
+<code bash>
+tabul data print postgres/setof-select-parametrized--sql-request.yml@howto
+</code>
+
+Output:
+<console>
+(setof-select-parametrized.sql@md)@postgres
+setoffunc
+---------
+        3
+        4
+</console>
+</unit>
+
+===== Next =====
+
+
+More information on ''setof'' functions can be found in the [[https://www.postgresql.org/docs/current/xfunc-sql.html#XFUNC-SQL-FUNCTIONS-RETURNING-SET|Postgres documentation at the section SQL Functions Returning Sets]].
+
+
+Learn [[howto:postgres:procedure_with_out_parameter|how to execute a parametrized procedure with Postgres]]
+

@@ -1,0 +1,22 @@
+---json
+{
+    "page_id": "rrptzeo1rlu544s9iisll"
+}
+---
+====== User Directory (USER_HOME) ======
+
+
+===== About =====
+The ''user directory'' is directory that stores user information such as:
+
+  * the [[docs:conf:tabul.yml|configuration vault]] if the [[docs:app:app|execution is not a app]]
+  * the [[howto:sqlite:howto_connection|default location for sqlite howto database]]
+
+
+===== How to change it? =====
+
+You can change it by setting the [[docs:conf:global_env|global attribute USER_HOME]] with the ''TABUL_USER_HOME'' [[:docs:conf:os|environment variable]]
+
+<code bash>
+export TABUL_USER_HOME=/home/tabul/.user
+</code>

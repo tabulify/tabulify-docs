@@ -1,0 +1,47 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:logicalname" }
+    ],
+    "page_id": "f2f1mtfgadxu684w1x0y3"
+}
+---
+====== Data Resource - Logical Name Attribute ======
+
+
+===== About =====
+''logicalName'' is an [[attribute|attribute]] a [[docs:resource:resource|data resource]] that defines its ''logical name''.
+
+
+The logical name defines a virtual logical resource (ie multiple resources with the same logical name are seen as belonging to the same data resource)
+
+
+===== Usage =====
+
+
+
+This is the ''name'' used:
+  * when a [[docs:flow:source|source resource]] must be matched to a [[docs:flow:target|target]] before a [[docs:op:transfer|transfer]].
+  * by the [[:docs:op:print|print]] operation to see if the [[:docs:resource:record|records]] belong to the same logical resource to print the header only once. The records may be split 
+    * in a [[:docs:flow:processing-type|intermediate stream]] (It will split its input to return each record immediately)
+    * a [[:docs:op:split|split operation]]
+
+
+
+
+===== Set =====
+You can set the ''logicalName'' of a resource in a [[data-definition|data definition file]]
+
+
+===== By Systems =====
+==== File System ====
+
+It's generally for a [[file|file]] the [[name|name]] without the [[media-type|type information]]
+
+
+For instance, by default, the [[file|file]] ''dataset.csv'' has:
+  * the ''name'': ''dataset.csv''
+  * and the ''logicalName'': ''dataset''
+
+==== Database and other ====
+For a [[docs:system:database:database|database system]], this is the name of the object

@@ -1,12 +1,13 @@
 # Ignore All
 *
-# Don't ignore the following files
+# Don't ignore devfiles
 !.gitignore
 !.gitattributes
 !README.md
-# Don't ignore contribute
-!contribute
-!contribute/**
+!CONTRIBUTING.md
+!LICENSE
+# Robots
+!robots.txt
 # Don't ignore the doc/docs directories
 !doc/
 !doc/**

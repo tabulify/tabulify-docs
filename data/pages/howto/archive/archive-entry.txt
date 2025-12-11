@@ -1,0 +1,130 @@
+---json
+{
+    "aliases": [
+        { "path": ":howto:archive:entry" }
+    ],
+    "page_id": "srzl2b984he6cya2d0kyw"
+}
+---
+====== How to define an archive entry as data resource? ======
+
+
+
+===== About =====
+This ''howto'' will show you how to define an [[:docs:resource:archive-entry|entry in an archive]] as [[:docs:resource:resource|data resource]].
+
+
+
+===== Scenario =====
+
+In the [[https://downloads.mysql.com/docs/world-db.tar.gz|world-db.tar.gz]] archive of the [[https://dev.mysql.com/doc/world-setup/en/|MySQL world sample schema]], there is a file called ''world.sql'' and we don't want to extract it each time but to use it directly as [[:docs:resource:resource|data resource]].
+
+===== Steps =====
+
+
+
+==== Determine the entry path ====
+
+The first step is to determine the [[:docs:resource:archive#path|entry path]] of your file in the [[:docs:resource:archive|archive]].
+
+You can list the content of an archive with the [[:docs:tabul:data:print|tabul print command]]
+
+<unit>
+<code bash>
+tabul data print https://downloads.mysql.com/docs/world-db.tar.gz
+</code>
+<console>
+world-db.tar.gz@https-downloads.mysql.com\docs
+path                 media_type          size   update_time
+------------------   ---------------   ------   ---------------------
+world-db/            inode/directory        0   2025-10-31 23:05:45.0
+world-db/world.sql   application/sql   398629   2025-10-31 23:05:45.0
+</console>
+</unit>
+
+On this listing, we can see that the ''world.sql'' is located at the path ''world-db/world.sql''
+
+
+==== Manifest ====
+
+The second step is to define the [[:docs:resource:archive-entry|archive entry]]. In Tabulify, you define it by creating a [[:docs:resource:archive-entry#manifest|manifest archive entry]].
+
+In this example, the manifest is called ''archive/world-sql--archive-entry.yml''.
+
+With the [[:docs:tabul:data:concat|cat command]], we can see its content.
+<unit>
+<code bash>
+tabul data cat archive/world-sql--archive-entry.yml@howto
+</code>
+<console yml>
+kind: archive-entry
+spec:
+  # The data uri of the archive
+  data-uri: https://downloads.mysql.com/docs/world-db.tar.gz
+  data-def:
+    # The path of the file in the archive
+    entry-path: world-db/world.sql
+
+</console>
+</unit>
+
+
+
+In this manifest,
+  * the ''data-uri'' defines the [[:docs:resource:archive|archive]] [[:docs:resource:data_uri|data uri]]
+  * the ''entry-path'' (in [[:docs:resource:manifest#data-def|data-def]]) defines the [[:docs:resource:archive#path|path entry]]
+
+
+
+==== Runtime Data URI ====
+
+In the third step, we define the ''archive entry'' resource as a [[:docs:resource:runtime#data uri|runtime resource]].
+
+Why? The manifest is an [[:docs:resource:runtime|runtime]].
+
+To:
+  * execute the [[:docs:resource:manifest|manifest]] ''archive/world-sql--archive-entry.yml''
+  * located in the [[:docs:connection:howto|howto directory]]
+  * and extract the ''entry'' into the [[:docs:connection:tmp|tmp directory]].
+we define the following [[:docs:resource:runtime#data uri|runtime data uri]]:
+
+
+
+<code>
+(archive/world-sql--archive-entry.yml@howto)@tmp
+</code>
+
+The entry will be extracted in to ''tmp directory/entry-path''.
+
+
+==== Usage ====
+
+With this [[:docs:resource:runtime#data uri|runtime data uri]], you can use the ''archive entry'' as a resource.
+
+For instance, to look at the first [[:docs:resource:record|records]] with the [[:docs:tabul:data:head|head command]]
+of the [[:docs:resource:sql_file|sql file]].
+
+
+<unit>
+<code bash>
+tabul data head '(archive/world-sql--archive-entry.yml@howto)@tmp'
+# The quotes are mandatory in bash because parenthesis are a bash token (ie subshell)
+</code>
+<console>
+The first 10 rows of the data resource (world-db/world.sql@tmp):
+name             subset           category   sql
+--------------   --------------   --------   ------------------------------------------------------------------
+script_comment   script_comment   comment    -- MySQL dump 10.13  Distrib 8.0.19, for osx10.14 (x86_64)\n
+script_comment   script_comment   comment    --\n
+script_comment   script_comment   comment    -- Host: 127.0.0.1    Database: world\n
+script_comment   script_comment   comment    -- ------------------------------------------------------\n
+script_comment   script_comment   comment    -- Server version	8.0.19-debug\n
+unknown          unknown          unknown    /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */
+unknown          unknown          unknown    /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */
+unknown          unknown          unknown    /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */
+unknown          unknown          unknown    /*!50503 SET NAMES utf8mb4 */
+unknown          unknown          unknown    /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */
+</console>
+</unit>
+
+

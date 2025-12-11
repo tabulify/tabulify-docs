@@ -1,0 +1,13 @@
+---json
+{
+    "page_id": "45s640q2qlm6ca4q8pb1i"
+}
+---
+====== Message Data Path ======
+
+
+===== About =====
+In a [[docs:flow:pipeline|pipeline]], the ''message'' that flows from [[docs:flow:step|step]] to [[docs:flow:step|step]] is:
+  * called a ''data path'' 
+  * and is a representation of a [[:docs:resource:resource|data resource]].
+

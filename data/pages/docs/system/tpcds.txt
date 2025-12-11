@@ -1,13 +1,14 @@
 ---json
 {
-    "canonical": "tpcds",
+    "canonical": ":tpcds",
     "description": "This page talks about the TPC-DS benchmark and how you can use it with Tabulify",
+    "featured-raster-image": ":docs:system:tpc.png",
     "images": [
         { "path": ":docs:system:tpc.ico" },
         { "path": ":docs:system:tpc.png" }
     ],
     "name": "Tpc-ds",
-    "title": "How to execute the TPC-DS benchmark data and query"
+    "page_id": "yr3zjjle8idlp03w04k09"
 }
 ---
 
@@ -17,89 +18,83 @@
 {{ :howto:database:tpc.svg?200|}}
 
 ===== About =====
-''Tabulify'' supports the [[http://www.tpc.org/tpcds/|Tpc-Ds]] [[database|database]] benchmark on the following points:
-  * the [[howto:database:tabli_create_table_with_dependencies|creation of schema]]
+''Tabulify'' supports the [[http://www.tpc.org/tpcds/|Tpc-Ds]] [[.database:database|database]] benchmark on the following points:
+  * the [[howto:sql_schema:create_table_with_dependencies|creation of schema]]
   * the [[howto:getting_started:6_transfer_data_resource|transfer of data]]
   * the execution of [[docs:connection:tpcds_query|TPC-DS queries]]
 
-
-TPC-DS  is a widely recognized benchmark for evaluating the performance of data warehouses and analytical databases. It involves a dataset spread across 24 tables.
-
-The benchmark includes 99 complex queries designed to test various aspects of database performance, such as joins, aggregations, and subqueries.
-
-The TPC-DS schema is based on a snowflake schema, representing real-world scenarios like 
-  * web, 
-  * catalog, 
-  * and store sales. 
-  
-
-
-===== Size 1TB =====
-
-TPC-DS 1TB involves a dataset of approximately 1TB in size, 
-containing around 6.35 billion records 
-spread across 24 tables.
-
-The 1TB scale is considered a moderate size for data warehouses 
-but is still challenging due to the complexity of the queries 
-and the large number of records
 
 ===== Operations =====
 ==== Schema Management====
 This section shows you how to manage the sub-schema of ''TPC-DS''
 === All tables ===
 ''tpcds'' - all ''TPC-DS'' tables
-  * [[docs:tabli:data:list]]
+  * [[docs:tabul:data:list]]
 <code bash>
-tabli data list *@tpcds
+tabul data list *@tpcds
 </code>
-  * [[docs:tabli:data:create]]
+  * [[docs:tabul:data:create]]
 <code bash>
-tabli data create *@tpcds @targetConnection
+tabul data create *@tpcds @targetConnection
 </code>
-  * [[docs:tabli:data:fill]]
+  * [[docs:tabul:data:fill]]
 <code bash>
-tabli data fill *@tpcds @targetConnection
+tabul data fill *@tpcds @targetConnection
 </code>
 
 === Dwh ===
 the data-warehouse tables - all tables without the tables that starts with a ''s'' (ie without the staging tables)
-  * [[docs:tabli:data:list]]
+  * [[docs:tabul:data:list]]
 <code bash>
-tabli data list [!s]*@tpcds
+tabul data list [!s]*@tpcds
 </code>
-  * [[docs:tabli:data:create]]
+  * [[docs:tabul:data:create]]
 <code bash>
-tabli data create [!s]*@tpcds @targetConnection
+tabul data create [!s]*@tpcds @targetConnection
 </code>
-  * [[docs:tabli:data:fill]]
+  * [[docs:tabul:data:fill]]
 <code bash>
-tabli data fill [!s]*@tpcds @targetConnection
+tabul data fill [!s]*@tpcds @targetConnection
 </code>
 === Store Sales ===
 
 The ''store-sales'' schema has  the ''store_sales'' and ''store_return'' star schema (a data-warehouse schema).
 
-  * [[docs:tabli:data:list]]
+  * [[docs:tabul:data:list]]
 <unit>
 <code bash>
-tabli data list --with-dependencies store*@tpcds
+tabul data list --with-dependencies store*@tpcds
 </code>
 <console>
+path                     media_type
+----------------------   ------------
+customer                 sql/relation
+customer_address         sql/relation
+customer_demographics    sql/relation
+date_dim                 sql/relation
+household_demographics   sql/relation
+income_band              sql/relation
+item                     sql/relation
+promotion                sql/relation
+reason                   sql/relation
+store                    sql/relation
+store_returns            sql/relation
+store_sales              sql/relation
+time_dim                 sql/relation
 </console>
 </unit>
 
-  * [[docs:tabli:data:create]]: With the same argument, you can create the tables
+  * [[docs:tabul:data:create]]: With the same argument, you can create the tables
 <code bash>
-tabli data create --with-dependencies store*@tpcds @targetConnection
+tabul data create --with-dependencies store*@tpcds @targetConnection
 </code>
-  * [[docs:tabli:data:copy]]
+  * [[docs:tabul:data:copy]]
 <code bash>
-tabli data copy --with-dependencies store*@tpcds @targetConnection
+tabul data copy --with-dependencies store*@tpcds @targetConnection
 </code>
 
 <note tip>
-This article explains this technic: [[howto:database:tabli_create_table_with_dependencies|how to select a star schema]]
+This article explains this technic: [[howto:sql_schema:create_table_with_dependencies|how to select a star schema]]
 </note>
 
 ==== Note on the schema ====

@@ -1,21 +1,46 @@
-====== Flow - Target (Output) ======
+---json
+{
+    "page_id": "qcug2mfxguotxyvdw9v8r"
+}
+---
+====== Flow - Target ======
 
 
 ===== About =====
-A ''target'' [[docs:resource:resource|data resource]] is:
-  * the [[docs:resource:content|data]] recipient of a [[docs:op:transfer|transfer operation]]
-  * or the output of a [[step|pipeline step]]
+The ''target'' is a [[docs:resource:resource|data resource]] that is the counterpart of an [[:docs:flow:input|input]] in an operation.
 
 
-===== Transfer =====
 
-In every [[docs:op:transfer|transfer operation]]:
-  * the [[docs:resource:target_uri|target data uri]] defines the target
+The target can be used as [[:docs:flow:output|output]] of an operation.
+
+
+
+
+
+
+
+===== Example =====
+
+==== Transfer ====
+
+In every [[docs:op:transfer|transfer operation]], the ''target-data-uri'' defines where the data should be stored
+
+Note:
   * if the defined target does not exist, it will be created
   * one of the following ''target operation'' can be executed before transfer:
-      * ''replace''
+      * ''drop''
       * ''truncate''
+  * The ''target operation'' in ''tabul'' is set with the ''target-operation'' [[docs:tabul:option|option]]
 
-<note>
-The ''target operation'' in ''tabli'' is set with the ''target-operation'' [[docs:tabli:option|option]]
-</note>
+
+==== Diff ====
+
+In a [[:docs:op:diff|diff operation]], the ''target'' is the data resource used to make a diff with the [[:docs:flow:input|inputs]]
+
+==== Create ====
+
+In a [[:docs:op:create|create operation]], the ''targets'' represents the created data resources from the input.
+
+==== Execute ====
+
+In the [[:docs:op:execute|execute operation]], the ''targets'' represents the created resources.

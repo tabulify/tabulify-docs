@@ -1,0 +1,19 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:selector" }
+    ],
+    "page_id": "66ljh7mtvnyqnnswk7976"
+}
+---
+====== Data Resource - Selector ======
+
+
+===== About =====
+A ''selector'' is an expression that when matched will select [[..:resource:resource|resources]] before processing.
+
+There is two kind of selectors:
+  * [[..:flow:data_selector|data selector]] to select [[..:resource:content|data resources]] or [[..:resource:container|container resources]]
+  * [[runtime_selector|runtime selector]] to select [[..:resource:resource|resources]] that are [[..:resource:runtime|executable]]
+
+

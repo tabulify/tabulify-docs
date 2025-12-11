@@ -1,0 +1,45 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:command" }
+    ],
+    "page_id": "wkv1s68hz6a64x5co1wj8"
+}
+---
+====== Tabul - Command ======
+
+
+===== About =====
+''command'' in ''tabul'' are contains in a [[docs:tabul:module|module]] and performs an operation against the ''tabulify'' platform.
+
+
+
+
+===== Syntax =====
+They can be customized via:
+  * [[option|options]]
+  * and arguments.
+<code>
+tabul module command --option value --flag argument...
+</code>
+
+<note>
+The options should be written after the command. The global options are options of the ''tabul'' command and can then be placed anywhere.
+
+For instance:
+  * this command is valid because [[docs:common:passphrase|passphrase]] is [[global|global option]]
+<code>
+tabul --passphrase secret connection list
+</code>
+  * this command is not valid because ''attribute'' is an option of the [[docs:tabul:connection:list|connection list]] command and should be written afterwards.
+<code bash>
+# not valid
+tabul --attribute user connection list
+# valid
+tabul connection list --attribute user
+</code>
+
+</note>
+
+
+

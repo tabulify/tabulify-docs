@@ -1,8 +1,13 @@
+---json
+{
+    "page_id": "mh4ki6qs7xgm3x9cf1pzj"
+}
+---
 ====== Local File System ======
 
 
 ===== About =====
-The ''local file system'' is the [[file|file system]] of the operation system where ''Tabulify'' is installed. 
+The ''local file system'' is the [[file|file system]] of the operation system where ''Tabulify'' is installed.
 
 This is the [[file|file system]]:
   * of your computer
@@ -12,11 +17,11 @@ depending on where the ''Tabulify'' is running.
 ===== Built-in Connection =====
 ''Tabulify'' comes with the below [[docs:connection:built-in|built-in connection]] to the local file system:
   * [[docs:connection:cd|cd]] - the current directory
-  * [[docs:connection:temp|temp]] - the temporary directory
+  * [[docs:connection:tmp|temp]] - the temporary directory
   * [[docs:connection:desktop|desktop]] -  the user desktop directory of the local file system
   * [[docs:connection:home|home]] -  the user home directory of the local file system
-  * [[docs:connection:sd|sd]] - the script directory actually running
-  * [[docs:connection:project|project]] - the project directory
+  * [[docs:connection:md|sd]] - the script directory actually running
+  * [[docs:connection:app|app]] - the app home directory
 
 
 ===== URL =====
@@ -47,7 +52,7 @@ file:///opt/
 </code>
 
 <note important>
-You can't defined a relative path. You cannot used as start character:
+You can't define a relative path. You cannot used as start character:
   * ''.'' for the working directory
   * and ''..'' for the parent
 You need to use the [[#data uri|data uri syntax]] to define a relative path
@@ -57,9 +62,9 @@ You need to use the [[#data uri|data uri syntax]] to define a relative path
 ==== Data Uri ====
 To define a relative path, you can use a [[docs:resource:data_uri|data uri]] with a [[#|built-in local data connection]]
 
-Example: to target the build directory inside the  [[docs:connection:project|project home connection directory]]
+Example: to target the build directory inside the  [[docs:connection:app|app home connection directory]]
 <code url>
-data-uri:build@project
+data-uri:build@app
 </code>
 
 

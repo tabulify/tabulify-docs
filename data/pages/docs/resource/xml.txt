@@ -1,10 +1,15 @@
+---json
+{
+    "page_id": "h1qpoox0hf2qaloon35oe"
+}
+---
 ====== Data Resource - Xml File ======
 
 
 ===== About =====
 An ''xml'' is a [[text|text file]] that shows an ''XML'' format.
 
-''XML'' files can be loaded into a [[docs:system:database|database]] for further processing.
+''XML'' files can be loaded into a [[docs:system:database:database|database]] for further processing.
 
 ===== Howto =====
 <related pattern="howto:*" />
@@ -20,30 +25,30 @@ Because a ''xml'' file is a [[text|text file]], you can also set [[text#attribut
 You can create XML file with the [[docs:templating:templating|templating module]].
 
 ===== Loading =====
-Tabulify supports the loading of XML file into a database. See [[howto:database:xml]]
+Tabulify supports the loading of XML file into a database. See [[howto:xml:load_db]]
 ===== How to see the first lines =====
 By default, ''Tabulify'' treats one XML document as one record (line). By printing it, you would see then always the whole document.
 
-If you want to see the first text lines of a document, you need to set the [[type|type]] to [[text|text]].
+If you want to see the first text lines of a document, you need to set the [[media-type|type]] to [[text|text]].
 
 Example:
 <unit>
 <code bash>
-tabli data head --type text xml/relation.xml@howto
+tabul data head --type text xml/relation.xml@howto
 </code>
 <console>
-The first 10 rows of the data resource (xml\relation.xml@howto): 
-lines                                                                               
----------------------------------------------------------------------------------   
-<?xml version="1.0"?>                                                               
-<api batchcomplete="">                                                              
-  <query>                                                                           
-    <normalized>                                                                    
-      <n from="Relation_(database)" to="Relation (database)"/>                      
-    </normalized>                                                                   
-    <pages>                                                                         
-      <page _idx="23720058" pageid="23720058" ns="0" title="Relation (database)">   
-        <categories>                                                                
+The first 10 rows of the data resource (xml/relation.xml@howto):
+lines
+-----------------------------------------------------------------------------------------------------------------------------------------------
+<?xml version="1.0"?>
+<api batchcomplete="">
+  <query>
+    <normalized>
+      <n from="Relation_(database)" to="Relation (database)"/>
+    </normalized>
+    <pages>
+      <page _idx="23720058" pageid="23720058" ns="0" title="Relation (database)" description="The base data structure of relational databases">
+        <categories>
           <cl ns="14" title="Category:Articles with example SQL code"/>
 </console>
 </unit>

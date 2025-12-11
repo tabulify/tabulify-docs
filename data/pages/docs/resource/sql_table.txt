@@ -1,0 +1,44 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:resource:table" }
+    ],
+    "page_id": "lf70fx1uvz1osfl1i2fix"
+}
+---
+====== Data Resource - Sql Table ======
+
+===== About =====
+A ''table'' is a [[docs:resource:content|content resource]] located in a [[docs:system:database:database|database]].
+
+
+
+===== MediaType =====
+
+The [[docs:resource:media-type|media type]] for a table is ''sql/table''
+===== Data URI =====
+The [[docs:resource:data_uri|data URI]] for SQL table looks like:
+
+  * fully qualified
+<code sql>
+catalog.schema.table@connection
+</code>
+  * with the default catalog of the connection
+<code sql>
+schema.table@connection
+</code>
+  * with the default catalog and schema of the connection
+<code sql>
+table@connection
+</code>
+
+
+Note:
+  * ''connection'' is a [[docs:connection:name|connection name]]
+  * ''schema'' is a [[sql_schema#name|schema name]]. If not present, it will default to the ''default connection schema''
+  * ''table'' is a ''table name''
+
+
+
+
+

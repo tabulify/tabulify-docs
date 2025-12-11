@@ -1,68 +1,70 @@
+---json
+{
+    "name": "SQLite",
+    "page_id": "rvnpuho35qi8sqbj2aj2p",
+    "template": "holy"
+}
+---
 ====== Sqlite ======
 
 
 <icon name="logos:sqlite" width="280" float="right"/>
 ===== About =====
-''Tabulify'' supports the [[https://www.sqlite.org/index.html|sqlite]] [[docs:system:relational|relational database]] as a [[docs:system:system|system]]
+''Tabulify'' supports the [[https://www.sqlite.org/index.html|sqlite]] [[docs:system:database:database|relational database]] as a [[docs:system:system|system]]
 
 <note>
-If you don't have any knowledge of ''Tabulify'', you can start with the [[howto:getting_started:getting_started|Learning Guide]],
-otherwise you can also browser the [[howto:database:database|relational database Howto's]]
+If you don't have any knowledge of ''Tabulify'', you can start with the [[howto:getting_started:getting_started|Learning Guide]].
 </note>
 
 
 ===== Connection =====
 
-To create a ''Sqlite'' connection, you have the following possibilities
-<tabs enclosed-tabs>
-<panel>
-<label>Connection Vault</label>
-In a [[docs:conf:file|Connection Vault]], to define a sqlite [[docs:connection:connection|connection]] with the name ''mySqlite'', you would write:
-\\
-  * On Linux
-<code properties>
-[mySqlite]
-url = jdbc\:sqlite\:////home/leo/work/mydatabase.db
-driver = org.sqlite.JDBC
-</code>
-   * On Windows
-<code properties>
-[mySqlite]
-url = jdbc\:sqlite\:///C\:/Users/user/AppData/Local/tabulify/sqlite.db
-driver = org.sqlite.JDBC
-</code>
-
-</panel>
-<panel selected>
-<label>Tabli</label>
-
-With the [[docs:tabli:connection:add|tabli add command of the connection module]], adding a Sqlite connection with the name ''sqliteConnectionName'':
-
-
-  * On Windows
-<code dos>
-tabli connection add "sqliteConnectionName" "jdbc:sqlite:C:/work/mydatabase.db"
-</code>
-  * On Linux
-<code dos>
-tabli connection add "sqliteConnectionName" "jdbc:sqlite:/home/leo/work/mydatabase.db"
-</code>
-
-</panel>
-</tabs>
-===== Data Type =====
-''Sqlite'' does not support natively the following data types.
-
-''Tabulify'' supports them with an added layer of  functionalities and you can read on this pages how they are managed by ''Tabulify'':
-  * [[time]]
-  * [[boolean]]
-
-<note>
-Due to the data type affinity system of Sqlite that defined the data type by cell, it's possible to have no data type definition on a column.
-
-If this is the case, the data type of the column is null and we infer it then to be a string (''varchar'').
-</note>
+See [[howto:sqlite:create]]
 
 ===== Driver =====
 The driver used is the [[https://github.com/xerial/sqlite-jdbc|Xerial one]]
 
+===== Table Size =====
+
+Table [[:docs:resource:size|size]] is determined with the following query against [[https://www.sqlite.org/dbstat.html|dbstat]]
+<code sql>
+SELECT SUM("pgsize") FROM "dbstat" WHERE name='table_name'
+</code>
+===== Support =====
+
+==== Data Type ====
+
+See [[datatype]]
+
+
+==== SQLite does not support the creation and drop of constraints in the alter statement (primary, unique and foreign key) ====
+
+Unfortunately, SQLite does not support the creation and dropping of constraints [[https://www.sqlite.org/lang_altertable.html|in the alter table statement]].
+
+Therefore, you can't drop any primary key, unique key and foreign keys once the tables have been created.
+
+You need to:
+  * [[:howto:sql_schema:create_table_with_dependencies|create a new schema]]
+  * and to copy or move the data
+
+We still support the constraint creation with the `CREATE TABLE` statement.
+
+
+==== LowerCase Table Name ====
+
+Table names are lowercase normalized by SQLite, not by Tabulify. The column names are not.
+
+
+
+
+<code sql>
+create table FOO (bar char);
+-- is equivalent to 
+create table foo (bar char);
+-- but not to
+create table foo (BAR char);
+</code>
+The second statement will result in the following error:
+<console>
+[SQLITE_ERROR] SQL error or missing database (table foo already exists)
+</console>

@@ -1,13 +1,17 @@
+---json
+{
+    "page_id": "e0yadgenf1nnh8epvjhof"
+}
+---
 ====== Release 1.01 ======
 
 
 
 ===== News =====
 
-  * the conf module has been renamed to [[:docs:tabli:variable:start|variable]]
-  * the ''conf'' global option has been renamed to ''vars''. See [[:docs:conf:command_line_variable_file]]
+  * the conf module has been renamed to [[:docs:tabul:env:start|env]]
   * the [[:docs:op:transfer|transfer operation]] can now be done on a [[:docs:flow:granularity|record level]]
   * the [[:docs:op:template|template command]] has been improved.
   * the ''url'' attribute has been renamed to [[:docs:connection:uri|URI]] to match the fact that there is more than web protocols.
-  * the [[:docs:conf:user|configuration directory for the user]] has been renamed from ''conf'' to ''.tabli'' to follows the convention.
+  * the [[:docs:conf:user_directory|configuration directory for the user]] has been renamed from ''conf'' to ''.tabul'' to follows the convention.
   * the [[docs:resource:html|html]] resource permits to extract data from html table.

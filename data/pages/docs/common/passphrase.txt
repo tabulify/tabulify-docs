@@ -1,17 +1,22 @@
+---json
+{
+    "page_id": "esl2ffklgxmz0le64g0rj"
+}
+---
 ====== Tabulify - Passphrase ======
 
 
 
-To encrypt and decrypt [[:docs:conf:secret|secret]], [[vault|vault]] uses a ''passphrase''. 
+To encrypt and decrypt [[:docs:conf:secret|secret]], [[vault|vault]] uses a ''passphrase''.
 
 
 This ''passphrase'' is used to generate a cryptographic key for the [[vault|encryption]].
 
 
-In [[docs:tabli:tabli|Tabli]], the ''passphrase'' can be given with:
+In [[docs:tabul:tabul|Tabul]], the ''passphrase'' can be given with:
 
-  * the ''%%--passphrase%%'' [[docs:tabli:global|global option]].
-  * or the ''TABLI_PASSPHRASE'' [[:docs:conf:os|Os environment variable]]
+  * the ''%%--passphrase%%'' [[docs:tabul:global|global option]].
+  * or the ''TABUL_PASSPHRASE'' [[:docs:conf:os|Os environment variable]]
 
 
 See also [[:docs:common:security|security consideration]] on how to handle secrets.

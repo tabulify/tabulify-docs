@@ -1,0 +1,41 @@
+---json
+{
+    "page_id": "jgafa6umoiu79adpp4tjc"
+}
+---
+====== Generator - DataSet Meta Generator ======
+
+
+
+
+===== About =====
+
+A ''data set meta generator''  is a [[data-supplier|column data generator]] that returns a meta column (third column) from a parent data set column (ie with a [[:docs:generator:data-set|data set]] or [[docs:generator:entity|entity]] generator)
+
+
+
+
+===== Example =====
+
+For example, in the region [[docs:generator:entity|entity]], you have rows that contains:
+  * a `code` column
+  * a `name` column
+
+With:
+  * the data set generator (ie [[entity|entity]] or [[docs:generator:data-set|data set]]), you may return the `name`
+  * the data set meta generator, you may return the `code`
+
+
+
+[[:howto:generator:data-set-meta|]]
+
+===== DataGenerator Attributes =====
+
+The list of [[:docs:conf:attribute|attributes]] that you can use in the [[:docs:resource:generator#Data_Generator|DataGenerator]] property are:
+
+^ Attribute Name ^ Description ^ Default ^ 
+| ''column-data-set'' | The column that contains a data set data supplier (ie an [[docs:generator:entity|entity]] or a [[docs:generator:data-set|data set]] generator) |  |
+| ''column'' | The column to get the data from in the data set | The column name |
+
+
+

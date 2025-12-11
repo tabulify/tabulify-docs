@@ -1,9 +1,24 @@
+---json
+{
+    "page_id": "uovchnwh4zahfdru814t1"
+}
+---
 ====== Tabulify - Sample Schema ======
 
 ===== About =====
-''Tabulify'' supports sample  [[docs:resource:schema|schema]] as [[docs:connection:connection|connection]] (ie a set of data resources that represents one or several process).
+''Tabulify'' supports sample  [[docs:resource:sql_schema|schema]] 
+  * as [[#connection|connection]]
+  * as [[#sql script|script]]
 
 
-The main and only sample schema provided is the [[docs:system:tpcds|tpc-ds benchmark schema]]
+===== Type =====
+
+==== Connection ====
+
+The main and only connection based sample schema provided is the [[docs:system:tpcds|tpc-ds benchmark schema]]
+
+==== Sql Script ====
+
+  * MySQL: [[:howto:mysql:sample_schema]]
 
 

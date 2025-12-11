@@ -3,8 +3,7 @@
     "description": "The data operation are all functions, operations, actions that you can perform on a data resources. They are the basic block of all data processing.",
     "low_quality_page": "false",
     "name": "Data Operations",
-    "page_id": "6zs99eognpbwidmi64e6q",
-    "title": "Data Operations - Process Your Data As You Want"
+    "page_id": "6zs99eognpbwidmi64e6q"
 }
 ---
 ====== Data Operations ======
@@ -14,12 +13,14 @@
 {{ :docs:op:undraw_data_processing.svg?600&ratio=16:9 |}}
 
 ===== About =====
-The ''data operation'' are all functions, operations, actions that you can perform on a [[docs:resource:resource|data resources]]. They are the basic block of all data processing.
+The ''data operations'' are all functions, operations, actions that you can perform on a [[docs:resource:resource|data resources]]. 
+
+They can be used in a [[:docs:flow:step|step]] of a [[:docs:flow:pipeline|pipeline]].
 
 This section lists all ''data operations'' supported.
 
 <note>
-Because all data structure are represented logically as a [[docs:resource:resource|data resource]] (file, table, ...), they all share the same common data vocabulary.
+Because all data structures are represented logically as a [[docs:resource:resource|data resource]] (file, table, ...), they all share the same common data vocabulary.
 </note>
 
 
@@ -29,17 +30,19 @@ Because all data structure are represented logically as a [[docs:resource:resour
 
 
 ^ Data Operations ^ Synonym ^ Description ^
+| [[docs:op:concat|concat]] | ''cat'' | Concatenate multiple data resources into one |
 | [[docs:op:copy|copy]] | | Create a copy of a resource on data and metadata level |
-| [[docs:op:insert|insert]] | [[docs:op:insert|append]] | Add data into a resource |
-| [[docs:op:list|list]] | | List data resources |
-| [[docs:op:truncate|truncate]] | | Delete the data, preserve the metadata |
-| [[docs:op:move|move]] | [[docs:op:rename|rename]] | Move or rename a data resource |
 | [[docs:op:delete|delete]] | | Delete data from a data resource |
+| [[docs:op:diff|diff]] |  | Compare two data resources |
+| [[docs:op:distinct|distinct]] |  | Filter data resource duplicate |
 | [[docs:op:drop|drop]] | [[docs:op:drop|remove]] | Remove the data and metadata of a data resource |
-| [[docs:op:upsert|upsert]] | | Insert otherwise update the data of a data resource |
-| [[docs:op:update|update]] | | Update data of a resource |
-| [[docs:op:query|query]] | [[docs:op:query|select]] | Execute a query and returns a data resource |
-| [[docs:op:transfer|transfer]] | [[docs:op:upload|load]], [[docs:op:upload|upload]], [[docs:op:download|download]] | Move data resource from one system to another  |
 | [[docs:op:fill|fill]] | [[docs:op:fill|generate]] | Generate data for a resource |
+| [[docs:op:insert|insert]] | [[docs:op:insert|append]] | Add data into a resource |
+| [[docs:op:meta|list]] | | List data resources |
+| [[docs:op:move|move]] | [[docs:op:rename|rename]] | Move or rename a data resource |
 | [[docs:op:print|print]] | [[docs:op:print|tail]], [[docs:op:print|head]] | Print the data of a resource |
-| [[docs:op:diff|diff]] | [[docs:op:diff|diff]] | Compare two data resources |
+| [[docs:op:replace|replace]] | | Replace a target |
+| [[docs:op:update|update]] | | Update data of a resource |
+| [[docs:op:upsert|upsert]] | | Insert otherwise update the data of a data resource |
+| [[docs:op:transfer|transfer]] | [[docs:op:upload|load]], [[docs:op:upload|upload]], [[docs:op:download|download]] | Move data resource from one system to another  |
+| [[docs:op:truncate|truncate]] | | Delete the data, preserve the metadata |

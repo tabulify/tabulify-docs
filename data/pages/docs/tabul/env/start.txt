@@ -1,0 +1,66 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabul:conf:start" }
+    ],
+    "low_quality_page": "false",
+    "page_id": "bv0n23zxipve82u6k4uc0"
+}
+---
+====== Tabul - Env Module  ======
+
+
+===== About =====
+The ''env'' [[docs:tabul:module|module]] manages the tabul environment and in particular the [[docs:conf:global_env|global attributes]] of [[docs:tabul:tabul|tabul]].
+
+===== Commands =====
+
+^ Actions ^ Description ^
+| [[list|list]] | Show in a list format all [[docs:conf:global_env|global attributes]] |
+| [[delete|delete]] | Delete a [[docs:conf:global_env|global attribute]] in the [[docs:conf:tabul.yml|conf vault]] |
+| [[set|set]] | Set a [[docs:conf:global_env|global attribute]] in the [[docs:conf:tabul.yml|conf vault]] |
+| ''diagnostic''  | Print environment diagnostic information |
+
+===== Syntax =====
+
+<unit>
+<code bash>
+tabul env -h
+</code>
+<console>
+
+Tabul env
+=========
+
+Management and configuration of the tabul execution environment
+
+
+
+Syntax
+------
+
+
+    tabul env <command> [-h,--help]
+
+
+where:
+
+
+  Commands:
+
+    delete        Delete a global attribute
+
+    diagnostic    Print env diagnostic information
+
+    list          List the global attributes
+
+    set           Set a global attribute
+
+
+  Option:
+
+    -h,--help     Print this help
+
+</console>
+</unit>
+

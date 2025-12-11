@@ -1,0 +1,38 @@
+---json
+{
+    "page_id": "ujk216ops1lf8nqp7qqoe"
+}
+---
+====== Generator - DataSet Generator ======
+
+
+
+
+===== About =====
+
+A ''data set generator''  is a [[data-supplier|column data generator]] that [[generator|generates]] data from any [[:docs:resource:resource|resource]] (Ie from any data set)
+
+
+
+
+===== Example =====
+
+
+  * [[:howto:generator:data-set|]]
+
+
+===== Arguments =====
+
+The list of [[:docs:conf:parameter|arguments]] that you can use in the [[data-supplier#data_supplier|data-supplier]] are:
+
+^ Attribute Name ^ Description ^ Default ^ 
+| ''data-uri'' | A mandatory [[:docs:resource:data_uri|data uri]] |  |
+| ''column'' | The column to get the data from in the [[:docs:resource:data_uri|data uri]] | The column name |
+| ''meta-columns'' | A map that links a local column to a metadata column (a third column)  | Empty |
+
+
+===== Weight Factor =====
+
+Note that you can apply a `Weight Factor` to the data generated.
+
+If you data resources contains a numeric weight factor column called `probability`, `weight` or `factor`, a [[:docs:generator:histogram|histogram (distribution)]] is generated.

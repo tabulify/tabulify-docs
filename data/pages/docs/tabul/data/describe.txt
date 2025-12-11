@@ -1,0 +1,92 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:tabli:data:struct" }
+    ],
+    "page_id": "4ibcxcc7pbzgeltt10z4f"
+}
+---
+====== Tabul - Data Describe command  ======
+
+
+===== About =====
+The [[..:tabul|Tabul]] ''data describe'' [[docs:tabul:command|command]] from the [[start|data module]] will shows the [[docs:resource:structure|data structure]] of a [[docs:resource:resource|data resource (such as a table or file)]]
+
+
+<note tip>
+If you want to create the structure, you need to use the [[create|create command]]
+</note>
+
+
+===== Syntax =====
+<unit>
+<code bash>
+tabul data describe -h
+</code>
+<console>
+Tabul data describe
+===================
+
+Show the data structure of one or more data resources (s)
+
+
+
+Syntax
+------
+
+
+    tabul data describe [options|flags] <data-selector...>
+
+
+where:
+
+
+  Arguments:
+
+    <data-selector...>                                         One or more data or script selectors
+
+
+  Data Definition Options:
+
+    -a,--attribute <value>                                     Set or add a data resource attribute
+
+
+  Selection Options:
+
+    --strict-selection                                         If set the selection will return an error if no data resources have been selected
+
+    -wd,--with-dependencies                                    If set, the dependencies will be also selected
+
+
+  Options:
+
+    -vc,--virtual-column <columnName=resourceAttributeName>    Add a virtual column with the value of a data resource attribute
+
+
+  Global Options:
+
+    -ah,--app-home <path>                                      The app home directory (default to the .tabul.yml file directory)
+
+    -vf,--conf <path>                                          The path to a configuration file
+
+    -ee,--exec-env <name>                                      The execution environment (prod or dev)
+
+    -h,--help                                                  Print this help
+
+    -l,--log-level <error|warning|tip|info|fine>               Set the log level
+
+    -ns,--not-strict                                           A minor error will not stop the process.
+
+    -odu,--output-data-uri <outputDataUri>                     defines the output data uri for the feedback data (default: console)
+
+    -oo,--output-operation <dataOperation>                     defines the data operations (replace, truncate) on an existing output resource before transfer.
+
+    -oop,--output-transfer-operation <transferOperation>       defines the output transfer operation (insert, update, merge, copy). Default to `copy` for a file system and `insert` for a database.
+
+    -pp,--passphrase <passphrase>                              A passphrase (master password) to decrypt the encrypted vault values (Env: TABUL_PASSPHRASE)
+
+    --pipe-mode                                                Use pipe mode if you want to pipe the output in a shell. Pipe mode will not print the headers (ie column name) and will not make the control character visible
+
+    -v,--version                                               Print version information
+</console>
+</unit>
