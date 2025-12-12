@@ -48,3 +48,16 @@ export TABUL_LOG_LEVEL=tip
 </code>
 
 
+===== Note =====
+
+==== Advanced Log configuration ====
+
+It's possible to define the log level by module/class with the [[https://docs.oracle.com/en/java/javase/21/docs/api/java.logging/java/util/logging/package-summary.html|java util logging]] framework known as ''JUL''.
+
+```bash
+java -Djava.util.logging.config.file=/path/to/logging.properties ...
+```
+
+For more information, you can check the [[https://docs.oracle.com/en/java/javase/21/core/java-logging-overview.html#GUID-B83B652C-17EA-48D9-93D2-563AE1FF8EDA__CONFIGURATIONFILE-4C48BDCE|official documentation]].
+
+
