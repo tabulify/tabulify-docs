@@ -49,24 +49,24 @@ tabul data fill *@sqlite
 Transfer results
 input                           target                          latency   record_count   error_code   error_message
 -----------------------------   -----------------------------   -------   ------------   ----------   -------------
-call_center@memgen              call_center@sqlite              0.37s              100                
-catalog_page@memgen             catalog_page@sqlite             0.12s              100                
-catalog_sales@memgen            catalog_sales@sqlite            0.36s              100                
-customer@memgen                 customer@sqlite                 0.16s              100                
-customer_address@memgen         customer_address@sqlite         0.21s              100                
-customer_demographics@memgen    customer_demographics@sqlite    0.15s              100                
-date_dim@memgen                 date_dim@sqlite                 0.82s              100                
-household_demographics@memgen   household_demographics@sqlite   0.10s              100                
-income_band@memgen              income_band@sqlite              0.10s              100                
-item@memgen                     item@sqlite                     0.32s              100                
-promotion@memgen                promotion@sqlite                0.19s              100                
-ship_mode@memgen                ship_mode@sqlite                0.12s              100                
-store@memgen                    store@sqlite                    0.30s              100                
-store_sales@memgen              store_sales@sqlite              0.23s              100                
-time_dim@memgen                 time_dim@sqlite                 0.13s              100                
-warehouse@memgen                warehouse@sqlite                0.17s              100                
-web_page@memgen                 web_page@sqlite                 0.16s              100                
-web_sales@memgen                web_sales@sqlite                0.34s              100                
+call_center@memgen              call_center@sqlite              0.37s              100
+catalog_page@memgen             catalog_page@sqlite             0.12s              100
+catalog_sales@memgen            catalog_sales@sqlite            0.36s              100
+customer@memgen                 customer@sqlite                 0.16s              100
+customer_address@memgen         customer_address@sqlite         0.21s              100
+customer_demographics@memgen    customer_demographics@sqlite    0.15s              100
+date_dim@memgen                 date_dim@sqlite                 0.82s              100
+household_demographics@memgen   household_demographics@sqlite   0.10s              100
+income_band@memgen              income_band@sqlite              0.10s              100
+item@memgen                     item@sqlite                     0.32s              100
+promotion@memgen                promotion@sqlite                0.19s              100
+ship_mode@memgen                ship_mode@sqlite                0.12s              100
+store@memgen                    store@sqlite                    0.30s              100
+store_sales@memgen              store_sales@sqlite              0.23s              100
+time_dim@memgen                 time_dim@sqlite                 0.13s              100
+warehouse@memgen                warehouse@sqlite                0.17s              100
+web_page@memgen                 web_page@sqlite                 0.16s              100
+web_sales@memgen                web_sales@sqlite                0.34s              100
 web_site@memgen                 web_site@sqlite                 0.26s              100
 </console>
 </unit>
@@ -191,24 +191,24 @@ Output:
 Transfer results
 input                           target                          latency   record_count   error_code   error_message
 -----------------------------   -----------------------------   -------   ------------   ----------   -------------
-call_center@memgen              call_center@sqlite              0.37s              100                
-catalog_page@memgen             catalog_page@sqlite             0.13s              100                
-catalog_sales@memgen            catalog_sales@sqlite            0.37s              100                
-customer@memgen                 customer@sqlite                 0.19s              100                
-customer_address@memgen         customer_address@sqlite         0.16s              100                
-customer_demographics@memgen    customer_demographics@sqlite    0.13s              100                
-date_dim@memgen                 date_dim@sqlite                 0.351s             100                
-household_demographics@memgen   household_demographics@sqlite   0.11s              100                
-income_band@memgen              income_band@sqlite              0.9s               100                
-item@memgen                     item@sqlite                     0.35s              100                
-promotion@memgen                promotion@sqlite                0.18s              100                
-ship_mode@memgen                ship_mode@sqlite                0.11s              100                
-store@memgen                    store@sqlite                    0.29s              100                
-store_sales@memgen              store_sales@sqlite              0.23s              100                
-time_dim@memgen                 time_dim@sqlite                 0.15s              100                
-warehouse@memgen                warehouse@sqlite                0.16s              100                
-web_page@memgen                 web_page@sqlite                 0.12s              100                
-web_sales@memgen                web_sales@sqlite                0.28s              100                
+call_center@memgen              call_center@sqlite              0.37s              100
+catalog_page@memgen             catalog_page@sqlite             0.13s              100
+catalog_sales@memgen            catalog_sales@sqlite            0.37s              100
+customer@memgen                 customer@sqlite                 0.19s              100
+customer_address@memgen         customer_address@sqlite         0.16s              100
+customer_demographics@memgen    customer_demographics@sqlite    0.13s              100
+date_dim@memgen                 date_dim@sqlite                 0.351s             100
+household_demographics@memgen   household_demographics@sqlite   0.11s              100
+income_band@memgen              income_band@sqlite              0.9s               100
+item@memgen                     item@sqlite                     0.35s              100
+promotion@memgen                promotion@sqlite                0.18s              100
+ship_mode@memgen                ship_mode@sqlite                0.11s              100
+store@memgen                    store@sqlite                    0.29s              100
+store_sales@memgen              store_sales@sqlite              0.23s              100
+time_dim@memgen                 time_dim@sqlite                 0.15s              100
+warehouse@memgen                warehouse@sqlite                0.16s              100
+web_page@memgen                 web_page@sqlite                 0.12s              100
+web_sales@memgen                web_sales@sqlite                0.28s              100
 web_site@memgen                 web_site@sqlite                 0.28s              100
 </console>
 </unit>
