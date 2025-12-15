@@ -54,7 +54,7 @@ desktop         file:///home/tabulify/Desktop
 entity          file:///opt/tabulify/resources/entity/
 home            file:///home/tabulify/
 howto           file:///opt/tabulify/resources/howto/
-log             file:///home/tabulify/.tabul/logs/
+log             file:///home/tabulify/.tabul/logs
 memory          mem:/
 mysql           jdbc:mysql://localhost:3306/howto
 noop            noop

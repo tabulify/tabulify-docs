@@ -1,0 +1,63 @@
+---json
+{
+    "page_id": "dfwg5mha942dt92r36ici"
+}
+---
+====== Java Environment ======
+
+
+===== About =====
+
+We build and test Tabulify with Java 17 Temurin.
+
+
+When installing with a packager:
+  * we install as dependency OpenJDK with brew
+  * we deliver the required [[#modules]] on windows with winget
+
+===== Modules =====
+
+Tabulify needs the following modules:
+  * `jdk.crypto.ec`: mandatory to avoid handshake_failure on http request
+  * `java.desktop`: for java/awt colors
+  * `jdk.compiler`: required by the Javascript runtime (Rhino)
+  * `jdk.dynalink`: required by the Javascript runtime (Rhino)
+  * `jdk.zipfs`: for archive format (jar)
+
+
+===== Support =====
+
+==== java.lang.NoClassDefFoundError: jdk/dynalink/RelinkableCallSite ====
+
+
+Using the [[:docs:generator:generator|data generator]], you may get the following error:
+<code>
+Exception in thread "main" java.lang.NoClassDefFoundError: jdk/dynalink/RelinkableCallSite
+        at org.mozilla.javascript.optimizer.BodyCodegen.addDynamicInvoke(BodyCodegen.java:4598)
+</code>
+
+
+Why? The code is generated and needs the jdk modules `jdk.dynalink` and `jdk.compiler`
+
+Check that your java machine has the required modules
+```bash
+java --list-modules | grep jdk.dynalink
+```
+
+If you have installed tabulify with a `nojre` archive, you need to be sure that the java virtual machine used in your computer is at minimum JDK 17.
+
+```bash
+java --version
+```
+Example:
+```
+openjdk 17.0.16 2025-07-15
+OpenJDK Runtime Environment Temurin-17.0.16+8 (build 17.0.16+8)
+OpenJDK 64-Bit Server VM Temurin-17.0.16+8 (build 17.0.16+8, mixed mode, sharing)
+```
+
+If this is not the case, you need to :
+  * install a JDK or make sure that the `JAVA_HOME` environment variable point to it
+  * reinstall Tabulify with a `jre` archive where the modules are present.
+
+If you use a package manager such as `brew` to install Tabulify, you should not have this error. [[:contact|Contact us]] if this is the case.

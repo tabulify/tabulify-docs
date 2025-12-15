@@ -1,0 +1,26 @@
+---json
+{
+    "aliases": [
+        { "path": ":docs:common:installation" }
+    ],
+    "page_id": "fdo79gmik5ztpn0nevlwo"
+}
+---
+====== Installation ======
+
+
+
+===== List =====
+
+==== Docker (Linux, Windows, macOS) ====
+
+With [[https://github.com/tabulify/tabulify/pkgs/container/tabulify|docker releases]]
+
+```bash
+docker run \
+  --rm \
+  -v $(pwd):/workspace \
+  ghcr.io/tabulify/tabulify-alpine:latest \
+  tabul --version
+```
+
