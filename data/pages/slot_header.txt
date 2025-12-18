@@ -9,9 +9,6 @@ Tabulify
 [[:docs:docs|Docs]]
 [[howto:howto|HowTo's]]
 </group>
-<btn light spacing="mr-2" border-color="gray">
-[[https://tower.combostrap.com/combo/app/list/registration?listGuid=lis-l89qSd8|Subscribe]]
-</btn>
 <btn elevation="true">
 [[howto:getting_started:getting_started|Getting Started]]
 </btn>

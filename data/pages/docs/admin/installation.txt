@@ -15,18 +15,21 @@
 ==== HomeBrew (Linux, macOS, Windows WSL) ====
 
 
-* Installation
+  * Installation
+
 ```bash
 brew install tabulify/tap/tabulify
 ```
 
-* Upgrade
+  * Upgrade
+
 ```bash
 brew update
 brew upgrade tabulify
 ```
 
-* Force a reinstall
+  * Force a reinstall
+
 ```bash
 brew reinstall tabulify
 ```
@@ -43,4 +46,35 @@ docker run \
   tabul --version
 ```
 
+
+
 The docker release do not have any resources (howto, data set entity, ...).
+
+==== Windows Installer ====
+
+You can install tabulify on Windows with the installer `tabulify-x.x.x-jre-x64.msi` 
+
+
+Steps:
+  * Download it from a [[https://github.com/tabulify/tabulify/releases|release page]]
+  * Open it
+  * You may get a `Windows protected your PC`. 
+    * To continue, click on the `More info` link 
+    * Then on the button `Run anyway`
+  * Done
+
+
+
+==== Java Archive ====
+
+We also provide the java archive `tabulify-X.X.X-nojre.zip` so that you can install tabulify on any architecture.
+
+
+
+
+Steps:
+  * You need to install a [[https://www.oracle.com/java/technologies/downloads/|Java JDK]] (minimum version 17)
+  * Set the `JAVA_HOME` to the java installation directory
+  * Download the zip file in the [[https://github.com/tabulify/tabulify/releases|release page]]
+  * Unzip it
+  * Add the `bin` directory in the `PATH` variable

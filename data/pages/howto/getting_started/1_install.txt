@@ -12,78 +12,29 @@ To learn ''Tabulify'', you need to install the [[docs:tabul:tabul|Tabul command 
 
 This pages will guide you through the installation steps.
 
-===== Steps =====
 
-==== Prerequisites ====
-''Tabulify'' relies on ''Java'' version ''1.8''
+===== Options =====
 
-You should have therefore already a ''java'' installation from and above ''1.8''
+==== HomeBrew ====
 
-You can check it by calling the below command
-<code>
-java -version
-</code>
-<console>
-java version "1.8.0_251"
-Java(TM) SE Runtime Environment (build 1.8.0_251-b08)
-Java HotSpot(TM) 64-Bit Server VM (build 25.251-b08, mixed mode)
-</console>
+On Windows WSL, macOS or Linux, you can [[:docs:admin:installation|install]] Tabulify with [[https://brew.sh/|brew]].
 
-<note>
-If this is not the case, you can download it and install it at the [[https://www.oracle.com/java/technologies/javase-downloads.html|Java download page]]
-</note>
+```bash
+brew install tabulify/tap/tabulify
+```
+
+==== Windows Installer =====
 
 
+You can install tabulify on Windows with the installer.
 
-
-==== Installation Directory ====
-
-
-Create a directory called the [[docs:tabul:home|Tabulify Home]] where you will unzip the content of the installation file. <inote>A path without space is recommended</inote>
-
-  * Windows
-<code bash>
-:: Below c:\tabulify is the Tabulify Home.
-mkdir c:\tabulify
-</code>
-  * Linux / Mac
-<code bash>
-# Below /opt/tabulify is the Tabulify Home.
-mkdir /opt/tabulify
-</code>
-
-==== Download ====
-You need to [[https://tabulify.com/tabulify.zip]] download the zipped file for your operating system.
-
-''Tabulify'' is distributed for different operation system.
-
-
-
-
-
-==== Unzip ====
-Unzip the downloaded file into the [[docs:tabul:home|Tabulify Home]]
-
-At the command line:
-  * Windows
-<code bash>
-unzip tabulify.zip -d c:\tabulify
-</code>
-  * Linux
-<code bash>
-unzip tabulify.zip -d /opt/tabulify
-</code>
-==== Symlink ====
-
-  * Optionally, create a symlink into your bin directory to be able to call [[docs:tabul:tabul|Tabulify]] from everywhere.
-<code bash>
-mklink c:\tabulify\tabul.cmd %USERPROFILE%\bin\tabul.cmd
-</code>
-  * This local ''bin'' directory should be added to the ''PATH'' environment variable.
-<code bash>
-setx PATH=%PATH%,%USERPROFILE%\bin
-</code>
-
+Steps:
+  * Download the [[https://github.com/tabulify/tabulify/releases/download/v2.0.0/tabulify-2.0.0-jre-x64.msi|tabulify-2.0.0-jre-x64.msi]] installer
+  * Open it
+  * You may get a `Windows protected your PC`. 
+    * To continue, click on the `More info` link 
+    * Then on the button `Run anyway`
+  * Done
 ===== Tabul =====
 If you can call the ''tabul'' command line, your installation is validated.
 
@@ -94,8 +45,6 @@ If you can call the ''tabul'' command line, your installation is validated.
 <unit>
 <code bash>
 tabul --help
-# or if you didn't have the directory in your PATH environment variable
-# TABULIFY_HOME\bin\tabul --help
 </code>
   * The [[docs:tabul:help|help]] should shows up.
 <console>
