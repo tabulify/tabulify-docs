@@ -12,9 +12,28 @@
 
 ===== List =====
 
+==== HomeBrew (Linux, macOS, Windows WSL) ====
+
+
+* Installation
+```bash
+brew install tabulify/tap/tabulify
+```
+
+* Upgrade
+```bash
+brew update
+brew upgrade tabulify
+```
+
+* Force a reinstall
+```bash
+brew reinstall tabulify
+```
+
 ==== Docker (Linux, Windows, macOS) ====
 
-With [[https://github.com/tabulify/tabulify/pkgs/container/tabulify|docker releases]]
+With [[https://github.com/tabulify/tabulify/pkgs/container/tabulify-alpine|docker releases]]
 
 ```bash
 docker run \
@@ -24,3 +43,4 @@ docker run \
   tabul --version
 ```
 
+The docker release do not have any resources (howto, data set entity, ...).
