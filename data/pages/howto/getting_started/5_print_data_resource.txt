@@ -7,19 +7,19 @@
 
 
 ===== About =====
-In the [[4_select_data_resources|previous page]], we learned how to select [[docs:resource:resource|data resources]]. This page will show you how to discover their content.
+In the [[4_select_data_resources|previous page]], we learned how to select [[docs:resource:resource|data resources]]. This page will show you how to discover their [[:docs:resource:content|content]].
 
-''Tabulify'' offers three command to explore the data content:
+''Tabulify'' offers three command to explore data content:
   * ''print'': to print the whole content
-  * ''head'': to print the first records of content
-  * ''tail'': to print the last records of content
+  * ''head'': to print the first records
+  * ''tail'': to print the last records
 
 ===== Print =====
 The [[docs:tabul:data:print|data print]] command print the whole content.
 
 
 Example:
-  * with the [[docs:connection:tpcds|tpcs connection]]:
+  * with the [[docs:connection:tpcds|tpcs connection]], the reason table has the following content.
 <unit>
 <code bash>
 tabul data print reason@tpcds

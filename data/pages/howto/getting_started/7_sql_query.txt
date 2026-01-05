@@ -34,9 +34,7 @@ We will execute the ''query 11'' that lists the customers that have generated gr
 Below is the ''query 11'' located at ''sqlite/query_11.sql@tpcds_query''
 <unit>
 <code bash>
-tabul data print --type text --pipe-mode sqlite/query_11.sql@tpcds_query
-# --type text disable sql statement parsing
-# --pipe-mode disallow the headers
+tabul data cat sqlite/query_11.sql@tpcds_query
 </code>
 <console sql height="300px" scroll="toggle">
 with year_total as (
@@ -153,7 +151,7 @@ AAAAAAAAOFCAAAAA   Timothy               Grogan               Timothy.Grogan@pn3
 
 Don't forget that:
   * a [[:docs:resource:sql_select|sql query]] is a [[docs:resource:runtime|runtime]]
-  * an [[docs:resource:runtime|runtime]] is just a [[docs:resource:resource|data resource]].
+  * and a [[docs:resource:runtime|runtime]] is just a [[docs:resource:resource|data resource]].
 
 A query can therefore be used on every command as any other [[docs:resource:resource|data resource]].
 

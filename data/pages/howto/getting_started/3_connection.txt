@@ -29,7 +29,7 @@ The default connection is the ''current directory'' of the local file system, kn
 
 
 In this ''learning guide'', we used mostly:
-  * [[docs:connection:cd|cd]]: the local file system
+  * [[docs:connection:cd|cd]]: the current directory (`cd`)
   * [[docs:connection:tpcds|tpcds]]: a set of table and their data for benchmarking purpose.
   * and the [[docs:connection:howtos|sqlite howto local database]]
 

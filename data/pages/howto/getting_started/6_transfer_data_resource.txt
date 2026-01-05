@@ -15,12 +15,12 @@ In ''Tabulify'', when you want to manipulate data, it's called a ''transfer''.
   * You want to [[docs:op:upsert|upsert]] data, you [[docs:op:transfer|transfer]]
   * You want to [[docs:op:delete|delete]] data, you [[docs:op:transfer|transfer]]
 
-For data manipulation, the [[docs:tabul:data:transfer|transfer command]] is the only command you need.
+For data manipulation, the [[docs:tabul:data:transfer|transfer command]] is the only command you need and all manipulation command are just aliases.
 
-The [[docs:tabul:data:transfer|transfer command]] is the most powerfull command and we will introduce it first with a [[docs:op:copy|copy]].
+The [[docs:tabul:data:transfer|transfer command]] is the most powerfull command, and we will introduce it first with the [[docs:op:copy|copy]] alias.
 
 ===== Sqlite HowTo Connection =====
-''Tabulify'' comes pre-installed with [[docs:connection:connection|connections]] used in the [[howto:howto|HowTo]]. We call this connections, the [[docs:connection:howtos|Howto's connections]].
+''Tabulify'' comes pre-installed with [[docs:connection:connection|connections]] used in the [[howto:howto|HowTo]]. We call these connections, the [[docs:connection:howtos|Howto's connections]].
 
 In this learning guide, we will use as target connection, the [[docs:connection:howtos|local sqlite how-to connection]]
 
