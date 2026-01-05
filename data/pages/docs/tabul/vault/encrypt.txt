@@ -13,11 +13,45 @@
 ''vault encrypt'' is a [[docs:tabul:command|tabul command]] of the [[start|vault module]] that supports the [[docs:common:vault|encryption]] of sensitive information
 
 ===== Example =====
+
+<note info>
+Note that even if in the examples, we use the same `passphrase`, the encrypted value (cipher) is not the same. That's not a bug, it's a feature.
+More info can be found in the [[:docs:common:vault|vault documentation]].
+</note>
+==== With the passphrase as environment variable ====
+ 
+<unit>
+<code bash>
+# set the passphrase
+export TABUL_PASSPHRASE=hardToGuess
+# with a password manager
+# export TABUL_PASSPHRASE=$(pass project/passphrase)
+# then encrypt
+tabul vault encrypt secret
+</code>
+</unit>
+
+<!-- The console output is not in the code execution unit because the value changes at each run for greater security -->
+<!-- Needs to be update manually for now -->
+<console>
+The encryption result
+plaintext   ciphertext
+---------   ------------------------------------------------------------------------------------------------------------------------------------------
+secret      tvaultQVE9PT5VRUMrN2FIL3hUQzRScVptUFo0TllRPT0+dFdhTk5mU1J3LzBsTXZuUnp6MEUyOWlEbGVoZXI4bTJ1aTN2M0dZOEZ6OD0+eTlNQUtxL1dScUJhSUFMT1F1anNadz09
+</console>
+
+
+==== With the passphrase as cli option ====
+
+
 <unit>
 <code bash>
 tabul --passphrase hardToGuess vault encrypt secret
 </code>
 </unit>
+
+
+
 <!-- The console output is not in the code execution unit because the value changes at each run for greater security -->
 <!-- Needs to be update manually for now -->
 <console>
