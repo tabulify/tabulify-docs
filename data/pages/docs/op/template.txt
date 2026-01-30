@@ -116,7 +116,7 @@ The ''template'' operations accept the following arguments.
 | ''target-data-uri'' | see [[#target-data-uri]] | A [[:docs:flow:template_data_uri|template data uri]] that defines the [[:docs:resource:data_uri|data uri]] of the templating results |
 | ''target-media-type'' | | Default to the template [[:docs:resource:media-type|media type]] |
 | ''target-data-def'' | | An optional [[:docs:resource:data-definition|data definition]] |
-| ''target-kind'' | ''template-outputs'' | Define the kind of target \\ ''template-outputs'': the output of the template engine, \\ ''enriched-inputs'': the output of the template engine are stored in a column of the input \\ ''data-model'': the data model in JSON format |
+| ''target-type'' | ''template-outputs'' | Define the kind of target \\ ''template-output'': the output of the template engine, \\ ''enriched-input'': the output of the template engine are stored in a column of the input \\ ''data-model'': the data model in JSON format |
 | ''output-type'' | ''targets'' | the [[:docs:flow:output|output]] may be \\ * ''targets'' \\ * ''inputs'' |
 
 

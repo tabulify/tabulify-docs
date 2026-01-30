@@ -174,7 +174,7 @@ The ''target-batch-size'' defines the size of a [[#batch mode|batch]].
 
 
 
-===== Batch mode ======
+===== Batch mode =====
 
 
 If the target system supports [[https://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html#supportsBatchUpdates--|batch update]], we don't send each SQL statement one by one but grouped in a unit called a ''batch''.

@@ -235,12 +235,12 @@ warehouse_delete.csv@howto   warehouse@sqlite   0.45s                1
   * How [[docs:resource:count|many rows]] do we have ?
 <unit>
 <code bash>
-tabul data list -a name -a count warehouse@sqlite
+tabul data list -a count warehouse@sqlite
 </code>
 <console>
-path        media_type   name        count
----------   ----------   ---------   -----
-warehouse   table        warehouse       1
+path        media_type   count
+---------   ----------   -----
+warehouse   table            1
 </console>
 </unit>
   * Do we still see the first row ?

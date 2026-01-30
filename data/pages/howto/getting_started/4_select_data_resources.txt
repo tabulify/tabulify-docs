@@ -10,9 +10,9 @@
 
 To [[docs:op:select|select a data resources]] such as a [[docs:resource:file|file]] or a [[docs:resource:sql_table|database table]], ''Tabulify'' uses the concept of:
   * [[#data selector]]
-  * and [[#selection_with_dependencies|dependency]] (Do we select also the dependent ''data resources'')
+  * and [[#selection_with_dependencies|dependency]] (Do we select also the dependent ''data resources'', generally the [[docs:resource:fkey|tables of the foreign-key constraint]])
 
-This page goes through this concepts with explanation and examples.
+This page goes through these concepts with explanation and examples.
 
 ===== Data Selector =====
 
@@ -56,7 +56,7 @@ web_sales       sql/relation
 </unit>
 
 <note>
-To get more practice on ''glob pattern'', you can have a look at this page. [[howto:tabul:glob]]
+To get more practice or information on ''glob pattern'', you can have a look at this page. [[howto:tabul:glob]]
 </note>
 
 
@@ -98,7 +98,7 @@ web_site                 sql/relation
 </unit>
 
 ===== Local File System =====
-The connection part of a [[docs:flow:data_selector|data selector]] is not mandatory as the default connection is the [[docs:connection:cd|local file system]].
+The connection part of a [[docs:flow:data_selector|data selector]] is not mandatory as the default connection is the [[docs:connection:cd|current directory]].
 
 Therefore, performing the [[docs:tabul:data:list|list command]] with a [[docs:flow:data_selector|data selector]] without ''connection'' will give you a list of the file in your current directory.
 

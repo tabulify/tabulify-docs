@@ -131,10 +131,13 @@ kind: csv
 spec:
   # the command manifest
   data-uri: hello-csv--command.yml@md
+  # Note: if your script does not need any argument,
+  # you could also set directly the runtime resource uri as data-uri value.
+  # ie the value: (command/hello-csv@howto)@tmp
   data-def:
     # the character separator
-    delimiter-character: ;
-    # the columns to define the data type
+    delimiter-character: ';'
+    # the columns (to define the data types)
     columns:
       - name: Id
         type: integer
@@ -151,7 +154,7 @@ tabul data print --strict-selection command/hello-csv--csv.yml@howto
 # We execute it with a strict-selection flag so that we get an error if the file is not found.
 </code>
 <console>
-execute/20251110-204747-850-hello-csv.csv@tmp
+execute/20260105-174314-288-hello-csv.csv@tmp
 Id   Greeting
 --   -------------------
  1   Hello World 1 time
