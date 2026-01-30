@@ -122,15 +122,15 @@ This report will shows you how to get from:
 
 
 It tells us that  we need to:
-  * add ''2'' rows
-  * and delete ''4'' rows
+  * add ''2'' rows : the ''green'' rows
+  * and delete ''4'' rows : the ''red'' rows
 from the ''original'' resource to obtain the ''new'' resource
 
 It's a total of ''6'' changes as seen previously in the ''summary report''.
 
 But why does the diff did not compare the ''Norman'' record to each other ?
 
-This is because their is no known identifier for the record, therefore the diff was executed by ''record hash'' and not by ''last name''.
+This is because their is no known identifier for the record, therefore the diff was executed on the whole ''record'' and not on the''last name''.
 
 The next step will show you how to define the unique columns to drive a diff comparison.
 
