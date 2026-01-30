@@ -29,7 +29,7 @@ brew install tabulify/tap/tabulify
 You can install tabulify on Windows with the installer.
 
 Steps:
-  * Download the [[https://github.com/tabulify/tabulify/releases/download/v2.0.0/tabulify-2.0.0-jre-x64.msi|tabulify-2.0.0-jre-x64.msi]] installer
+  * Download the `tabulify-x.x.x-jre-x64.msi` installer file from the [[https://github.com/tabulify/tabulify/releases/latest|latest release]]
   * Open it
   * You may get a `Windows protected your PC`. 
     * To continue, click on the `More info` link 
