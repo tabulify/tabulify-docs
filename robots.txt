@@ -84,6 +84,6 @@ Disallow: /*?*do=search*
 User-agent: *
 Disallow: /*?*do=diff*
 
-Sitemap: https://tabulify.com/doku.php?do=sitemap
+Sitemap: https://www.tabulify.com/doku.php?do=sitemap
 # A new page every 2 seconds
 Crawl-delay: 2
