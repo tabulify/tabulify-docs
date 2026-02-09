@@ -78,12 +78,15 @@ Disallow: /
 
 # User-agent: Mail.RU_Bot
 
+# Disallow scrolling of URL with parameters
 User-agent: *
-Disallow: /*?*do=search*
+Disallow: /*?*
 
+# Disallow sidebar
 User-agent: *
-Disallow: /*?*do=diff*
+Disallow: /*sidebar*
 
 Sitemap: https://www.tabulify.com/doku.php?do=sitemap
 # A new page every 2 seconds
-Crawl-delay: 2
+# Not supported by google
+# Crawl-delay: 2
