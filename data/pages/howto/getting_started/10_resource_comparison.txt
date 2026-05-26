@@ -173,15 +173,15 @@ from the ''original'' resource to obtain the ''new'' resource
 
 ===== Conclusion =====
 
-This page ends the learning guide of ''Tabulify'' at the command line with ''Tabul'' where we have learned to perform data operation one command at a time.
+This page ends the learning guide of ''Tabulify'' at the command line with ''Tabul'' where we have learned to perform data diff and testing one command at a time.
 
 <box display="none">
-''Tabulify'' supports also the creation of workflows with the ''pipeline'' scripting language where you bind all this operations in pipelines.
+''Tabulify'' supports also the creation of workflows with the ''pipeline'' scripting language where you bind all these operations in pipelines.
 
-To learn more about the ''pipeline'' scripting language, we have create the ''pipeline learning guide'' where you will learn how to create a data warehouse and analyse weblog event of a website.
+To learn more about the ''pipeline'' scripting language, we have created the ''pipeline learning guide'' where you will learn how to create a data warehouse and analyse weblog event of a website.
 
 <btn>
-Flow Learning Guide - How to analyze weblog ?
+Flow Learning Guide - How to analyze weblogs ?
 </btn>
 </box>
 

@@ -12,7 +12,7 @@
 
 <box width=600 >
 
-The ''tabulify'' platform is a ''data processing'' specialized in ''data delivery'' that is piloted by the command line [[docs:tabul:tabul|tabul]].
+The ''tabulify'' platform is a ''data processing'' specialized in ''testing'' and ''prototyping'' that is piloted by the command line [[docs:tabul:tabul|tabul]].
 
 \\
 

@@ -12,16 +12,12 @@
 
 
 <bar hero="md">
-<heading d5 align="text-center">Difficulty analyzing your data with all your tools? </heading>
-<heading d3 align="text-center">Move data around with just SQL</heading>
+<heading d5 align="text-center">Are you 100% sure?</heading>
+<heading d3 align="text-center">Ship data application with confidence</heading>
 
 <text lead align="text-center" spacing="mt-5" line-spacing="lg">
-Data processing and wrangling platform \\
-that helps data ''teams'' and ''professionals'' \\
-to build
-''qualitative'' and ''collaborative'' \\
-data application \\
-with a ''declarative'' and ''interactive'' ''SQL'' workflow.
+A data processing and wrangling framework \\ that focus on data ''testing'' and ''prototyping'' \\
+for a quick and confident deployment
 </text>
 </bar>
 
@@ -29,7 +25,8 @@ with a ''declarative'' and ''interactive'' ''SQL'' workflow.
 
 <masonry>
 <card clickable>
-=== Batch Source Processing ===
+=== Batch Source Selection Processing ===
+= Easy Prototyping =
 
 ''Tabulify'' is the first data processing platform that introduces ''batch source processing'' where all operations can select and process multiple sources at once.
 
@@ -40,8 +37,11 @@ with a ''declarative'' and ''interactive'' ''SQL'' workflow.
 </card>
 
 
+
 <card clickable>
 === A common data vocabulary ===
+= Easy Prototyping =
+
 ''Data'' stays data and with ''Tabulify'', they share a common data vocabulary.
 
   * You may want to ''drop'' a table
@@ -54,6 +54,7 @@ With ''Tabulify'', you will just [[docs:op:drop|drop]] it.
 
 <card clickable>
 === Automate, Test, and Deploy your scripts with ease  ===
+= Easy Testing =
 \\
   * No need to code, just plain SQL.
   * Load files where you want
@@ -65,7 +66,9 @@ With ''Tabulify'', you will just [[docs:op:drop|drop]] it.
 </card>
 
 <card clickable>
-=== Built-in Benchmark ===
+=== Test your performance: Built-in Benchmark ===
+= Easy Testing =
+
 Do you want to know if your ''index'', your new ''model'' or your new database will impact your performance.
 
 ''Tabulify'' ships built-in with a ''benchmark'' tool.
@@ -78,6 +81,7 @@ Do you want to know if your ''index'', your new ''model'' or your new database w
 
 <card>
 === Data Generator included ===
+= Easy Prototyping =
 Every data project needs data to start. Unfortunately, due to privacy law,
 (CPRA, CCPA, GDPR) and procedures, it is difficult to get them.
 \\
@@ -92,7 +96,8 @@ Generates your data and starts your project right-away.
 </card>
 
 <card>
-=== Allow interactive programming ===
+==== Allow interactive programming ====
+= Easy Prototyping =
 
 ''SQL'' is a paradigm that allows for quick development based on quick iteration.
 better known as the ''read-eval-print loop''
